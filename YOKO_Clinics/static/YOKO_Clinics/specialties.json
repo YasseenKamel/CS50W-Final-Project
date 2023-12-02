@@ -1,0 +1,294 @@
+{
+    "Dermatology": [
+        "Cosmetic Dermatology and Laser",
+        "Genital Dermatology",
+        "Pediatric Dermatology",
+        "Adult Dermatology"
+    ],
+    "Dentistry": [
+        "Endodontics",
+        "Orthodontics",
+        "Oral Radiology",
+        "Pediatric Dentistry",
+        "Periodontics",
+        "Prosthodontics",
+        "Implantology",
+        "Cosmetic Dentistry",
+        "Oral and Maxillofacial Surgery",
+        "Elder Dentistry",
+        "Adult Dentistry"
+    ],
+    "Psychiatry": [
+        "Family Counseling",
+        "Adolescent Psychiatry",
+        "Toxicology",
+        "Pediatric Psychiatry",
+        "Addiction",
+        "Adult Psychiatry"
+    ],
+    "Pediatrics and New Born": [
+        "Pediatric Hepatology",
+        "New Born",
+        "Pediatric Hematology",
+        "Pediatric Rheumatology",
+        "Natural Breast Feeding",
+        "Pediatric Cardiology",
+        "Pediatric Nephrology",
+        "Pediatric Urology",
+        "Pediatric Dietitian and Nutrition",
+        "Special Needs",
+        "Pediatric Diabetes and Endocrinology",
+        "Pediatrics",
+        "Pediatric Psychiatry",
+        "Pediatric Neurology",
+        "Pediatric Gastroenterology and Endoscopy"
+    ],
+    "Neurology": [
+        "Adult Neurology",
+        "Pediatric Neurology"
+    ],
+    "Orthopedics": [
+        "Bone Deformities",
+        "Adult Orthopedics",
+        "Microscopic Surgery",
+        "Adult Orthopedic Surgery",
+        "Arthroscopy and Sports injuries",
+        "Foot and Ankle Orthopedics.",
+        "Osteopathic Medicine",
+        "Pediatric Orthopedics",
+        "Pediatric Orthopedic Surgery",
+        "Adult Spine Surgery",
+        "Joint Replacement",
+        "Hand and Upper Limb Surgery",
+        "Pediatric Spine Surgery"
+    ],
+    "Gynaecology and Infertility": [
+        "Gynaecological Cosmetic Surgery",
+        "Gynaecology",
+        "Obstetrics",
+        "Gynaecologic Oncological Surgery"
+    ],
+    "Ear, Nose and Throat": [
+        "Adult Ear, Nose and throat Surgery",
+        "Hearing and Balance Disorder",
+        "Pediatric Ear, Nose and Throat",
+        "Adult Ear, Nose and Throat",
+        "Pediatric Ear, Nose and throat Surgery"
+    ],
+    "Cardiology and Vascular Disease": [
+        "Adult Vascular Diseases",
+        "Pediatric Cardiology",
+        "Pediatric Vascular Diseases",
+        "Adult Cardiology"
+    ],
+    "Allergy and Immunology": [
+        "Adult Allergy and Immunology",
+        "Autoimmune Allergy",
+        "Ophthalmologic Allergy",
+        "Pediatric Allery and Immunology",
+        "Respiratory Tract Allergy",
+        "Skin Allergy"
+    ],
+    "Andrology and Male Infertility": [
+        "Andrology",
+        "Andrology"
+    ],
+    "Audiology": [
+        "Pediatric Audiology",
+        "Hearing and Balance Disorder",
+        "Adult Audiology"
+    ],
+    "Cardiology and Thoracic Surgery": [
+        "Adult Cardiology Surgery",
+        "Adult Thoracic Surgery",
+        "Pediatric Cardiology Surgery",
+        "Pediatric Thoracic Surgery"
+    ],
+    "Chest and Respiratory": [
+        "Adult Chest and Respiratory",
+        "Pediatric Chest and Respiratory"
+    ],
+    "Diabetes and Endocrinology": [
+        "Adult Diabetes and Endocrinology",
+        "Pediatric Diabetes and Endocrinology"
+    ],
+    "Diagnostic Radiology": [
+        "Breast Imaging",
+        "XRay",
+        "Ultrasound",
+        "PET CT"
+    ],
+    "Dietitian and Nutrition": [
+        "Adult Dietitian and Nutrition",
+        "Pediatric Dietitian and Nutrition"
+    ],
+    "Family Medicine": [
+        "Chronic Disease Care",
+        "Adult Internal Medicine",
+        "Gastrointestinal",
+        "Pediatrics",
+        "Chest Diseases"
+    ],
+    "Gastroenterology and Endoscopy": [
+        "Adult Gastroenterology and Endoscopy",
+        "Pediatric Gastroenterology and Endoscopy"
+    ],
+    "General Practice": [
+        "Adult General Practice",
+        "jatric General Practice"
+    ],
+    "General Surgery": [
+        "Endocrinal Surgery",
+        "Gynaecologic Oncological Surgery",
+        "Breast Tumor",
+        "Lung Tumors",
+        "Prostate Tumor",
+        "Pediatric Gastroenterological Surgery",
+        "Pediatric General Surgery",
+        "Adult Gastroenterological Surgery",
+        "Adult Oncology Surgery",
+        "Colon Tumor",
+        "Orthopedics Tumor",
+        "Stomach Tumor",
+        "Abdominal Surgery",
+        "Trauma and Accident Surgery",
+        "Brain Tumor",
+        "Liver Tumor",
+        "Pediatric Oncology Surgery",
+        "Adult General Surgery"
+    ],
+    "Geriatrics": [
+        "Elder Nutrition",
+        "Elder Memory",
+        "Elder Movements"
+    ],
+    "Hematology": [
+        "Pediatric Hematology",
+        "Bone Marrow Transplantation",
+        "Adult Hematology"
+    ],
+    "Hepatology": [
+        "Adult Hepatology",
+        "Pediatric Hepatology"
+    ],
+    "Internal Medicine": [
+        "Adult Internal Medicine",
+        "Infectious Diseases"
+    ],
+    "Interventional Radiology": [
+        "Interventional Neuroradiology",
+        "Interventional Neuroradiology"
+    ],
+    "IVF and Infertility": [
+        "IVF"
+    ],
+    "Laboratories": [
+        "Laboratories",
+        "Laboratories"
+    ],
+    "Nephrology": [
+        "Adult Nephrology",
+        "Pediatric Nephrology"
+    ],
+    "Neurosurgery": [
+        "Adult Neurology",
+        "Pediatric Spine Surgery",
+        "Adult Spine Surgery",
+        "Pediatric Neurology",
+        "Pediatric Neurosurgery",
+        "Adult Neurosurgery"
+    ],
+    "Obesity and Laparoscopic Surgery": [
+        "Obesity Surgery",
+        "Obesity Surgery"
+    ],
+    "Oncology": [
+        "Radiation Oncology",
+        "Adult Oncology",
+        "Pediatric Oncology"
+    ],
+    "Oncology Surgery": [
+        "Brain Tumor",
+        "Liver Tumor",
+        "Pediatric Oncology Surgery",
+        "Gynaecologic Oncological Surgery",
+        "Breast Tumor",
+        "Lung Tumors",
+        "Prostate Tumor",
+        "Adult Oncology Surgery",
+        "Colon Tumor",
+        "Orthopedics Tumor",
+        "Stomach Tumor"
+    ],
+    "Ophthalmology": [
+        "Lasik, Vision Correction and Cataract",
+        "Adult Ophthalmology",
+        "Pediatric Ophthalmology",
+        "Visual Rehabilitation",
+        "Vitreous Body and Retinal Surgery"
+    ],
+    "Osteopathy": [
+        "Pediatric Osteopathy",
+        "Sport Injuries",
+        "Adult Osteopathy"
+    ],
+    "Pain Management": [
+        "Adult Pain Management",
+        "Pediatric Pain Management"
+    ],
+    "Pediatric S": [
+        "Pediatric Neurosurgery",
+        "Pediatric Cardiology Surgery",
+        "Pediatric General Surgery",
+        "Pediatric Oncology Surgery",
+        "Pediatric Gastroenterological Surgery",
+        "Pediatric Urology Surgery",
+        "Pediatric Thoracic Surgery",
+        "Pediatric Deformities and Birth Defects Surgery"
+    ],
+    "Phoniatrics": [
+        "Adult Phoniatrics",
+        "Pediatric Phoniatrics"
+    ],
+    "Physiotherapy and Sport Injuries": [
+        "Sport Injuries",
+        "Adult Physiotherapy",
+        "Rehabilitation",
+        "Pediatric Physiotherapy"
+    ],
+    "Plastic Surgery": [
+        "Burn Surgery",
+        "Rhinoplastic Surgery",
+        "Facial Plastic Surgery",
+        "Eyes Cosmetic Surgery",
+        "Cosmetic Dermatology and Laser",
+        "Hand Surgery"
+    ],
+    "Rheumatology": [
+        "Adult Rheumatology",
+        "Pediatric Rheumatology"
+    ],
+    "Spinal Surgery": [
+        "Foot and Ankle Orthopedics",
+        "Hand and Upper Limb Surgery",
+        "Adult Orthopedic Surgery",
+        "Adult Spine Surgery",
+        "Joint Replacement",
+        "Microscopic Surgery",
+        "Pediatric Orthopedic Surgery",
+        "Bone Deformities",
+        "Osteopathic Medicine",
+        "Pediatric Spine Surgery"
+    ],
+    "Urology": [
+        "Adult Urology",
+        "Pediatric Urology Surgery",
+        "Adult Urology Surgery",
+        "Pediatric Urology"
+    ],
+    "Vascular Surgery": [
+        "Diabetic Foot treatment",
+        "Pediatric Vascular Surgery",
+        "Adult Vascular Surgery"
+    ]
+}

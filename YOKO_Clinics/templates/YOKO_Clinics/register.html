@@ -1,0 +1,139 @@
+{% extends "YOKO_Clinics/layout.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block body %}
+    <div class="log_frame">
+    <h2 style="margin-bottom:20px;">Sign Up</h2>
+    {% if message %}
+                        <script>
+                            function hide(){
+                                document.getElementById("beep").style.display = "none";
+                            }
+                        </script>
+                        <div class="alert alert-danger" id="beep">
+                            <a class="close" data-dismiss="alert" href="#" onclick="hide()">×</a>
+                            {{ message }}
+                        </div>
+
+                    {% endif %}
+                    <script>
+                        function hide1(){
+                            document.getElementById("beep1").style.display = "none";
+                        }
+                    </script>
+                    <div class="alert alert-danger" id="beep1" style="display:none;">
+                        <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
+                        Please fill in all required fields.
+                    </div>
+                    <script>
+                        function hide2(){
+                            document.getElementById("beep2").style.display = "none";
+                        }
+                    </script>
+                    <div class="alert alert-danger" id="beep2" style="display:none;">
+                        <a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>
+                        Passwords do not match.
+                    </div>
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div>
+            <div class="form-group1" id="slide_container">
+                <div id="page_1" class="page_1">
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="username" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="confirmation" id="confirmation" placeholder="Confirm Password" required>
+                    </div>
+                    <div class="hidden-doc" id="doc-div">
+                        <div class="country_city">
+                            <div class="form-group" style="margin-right:0.5rem;">
+                                <select class="form-select country form-control" name="country">
+                                    <option selected disabled>Select Country</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-right:0.5rem;">
+                                <select class="form-select state form-control" name="state">
+                                    <option selected disabled>Select State</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select city form-control" name="city">
+                                    <option selected disabled>Select City</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="address" placeholder="Address" id="address">
+                        </div>
+                        <div class="form-group">
+                            <textarea name="bio" placeholder="Enter a description for yourself. (optional)" id="bio" class="form-control"></textarea>
+                        </div>
+                        <p style="margin-bottom:0.2rem;">Normal working times:</p>
+                        <div class="form-group form-group1">
+                            <input type="time" id="start_time" name="start_time" class="form-control">
+                            <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
+                            <input type="time" id="end_time" name="end_time" class="form-control">
+                        </div>
+                        <div class="form-group form-group1 form-group2">
+                            <input type="checkbox" id="1d" name="days" value="1" class="days_checker">
+                            <label class="toggle-control" for="1d">Sun</label>
+                            <input type="checkbox" id="2d" name="days" value="2" class="days_checker">
+                            <label class="toggle-control" for="2d">Mon</label>
+                            <input type="checkbox" id="3d" name="days" value="3" class="days_checker">
+                            <label class="toggle-control" for="3d">Tue</label>
+                            <input type="checkbox" id="4d" name="days" value="4" class="days_checker">
+                            <label class="toggle-control" for="4d">Wed</label>
+                            <input type="checkbox" id="5d" name="days" value="5" class="days_checker">
+                            <label class="toggle-control" for="5d">Thu</label>
+                            <input type="checkbox" id="6d" name="days" value="6" class="days_checker">
+                            <label class="toggle-control" for="6d">Fri</label>
+                            <input type="checkbox" id="7d" name="days" value="7" class="days_checker">
+                            <label class="toggle-control" for="7d">Sat</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="page_2" class="page_2 slid2">
+                    <div class="form-group">
+                        <select class="form-select form-control" id="specialty" required>
+                            <option selected disabled>Select Specialty</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-group-wrap" id="sub_specialties1">
+                        <div id="all_subs" style="display:none;">
+                            <input type="checkbox" name="specialties" class="sub_checker" id="all_sub" autocomplete="off">
+                            <label for="all_sub" class="toggle-control1">All Sub Specialties</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group1">
+                <div style="width:34%;">
+                <p id="signing_up">Signing up as a <strong>Patient</strong>:</p>
+                <input type="checkbox" id="scroll_toggle" class="toggle" name="doctor" autocomplete="off">
+                <label for="scroll_toggle" class="slide_animation" style="animation-duration:1.5s;"></label>
+                </div>
+                <div style="width:66%;" class="form-group1">
+                    <button class="btn btn-primary" type="button" id="prev_button" style="display:none;margin-bottom:10px;margin-left:auto;height:3rem;margin-top: 2.6rem;width:8rem;">Previous</button>
+                    <input class="btn btn-primary" type="submit" value="Sign up" id="submit" style="margin-bottom:10px;margin-left:auto;height:3rem;margin-top: 2.6rem;width:8rem;">
+                    <button class="btn btn-primary" type="button" id="special_button" style="display:none;margin-bottom:10px;margin-left:auto;height:3rem;margin-top: 2.6rem;width:8rem;">Next</button>
+                </div>
+            </div>
+            <div class="form-group1" id="page_dots" style="display:none; justify-content: center;">
+                <img src="../static/YOKO_Clinics/current_dot.png" class="lil_dot">
+                <img src="../static/YOKO_Clinics/dot.png" class="lil_dot">
+            </div>
+            <p style="margin:auto; text-align: center;">Already have an account? <a href="{% url 'login' %}">Log In here.</a></p>
+        </div>
+    </form>
+
+    </div>
+
+{% endblock %}

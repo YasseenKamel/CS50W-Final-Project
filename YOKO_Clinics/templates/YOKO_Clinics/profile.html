@@ -1,0 +1,31 @@
+{% extends "YOKO_Clinics/layout.html" %}
+
+{% block title %}{{target.username}}{% endblock %}
+
+{% block body %}
+    <div class="profile_frame">
+        <h3>{{ target.username }}</h3>
+        <h5>{{ target.rating }}</h5>
+        <div class="rating" id="rating">
+            
+        </div>
+        <script>
+            document.getElementById('rating').style.width = Math.round(document.getElementById('rating').clientWidth * ({{ target.rating }} / 5)) + 'px';
+        </script>
+        <h5>Address</h5>
+        <p>{{ target.address }}</p>
+        <h5>About</h5>
+        <p>{{ target.bio }}</p>
+        <h5>Specialties</h5>
+        <div class="form-group form-group-wrap" id="sub_specialties1">
+            <div id="all_subs">
+                {% for s in sub %}
+                    <p class="toggle-control2">{{ s.type_name }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% if user.id == target.id %}
+            <button class="btn btn-primary norm_btn" id="edit_btn">Edit Profile</button>
+        {% endif %}
+    </div>
+{% endblock %}
