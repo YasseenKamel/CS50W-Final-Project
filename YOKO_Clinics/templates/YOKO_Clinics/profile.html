@@ -13,19 +13,102 @@
             document.getElementById('rating').style.width = Math.round(document.getElementById('rating').clientWidth * ({{ target.rating }} / 5)) + 'px';
         </script>
         <h5>Address</h5>
-        <p>{{ target.address }}</p>
+        <div id="address_div">
+            <p id="country_display">{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}</p>
+            <p id="address_display">{{ target.address }}</p>
+            <div class="country_city" style="display:none;" id="country_input">
+                <div class="form-group" style="margin-right:0.5rem;">
+                    <select class="form-select country form-control" name="country" id="country_select">
+                        
+                    </select>
+                </div>
+                <div class="form-group" style="margin-right:0.5rem;">
+                    <select class="form-select state form-control" name="state" id="state_select">
+                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-select city form-control" name="city" id="city_select">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="display:none;" id="address_input">
+                <input class="form-control" type="text" name="address" value="{{ target.address }}" id="address">
+            </div>
+        </div>
         <h5>About</h5>
-        <p>{{ target.bio }}</p>
+        <div id="bio_div">
+            <p id="bio_display">{{ target.bio }}</p>
+            <div class="form-group" id="bio_input" style="display:none;">
+                <textarea name="bio" id="bio" class="form-control">{{ target.bio }}</textarea>
+            </div>
+        </div>
+        <p style="margin-bottom:0.2rem;">Normal working times:</p>
+        <div id="time_div">
+            <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
+                <p class="normal_p">{{ target.start_time|time:"H:i" }}</p>
+                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
+                <p class="normal_p">{{ target.end_time|time:"H:i" }}</p>
+            </div>
+            <div class="form-group form-group1" id="time_input" style="display:none;">
+                <input type="time" id="start_time" name="start_time" class="form-control" value="{{ target.start_time|time:"H:i" }}">
+                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow2">
+                <input type="time" id="end_time" name="end_time" class="form-control" value="{{ target.end_time|time:"H:i" }}">
+            </div>
+        </div>
+        <div id="day_div">
+            <div class="form-group1 form-group2" style="margin-bottom: 1rem;" id="day_display">
+                <label class="{% if days.0 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d1">Sun</label>
+                <label class="{% if days.1 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d2">Mon</label>
+                <label class="{% if days.2 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d3">Tue</label>
+                <label class="{% if days.3 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d4">Wed</label>
+                <label class="{% if days.4 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d5">Thu</label>
+                <label class="{% if days.5 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d6">Fri</label>
+                <label class="{% if days.6 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d7">Sat</label>
+            </div>
+            <div class="form-group form-group1 form-group2" id="day_input" style="display: none;">
+                <input type="checkbox" id="1d" name="days" value="1" class="days_checker">
+                <label class="toggle-control" for="1d">Sun</label>
+                <input type="checkbox" id="2d" name="days" value="2" class="days_checker">
+                <label class="toggle-control" for="2d">Mon</label>
+                <input type="checkbox" id="3d" name="days" value="3" class="days_checker">
+                <label class="toggle-control" for="3d">Tue</label>
+                <input type="checkbox" id="4d" name="days" value="4" class="days_checker">
+                <label class="toggle-control" for="4d">Wed</label>
+                <input type="checkbox" id="5d" name="days" value="5" class="days_checker">
+                <label class="toggle-control" for="5d">Thu</label>
+                <input type="checkbox" id="6d" name="days" value="6" class="days_checker">
+                <label class="toggle-control" for="6d">Fri</label>
+                <input type="checkbox" id="7d" name="days" value="7" class="days_checker">
+                <label class="toggle-control" for="7d">Sat</label>
+            </div>
+        </div>
         <h5>Specialties</h5>
-        <div class="form-group form-group-wrap" id="sub_specialties1">
-            <div id="all_subs">
-                {% for s in sub %}
-                    <p class="toggle-control2">{{ s.type_name }}</p>
-                {% endfor %}
+        <div id="sub_specialties_div">
+            <div class="form-group form-group-wrap" id="sub_specialties_display">
+                <div id="all_subs1">
+                    {% for s in sub %}
+                        <p class="toggle-control2" id="sub{{ s.id }}">{{ s.type_name }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group" style="display:none;" id="sub_specialties_data1">
+                <select class="form-select form-control" id="specialty">
+                    
+                </select>
+            </div>
+            <div class="form-group form-group-wrap" id="sub_specialties1" style="display:none;">
+                <div id="all_subs">
+                    <input type="checkbox" name="specialties" class="sub_checker" id="all_sub" autocomplete="off">
+                    <label for="all_sub" class="toggle-control1">All Sub Specialties</label>
+                </div>
             </div>
         </div>
         {% if user.id == target.id %}
-            <button class="btn btn-primary norm_btn" id="edit_btn">Edit Profile</button>
+        <button class="btn btn-primary norm_btn" id="edit_btn">Edit Profile</button>
+        <button class="btn btn-primary norm_btn" id="save_btn" style="display:none;">Save</button>
+        <button class="btn btn-primary norm_btn" id="cancel_btn" style="display:none;">Cancel</button>
         {% endif %}
     </div>
 {% endblock %}

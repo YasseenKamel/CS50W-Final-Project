@@ -133,12 +133,17 @@ def profile(request,id):
     else:
         target.rating = round(target.rating,1)
         specialties = expertise.objects.filter(doctor_id=id).values_list('type_id',flat=True)
+        day = repeated_vacations.objects.filter(doctor_id=id).values_list('day',flat=True)
+        days = [0,0,0,0,0,0,0]
+        for d in day:
+            days[d - 1] = 1
         sub = []
         for specialty in specialties:
             sub.append(types.objects.get(id=specialty))
         return render(request, "YOKO_Clinics/profile.html",{
             'target': target,
-            'sub': sub
+            'sub': sub,
+            'days': days
         })
     
 @login_required

@@ -259,6 +259,7 @@ nav{
 
 .page_1{
     max-width: 100%;
+    width: 100%;
     position: relative;
     left: 0px;
     height:auto;
@@ -440,9 +441,51 @@ input[type="checkbox"].toggle1:checked+label::after {
     text-align: center;
 }
 
+.toggle-control3 {
+    position: relative;
+    float: left;
+    margin: 0 0 0 0;
+    background: var(--days);
+    width: 14.2857%;
+    color: var(--text);
+    padding: .5rem .5rem;
+    border-radius: 2px;
+    border: 1px solid var(--disabled);
+    text-transform: uppercase;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    text-align: center;
+}
+
+.toggle-control4 {
+    position: relative;
+    float: left;
+    margin: 0 0 0 0;
+    background: #eaebef;
+    width: 14.2857%;
+    color: #000000;
+    padding: .5rem .5rem;
+    border-radius: 2px;
+    border: 1px solid var(--disabled);
+    text-transform: uppercase;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    text-align: center;
+}
+
 .norm_btn{
     margin-right:auto;
     margin-left:auto;
     height:3rem;
     width:8rem;
+}
+
+.normal_p{
+    margin:0;
 }
