@@ -165,6 +165,113 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    if(document.getElementById("save_btn") != undefined){
+        document.getElementById("save_btn").addEventListener('click',function(){
+            let address = document.getElementById('address_display');
+            let country = document.getElementById('country_display');
+            let country_select = document.getElementById('country_select');
+            let state_select = document.getElementById('state_select');
+            let city_select = document.getElementById('city_select');
+            let bio = document.getElementById('bio_display');
+            let time = document.getElementById('time_display');
+            let day = document.getElementById('day_display');
+            let sub_specialties = document.getElementById('sub_specialties_display');
+            let address_input = document.getElementById('address_input');
+            let country_input = document.getElementById('country_input');
+            let bio_input = document.getElementById('bio_input');
+            let time_input = document.getElementById('time_input');
+            let day_input = document.getElementById('day_input');
+            let sub_specialties_input1 = document.getElementById('sub_specialties_data1');
+            let sub_specialties_input2 = document.getElementById('sub_specialties1');
+            let days_list = [0,0,0,0,0,0,0];
+            let subs_list = [];
+
+            for(let i = 0 ; i < 7 ; i ++){
+                days_list[i] = document.getElementById((i + 1) + 'd').checked;
+            }
+            
+            for(let i = 0 ; i < document.querySelectorAll('.sub_checker').length ; i ++){
+                if(document.querySelectorAll('.sub_checker')[i].id != 'all_sub' && document.querySelectorAll('.sub_checker')[i].checked == true){
+                    subs_list.push(document.querySelectorAll('.sub_checker')[i].id);
+                }
+            }
+
+            fetch('edit_profile',{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token,
+                },
+                body: JSON.stringify({
+                    country: country_select.value,
+                    state: state_select.value,
+                    city: city_select.value,
+                    address: document.getElementById('address').value,
+                    bio: document.getElementById('bio').value,
+                    start_time: document.getElementById('start_time').value,
+                    end_time: document.getElementById('end_time').value,
+                    days: days_list,
+                    sub_specialties: subs_list
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                address_input.style.display='none';
+                bio_input.style.display='none';
+                country_input.style.display="none";
+                time_input.style.display="none";
+                day_input.style.display="none";
+                sub_specialties_input1.style.display="none";
+                sub_specialties_input2.style.display="none";
+                document.getElementById('country_display').textContent = country_select.value;
+                if(country_select.value != state_select.value){
+                    document.getElementById('country_display').textContent += ', ' + state_select.value;
+                }
+                if(city_select.value != state_select.value){
+                    document.getElementById('country_display').textContent += ', ' + state_select.value;
+                }
+                document.getElementById('address_display').textContent = document.getElementById('address').value;
+                document.getElementById('bio_display').textContent = document.getElementById('bio').value;
+                document.getElementById('start_time_display').textContent = document.getElementById('start_time').value;
+                document.getElementById('end_time_display').textContent = document.getElementById('end_time').value;
+                for(let i = 0 ; i < 7 ; i ++){
+                    if(days_list[i]){
+                        document.getElementById('d' + (i + 1)).classList.value = "toggle-control3";
+                    }
+                    else{
+                        document.getElementById('d' + (i + 1)).classList.value = "toggle-control4";
+                    }
+                }
+                document.getElementById('all_subs1').innerHTML = "";
+                let sm1 = 1;
+                let key = "";
+                for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
+                    if(parseInt(subs_list[0]) < sm1){
+                        break;
+                    }
+                    sm1 += specialties[Object.keys(specialties)[i]].length;
+                    key = Object.keys(specialties)[i];
+                }
+                sm1 -= specialties[key].length;
+                for(let i = 0 ; i < subs_list.length ; i ++){
+                    document.getElementById('all_subs1').innerHTML += '<p class="toggle-control2" id="sub' + subs_list[i] + '">' + specialties[key][parseInt(subs_list[i]) - sm1] + '</p>';
+                }
+                address.style.display="block";
+                document.getElementById('beep1').classList.value="alert alert-success";
+                document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Profile editted successfully';
+                document.getElementById('beep1').style.display = "block";
+                time.style.display="flex";
+                country.style.display="block";
+                bio.style.display="block";
+                day.style.display="flex";
+                sub_specialties.style.display="flex";
+                document.getElementById('edit_btn').style.display="inline-block";
+                document.getElementById('save_btn').style.display="none";
+                document.getElementById('cancel_btn').style.display="none";
+            });
+        });
+    }
+
     if(document.getElementById("cancel_btn") != undefined){
         document.getElementById("cancel_btn").addEventListener('click',function(){
             let address = document.getElementById('address_display');
@@ -205,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if(document.getElementById("edit_btn") != undefined){
         document.getElementById('edit_btn').addEventListener('click',function(){
+            document.getElementById('beep1').style.display = "none";
             let address = document.getElementById('address_display');
             let country = document.getElementById('country_display');
             let country_select = document.getElementById('country_select');

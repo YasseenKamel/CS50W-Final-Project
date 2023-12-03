@@ -39,6 +39,9 @@
     --hover: #bb96cd;
     --days: #e6b7cf;
     --days_hover: #d4a7bd;
+    --alert_success_background: #d4edda;
+    --alert_success_text: #155724;
+    --alert_success_border: #c3e6cb;
   }
   :root[data-theme="dark"] {
     --text: #ebe5f0;
@@ -51,6 +54,9 @@
     --hover: #3c2945;
     --days: #8f4ca4;
     --days_hover: #783e89;
+    --alert_success_background: rgb(33, 79, 44);
+    --alert_success_text: rgb(153, 230, 171);
+    --alert_success_border: rgb(41, 97, 54);
   }
   
 
@@ -464,9 +470,9 @@ input[type="checkbox"].toggle1:checked+label::after {
     position: relative;
     float: left;
     margin: 0 0 0 0;
-    background: #eaebef;
+    background: #8f9097;
     width: 14.2857%;
-    color: #000000;
+    color: #ffffff;
     padding: .5rem .5rem;
     border-radius: 2px;
     border: 1px solid var(--disabled);
@@ -488,4 +494,10 @@ input[type="checkbox"].toggle1:checked+label::after {
 
 .normal_p{
     margin:0;
+}
+
+.alert-success{
+    color: var(--alert_success_text);
+    border-color: var(--alert_success_border);
+    background-color: var(--alert_success_background);
 }

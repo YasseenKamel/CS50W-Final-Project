@@ -7,7 +7,9 @@ from django.shortcuts import render
 from django import forms
 from django.urls import reverse
 from django.contrib import messages
+from django import forms
 import datetime
+import json
 from django.contrib.auth.decorators import login_required
 from .models import User,types,reviews,expertise,repeated_vacations,vacations,appointments,bookings,messages
 from django.http import JsonResponse
@@ -147,9 +149,42 @@ def profile(request,id):
         })
     
 @login_required
-def edit_profile(request,id):
+def edit_profile(request,banana):
     if request.method == "PUT":
-        pass
+        data = json.loads(request.body)
+        country = data['country']
+        state = data['state']
+        city = data['city']
+        address = data['address']
+        bio = data['bio']
+        start_time = data['start_time']
+        end_time = data['end_time']
+        days = data['days']
+        sub_specialties = data['sub_specialties']
+        doc = User.objects.get(id=request.user.id)
+        if doc == None:
+            return JsonResponse({'message': 'Failed'})
+        doc.country = country
+        doc.state = state
+        doc.city = city
+        doc.address = address
+        doc.bio = bio
+        doc.start_time = start_time
+        doc.end_time = end_time
+        doc.save()
+        repeated_vacations.objects.filter(doctor_id=request.user.id).delete()
+        idx = 1
+        for x in days:
+            if x:
+                item = repeated_vacations(doctor_id=request.user.id,day=idx)
+                item.save()
+            idx += 1
+        expertise.objects.filter(doctor_id=request.user.id).delete()
+        for x in sub_specialties:
+            item = expertise(type_id=int(x),doctor_id=request.user.id)
+            item.save()
+        return JsonResponse({'message': 'Post edited successfully.'})
+
 
 @login_required
 def appointments(request):

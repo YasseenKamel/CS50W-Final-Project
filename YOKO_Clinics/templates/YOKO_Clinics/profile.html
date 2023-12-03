@@ -4,7 +4,18 @@
 
 {% block body %}
     <div class="profile_frame">
-        <h3>{{ target.username }}</h3>
+        <script>
+            function hide1(){
+                document.getElementById("beep1").style.display = "none";
+            }
+        </script>
+        <div class="alert" id="beep1" style="display:none;">
+            <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
+        </div>
+        <h3 id="target_username"></h3>
+        <script>
+            document.getElementById('target_username').textContent = "{{ target.username }}";
+        </script>
         <h5>{{ target.rating }}</h5>
         <div class="rating" id="rating">
             
@@ -14,8 +25,14 @@
         </script>
         <h5>Address</h5>
         <div id="address_div">
-            <p id="country_display">{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}</p>
-            <p id="address_display">{{ target.address }}</p>
+            <p id="country_display"></p>
+            <script>
+                document.getElementById('country_display').textContent = "{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}";
+            </script>
+            <p id="address_display"></p>
+            <script>
+                document.getElementById('address_display').textContent = "{{ target.address }}";
+            </script>
             <div class="country_city" style="display:none;" id="country_input">
                 <div class="form-group" style="margin-right:0.5rem;">
                     <select class="form-select country form-control" name="country" id="country_select">
@@ -39,7 +56,10 @@
         </div>
         <h5>About</h5>
         <div id="bio_div">
-            <p id="bio_display">{{ target.bio }}</p>
+            <p id="bio_display"></p>
+            <script>
+                document.getElementById('bio_display').textContent = "{{ target.bio }}";
+            </script>
             <div class="form-group" id="bio_input" style="display:none;">
                 <textarea name="bio" id="bio" class="form-control">{{ target.bio }}</textarea>
             </div>
