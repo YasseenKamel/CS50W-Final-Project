@@ -165,6 +165,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    if(document.getElementById("cancel_btn") != undefined){
+        document.getElementById("cancel_btn").addEventListener('click',function(){
+            let address = document.getElementById('address_display');
+            let country = document.getElementById('country_display');
+            let country_select = document.getElementById('country_select');
+            let state_select = document.getElementById('state_select');
+            let city_select = document.getElementById('city_select');
+            let bio = document.getElementById('bio_display');
+            let time = document.getElementById('time_display');
+            let day = document.getElementById('day_display');
+            let sub_specialties = document.getElementById('sub_specialties_display');
+            let address_input = document.getElementById('address_input');
+            let country_input = document.getElementById('country_input');
+            let bio_input = document.getElementById('bio_input');
+            let time_input = document.getElementById('time_input');
+            let day_input = document.getElementById('day_input');
+            let sub_specialties_input1 = document.getElementById('sub_specialties_data1');
+            let sub_specialties_input2 = document.getElementById('sub_specialties1');
+
+            address_input.style.display='none';
+            bio_input.style.display='none';
+            country_input.style.display="none";
+            time_input.style.display="none";
+            day_input.style.display="none";
+            sub_specialties_input1.style.display="none";
+            sub_specialties_input2.style.display="none";
+            address.style.display="block";
+            time.style.display="flex";
+            country.style.display="block";
+            bio.style.display="block";
+            day.style.display="flex";
+            sub_specialties.style.display="flex";
+            document.getElementById('edit_btn').style.display="inline-block";
+            document.getElementById('save_btn').style.display="none";
+            document.getElementById('cancel_btn').style.display="none";
+        });
+    }
+
     if(document.getElementById("edit_btn") != undefined){
         document.getElementById('edit_btn').addEventListener('click',function(){
             let address = document.getElementById('address_display');
@@ -332,6 +370,10 @@ document.addEventListener('DOMContentLoaded', function () {
             citySelect.style.pointerEvents = 'auto';
             address_input.style.display='block';
             bio_input.style.display='block';
+            document.getElementById('bio').value = bio.innerHTML;
+            document.getElementById('address').value = address.innerHTML;
+            document.getElementById('start_time').value = document.getElementById('start_time_display').innerHTML;
+            document.getElementById('end_time').value = document.getElementById('end_time_display').innerHTML;
             country_input.style.display="flex";
             time_input.style.display="flex";
             day_input.style.display="flex";
