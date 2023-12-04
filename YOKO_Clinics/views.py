@@ -199,5 +199,21 @@ def search(request):
         name = request.POST.get('name')
         specialties = request.POST.getlist('sub_specialties')
         print(request.POST)
+        docs = []
+        if country == None:
+            country = ""
+        if state == None:
+            state = ""
+        if city == None:
+            city = ""
+        if specialties != []:
+            docs = expertise.objects.filter(type_id__in=specialties).values_list('doctor_id',flat=True)
+        if docs == []:
+            if country == "":
+                country = ""
+            elif state == "":
+                state = ""
+            elif city == "":
+                city = ""
         return render(request, "YOKO_Clinics/search.html")
 
