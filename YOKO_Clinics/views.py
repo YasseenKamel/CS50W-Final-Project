@@ -197,6 +197,7 @@ def search(request):
         state = request.POST.get('state')
         city = request.POST.get('city')
         name = request.POST.get('name')
+        rating = len(request.POST.getlist('star'))
         specialties = request.POST.getlist('sub_specialties')
         print(request.POST)
         docs = []

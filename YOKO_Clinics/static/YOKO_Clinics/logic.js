@@ -608,5 +608,42 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    if(document.getElementById("s1") != undefined){
+        for(let i = 1 ; i < 6 ; i ++) {
+            document.getElementById("s"+String(i)).addEventListener('click', function () {
+                for(let j = 1 ; j < i + 1 ; j ++) {
+                    document.getElementById("s"+String(j)).checked = true;
+                }
+                for(let j = i + 1 ; j < 6 ; j ++) {
+                    document.getElementById("s"+String(j)).checked = false;
+                }
+            });
+        }
+        
+        
+        for(let i = 1 ; i < 6 ; i ++) {
+            document.getElementById("a"+String(i)).addEventListener('mouseenter', function () {
+                for(let j = 1 ; j < 6 ; j ++){
+                    if(document.getElementById("a"+String(j)).classList.contains('lil_star_hover')){
+                        document.getElementById("a"+String(j)).classList.toggle('lil_star_hover');
+                    }
+                }
+                for(let j = 1 ; j < i + 1 ; j ++) {
+                    document.getElementById("a"+String(j)).classList.toggle('lil_star_hover');
+                }
+            });
+        }
+
+        for(let i = 1 ; i < 6 ; i ++) {
+            document.getElementById("a"+String(i)).addEventListener('mouseleave', function () {
+                for(let j = 1 ; j < 6 ; j ++){
+                    if(document.getElementById("a"+String(j)).classList.contains('lil_star_hover')){
+                        document.getElementById("a"+String(j)).classList.toggle('lil_star_hover');
+                    }
+                }
+            });
+        }
+
+    }
 
 });

@@ -537,3 +537,37 @@ input[type="checkbox"].toggle1:checked+label::after {
 .search_form{
     position: relative;
 }
+
+.star_checker {
+    display: none;
+    visibility: hidden;
+}
+
+.lil_star{
+    font-size: 24px;
+    margin:0;
+    cursor: pointer;
+}
+
+.lil_star_hover{
+    color: gray;
+}
+
+.star_checker:checked + .lil_star {
+    color:orange;
+}
+
+
+.star_checker:checked + .lil_star_hover {
+    color: rgb(186, 124, 10);
+}
+
+.no_wrap{
+    white-space: nowrap;
+    margin-left: 0.5rem;
+    margin-bottom: 0;
+    background-color: var(--primary) !important;
+    border: 1px solid var(--background);
+    border-radius: 0.25rem;
+    padding: 0rem 0.3rem;
+}
