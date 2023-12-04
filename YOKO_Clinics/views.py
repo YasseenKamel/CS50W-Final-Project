@@ -192,4 +192,12 @@ def appointments(request):
 
 @login_required
 def search(request):
-    pass
+    if request.method == "POST":
+        country = request.POST.get('country')
+        state = request.POST.get('state')
+        city = request.POST.get('city')
+        name = request.POST.get('name')
+        specialties = request.POST.getlist('sub_specialties')
+        print(request.POST)
+        return render(request, "YOKO_Clinics/search.html")
+

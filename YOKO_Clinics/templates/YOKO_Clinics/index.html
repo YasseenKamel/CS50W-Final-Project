@@ -3,5 +3,53 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+{% if request.session.type == "patient" %}
 
+<div class="search_frame">
+    <h2>Search for a doctor</h2>
+    <br>
+    <form action="{% url 'search' %}" method="post" class="search_form">
+        {% csrf_token %}
+        <div class="country_city1">
+            <div class="form-elements-container1">
+                <div class="form-group" style="margin-right:0.5rem;">
+                    <select class="form-select country form-control" name="country" autocomplete="off">
+                        <option selected disabled>Select Country</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-right:0.5rem;">
+                    <select class="form-select state form-control" name="state" autocomplete="off">
+                        <option selected disabled>Select State</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-select city form-control" name="city" autocomplete="off">
+                        <option selected disabled>Select City</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="name" id="name" placeholder="Enter doctor name." autocomplete="off">
+        </div>
+        <div class="form-group">
+            <select class="form-select form-control" id="specialty" autocomplete="off">
+                <option selected disabled>Select Specialty</option>
+            </select>
+        </div>
+        <div class="form-group form-group-wrap1" id="sub_specialties1">
+            <div id="all_subs" style="display:none;">
+                <input type="checkbox" name="specialties" class="sub_checker" id="all_sub" autocomplete="off">
+                <label for="all_sub" class="toggle-control1">All Sub Specialties</label>
+            </div>
+        </div>
+        <div class="submit_container">
+            <input class="btn btn-primary" type="submit" value="Search" id="submit">
+        </div>
+    </form>
+        
+</div>
+{% else %}
+
+{% endif %}
 {% endblock %}

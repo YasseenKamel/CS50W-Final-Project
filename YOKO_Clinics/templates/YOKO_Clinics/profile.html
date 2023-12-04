@@ -3,6 +3,7 @@
 {% block title %}{{target.username}}{% endblock %}
 
 {% block body %}
+{% if user.id == target.id %}
     <div class="profile_frame">
         <script>
             function hide1(){
@@ -125,10 +126,78 @@
                 </div>
             </div>
         </div>
-        {% if user.id == target.id %}
         <button class="btn btn-primary norm_btn" id="edit_btn">Edit Profile</button>
         <button class="btn btn-primary norm_btn" id="save_btn" style="display:none;">Save</button>
         <button class="btn btn-primary norm_btn" id="cancel_btn" style="display:none;">Cancel</button>
-        {% endif %}
     </div>
+    {% else %}
+    <div class="profile_frame">
+        <script>
+            function hide1(){
+                document.getElementById("beep1").style.display = "none";
+            }
+        </script>
+        <div class="alert" id="beep1" style="display:none;">
+            <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
+        </div>
+        <h3 id="target_username"></h3>
+        <script>
+            document.getElementById('target_username').textContent = "{{ target.username }}";
+        </script>
+        <h5>{{ target.rating }}</h5>
+        <div class="rating" id="rating">
+            
+        </div>
+        <script>
+            document.getElementById('rating').style.width = Math.round(document.getElementById('rating').clientWidth * ({{ target.rating }} / 5)) + 'px';
+        </script>
+        <h5>Address</h5>
+        <div id="address_div">
+            <p id="country_display"></p>
+            <script>
+                document.getElementById('country_display').textContent = "{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}";
+            </script>
+            <p id="address_display"></p>
+            <script>
+                document.getElementById('address_display').textContent = "{{ target.address }}";
+            </script>
+        </div>
+        <h5>About</h5>
+        <div id="bio_div">
+            <p id="bio_display"></p>
+            <script>
+                document.getElementById('bio_display').textContent = "{{ target.bio }}";
+            </script>
+        </div>
+        <p style="margin-bottom:0.2rem;">Normal working times:</p>
+        <div id="time_div">
+            <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
+                <p class="normal_p" id="start_time_display">{{ target.start_time|time:"H:i" }}</p>
+                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
+                <p class="normal_p" id="end_time_display">{{ target.end_time|time:"H:i" }}</p>
+            </div>
+        </div>
+        <div id="day_div">
+            <div class="form-group1 form-group2" style="margin-bottom: 1rem;" id="day_display">
+                <label class="{% if days.0 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d1">Sun</label>
+                <label class="{% if days.1 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d2">Mon</label>
+                <label class="{% if days.2 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d3">Tue</label>
+                <label class="{% if days.3 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d4">Wed</label>
+                <label class="{% if days.4 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d5">Thu</label>
+                <label class="{% if days.5 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d6">Fri</label>
+                <label class="{% if days.6 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d7">Sat</label>
+            </div>
+        </div>
+        <h5>Specialties</h5>
+        <div id="sub_specialties_div">
+            <div class="form-group form-group-wrap" id="sub_specialties_display">
+                <div id="all_subs1">
+                    {% for s in sub %}
+                        <p class="toggle-control2" id="sub{{ s.id }}">{{ s.type_name }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
