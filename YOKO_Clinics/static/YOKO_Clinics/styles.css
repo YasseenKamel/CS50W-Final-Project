@@ -571,3 +571,13 @@ input[type="checkbox"].toggle1:checked+label::after {
     border-radius: 0.25rem;
     padding: 0rem 0.3rem;
 }
+
+.no_link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.no_link:hover {
+    color: inherit;
+    text-decoration: none;
+}

@@ -618,10 +618,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById("s"+String(j)).checked = false;
                 }
             });
-        }
-        
-        
-        for(let i = 1 ; i < 6 ; i ++) {
             document.getElementById("a"+String(i)).addEventListener('mouseenter', function () {
                 for(let j = 1 ; j < 6 ; j ++){
                     if(document.getElementById("a"+String(j)).classList.contains('lil_star_hover')){
@@ -632,9 +628,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById("a"+String(j)).classList.toggle('lil_star_hover');
                 }
             });
-        }
-
-        for(let i = 1 ; i < 6 ; i ++) {
             document.getElementById("a"+String(i)).addEventListener('mouseleave', function () {
                 for(let j = 1 ; j < 6 ; j ++){
                     if(document.getElementById("a"+String(j)).classList.contains('lil_star_hover')){
@@ -643,7 +636,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
-
     }
 
 });

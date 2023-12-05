@@ -4,4 +4,54 @@
 
 {% block body %}
 
+{% for doc in page_obj %}
+<a href="{% url 'profile' doc.id %}" class="no_link">
+    <div class="profile_frame">
+        <h3 id="target_username{{ doc.id }}"></h3>
+        <script>
+            document.getElementById('target_username{{ doc.id }}').textContent = "{{ doc.username }}";
+        </script>
+        <h5>{{ doc.rating }}</h5>
+        <div class="rating" id="rating{{ doc.id }}">
+            
+        </div>
+        <script>
+            document.getElementById('rating{{ doc.id }}').style.width = Math.round(document.getElementById('rating{{ doc.id }}').clientWidth * ({{ doc.rating }} / 5)) + 'px';
+        </script>
+        <h5>Address</h5>
+        <div id="address_div">
+            <p id="country_displa{{ doc.id }}y"></p>
+            <script>
+                document.getElementById('country_display{{ doc.id }}').textContent = "{{ doc.country }}{% if doc.country != doc.state %}, {{ doc.state }}{% endif %}{% if doc.city != doc.state %}, {{ doc.city }}{% endif %}";
+            </script>
+            <p id="address_display{{ doc.id }}"></p>
+            <script>
+                document.getElementById('address_display{{ doc.id }}').textContent = "{{ doc.address }}";
+            </script>
+        </div>
+        <h5>About</h5>
+        <div id="bio_div">
+            <p id="bio_display{{ doc.id }}"></p>
+            <script>
+                document.getElementById('bio_display{{ doc.id }}').textContent = "{{ doc.bio }}";
+            </script>
+        </div>
+    </div>
+</a>
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 {% endblock %}

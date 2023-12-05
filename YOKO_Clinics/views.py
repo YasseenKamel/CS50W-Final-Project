@@ -8,6 +8,7 @@ from django import forms
 from django.urls import reverse
 from django.contrib import messages
 from django import forms
+from django.core.paginator import Paginator
 import datetime
 import json
 from django.contrib.auth.decorators import login_required
@@ -199,22 +200,44 @@ def search(request):
         name = request.POST.get('name')
         rating = len(request.POST.getlist('star'))
         specialties = request.POST.getlist('sub_specialties')
-        print(request.POST)
         docs = []
-        if country == None:
-            country = ""
-        if state == None:
-            state = ""
-        if city == None:
-            city = ""
-        if specialties != []:
-            docs = expertise.objects.filter(type_id__in=specialties).values_list('doctor_id',flat=True)
-        if docs == []:
-            if country == "":
+        if request.POST['submit'] == 'All Doctors':
+            docs = User.objects.filter(is_doctor=True)
+        else:
+            if country == None:
                 country = ""
-            elif state == "":
+            if state == None:
                 state = ""
-            elif city == "":
+            if city == None:
                 city = ""
-        return render(request, "YOKO_Clinics/search.html")
+            if specialties != []:
+                docs = expertise.objects.filter(type_id__in=specialties).values_list('doctor_id',flat=True)
+            if docs == []:
+                if country == "":
+                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, is_doctor=True)
+                elif state == "":
+                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, is_doctor=True)
+                elif city == "":
+                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, state=state, is_doctor=True)
+                else:
+                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, state=state, city=city, is_doctor=True)
+            else:
+                if country == "":
+                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, is_doctor=True)
+                elif state == "":
+                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, is_doctor=True)
+                elif city == "":
+                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, state=state, is_doctor=True)
+                else:
+                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, state=state, city=city, is_doctor=True)
+        print(docs)
+        docs = docs.order_by('-rating')
+        paginator = Paginator(docs, 10)
+        page_num = request.GET.get('page')
+        if page_num == None:
+            page_num = 1
+        page_obj = paginator.get_page(page_num)
+        return render(request, "YOKO_Clinics/search.html",{
+            'page_obj': page_obj
+        })
 
