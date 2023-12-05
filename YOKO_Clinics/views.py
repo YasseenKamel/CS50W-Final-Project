@@ -90,6 +90,10 @@ def register(request):
             end_time = request.POST.get('end_time')
             days = request.POST.getlist('days')
             specialties = request.POST.getlist('sub_specialties')
+            if country == None or state == None or city == None or address == None or start_time == None or end_time == None or days == [] or specialties == []:
+                return render(request, "YOKO_Clinics/register.html", {
+                    "message": "Please fill in all fields."
+                })
             try:
                 user = User.objects.create_user(username=username, email=email, password=password, is_doctor=True, country=country, state=state, city=city, address=address, bio=bio, start_time=start_time, end_time=end_time)
             except IntegrityError as e:
@@ -201,11 +205,11 @@ def search(request):
         rating = len(request.GET.getlist('star'))
         specialties = request.GET.getlist('sub_specialties')
         docs = []
-        if country == None:
+        if country == None or country == "Select Country":
             country = ""
-        if state == None:
+        elif state == None:
             state = ""
-        if city == None:
+        elif city == None:
             city = ""
         if specialties != []:
             docs = expertise.objects.filter(type_id__in=specialties).values_list('doctor_id',flat=True)

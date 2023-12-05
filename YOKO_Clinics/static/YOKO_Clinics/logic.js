@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.getElementById('arrow2') != undefined){
                 document.getElementById('arrow2').src="../static/YOKO_Clinics/right-arrow1.png";
             }
+            if(document.getElementById('back_arrow') != undefined){
+                document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow1.png";
+            }
         }
         else{
             toggle.checked = false;
@@ -21,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.getElementById('arrow2') != undefined){
                 document.getElementById('arrow2').src="../static/YOKO_Clinics/right-arrow.png";
             }
+            if(document.getElementById('back_arrow') != undefined){
+                document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow.png";
+            }
         }
     }
     
@@ -28,6 +34,23 @@ document.addEventListener('DOMContentLoaded', function () {
     stateSelect = document.querySelector('.state'),
     citySelect = document.querySelector('.city');
     let countries,specialties;
+    function convertTo24HourFormat(twelveHourTime) {
+        var date = new Date("2000-01-01 " + twelveHourTime);
+        var twentyFourHourTime = date.toLocaleTimeString('en-US', {hour12: false});
+        return twentyFourHourTime;
+    }
+    function convertTo12HourFormat(twentyFourHourTime) {
+        var splitTime = twentyFourHourTime.split(":");
+        var hours = parseInt(splitTime[0], 10);
+        var minutes = splitTime[1];
+    
+        var period = hours >= 12 ? 'PM' : 'AM';
+    
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Handle midnight (00:00)
+    
+        return hours + ':' + minutes + ' ' + period;
+    }
     if(countrySelect != undefined){
         function fetchJson(url) {
             return fetch(url)
@@ -49,59 +72,72 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById("specialty").appendChild(option);
             }
             document.getElementById("specialty").addEventListener('change',function(){
-                let div = document.getElementById("sub_specialties1");
-                document.getElementById("all_subs").style.display='block';
-                document.getElementById("all_sub").checked=false;
-                let idx = 0,sm = 0;
-                for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
-                    if(document.getElementById("specialty").value == Object.keys(specialties)[i]){
-                        idx = sm + 1;
-                    }
-                    sm += specialties[Object.keys(specialties)[i]].length;
-                }
-                let children = div.children;
-                for (let i = children.length - 1; i >= 0; i--) {
-                    if (children[i].id !== 'all_subs') {
-                        div.removeChild(children[i]);
+                if(document.getElementById("specialty").value == "Select Specialty"){
+                    let div = document.getElementById("sub_specialties1");
+                    document.getElementById("all_subs").style.display='none';
+                    document.getElementById("all_sub").checked=false;
+                    let children = div.children;
+                    for (let i = children.length - 1; i >= 0; i--) {
+                        if (children[i].id !== 'all_subs') {
+                            div.removeChild(children[i]);
+                        }
                     }
                 }
-                for(let i = 0 ; i < specialties[document.getElementById("specialty").value].length ; i ++){
-                    const input = document.createElement('input');
-                    input.type = "checkbox";
-                    input.autocomplete = "off";
-                    input.name = "sub_specialties";
-                    input.value = i + idx;
-                    input.id = i + idx;
-                    input.classList.toggle('sub_checker');
-                    const label = document.createElement('label');
-                    label.classList.toggle('toggle-control1');
-                    label.htmlFor = i + idx;
-                    label.innerHTML = specialties[document.getElementById("specialty").value][i];
-                    let div1 = document.createElement('div');
-                    div1.appendChild(input);
-                    div1.appendChild(label);
-                    div.appendChild(div1);
-                }
-                document.getElementById("all_sub").addEventListener('change',function(){
+                else{
+                    let div = document.getElementById("sub_specialties1");
+                    document.getElementById("all_subs").style.display='block';
+                    document.getElementById("all_sub").checked=false;
+                    let idx = 0,sm = 0;
+                    for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
+                        if(document.getElementById("specialty").value == Object.keys(specialties)[i]){
+                            idx = sm + 1;
+                        }
+                        sm += specialties[Object.keys(specialties)[i]].length;
+                    }
+                    let children = div.children;
+                    for (let i = children.length - 1; i >= 0; i--) {
+                        if (children[i].id !== 'all_subs') {
+                            div.removeChild(children[i]);
+                        }
+                    }
+                    for(let i = 0 ; i < specialties[document.getElementById("specialty").value].length ; i ++){
+                        const input = document.createElement('input');
+                        input.type = "checkbox";
+                        input.autocomplete = "off";
+                        input.name = "sub_specialties";
+                        input.value = i + idx;
+                        input.id = i + idx;
+                        input.classList.toggle('sub_checker');
+                        const label = document.createElement('label');
+                        label.classList.toggle('toggle-control1');
+                        label.htmlFor = i + idx;
+                        label.innerHTML = specialties[document.getElementById("specialty").value][i];
+                        let div1 = document.createElement('div');
+                        div1.appendChild(input);
+                        div1.appendChild(label);
+                        div.appendChild(div1);
+                    }
+                    document.getElementById("all_sub").addEventListener('change',function(){
+                        let checks = document.querySelectorAll('.sub_checker');
+                        for(let i = 0 ; i < checks.length ; i ++){
+                            if(checks[i] != document.getElementById("all_sub")){
+                                checks[i].checked = document.getElementById("all_sub").checked;
+                            }
+                        }
+                    });
                     let checks = document.querySelectorAll('.sub_checker');
                     for(let i = 0 ; i < checks.length ; i ++){
                         if(checks[i] != document.getElementById("all_sub")){
-                            checks[i].checked = document.getElementById("all_sub").checked;
-                        }
-                    }
-                });
-                let checks = document.querySelectorAll('.sub_checker');
-                for(let i = 0 ; i < checks.length ; i ++){
-                    if(checks[i] != document.getElementById("all_sub")){
-                        checks[i].addEventListener('change',function(){
-                            let b1 = true;
-                            for(let j = 0 ; j < checks.length ; j ++){
-                                if(checks[j] != document.getElementById("all_sub")){
-                                    b1 &= checks[j].checked;
+                            checks[i].addEventListener('change',function(){
+                                let b1 = true;
+                                for(let j = 0 ; j < checks.length ; j ++){
+                                    if(checks[j] != document.getElementById("all_sub")){
+                                        b1 &= checks[j].checked;
+                                    }
                                 }
-                            }
-                            document.getElementById("all_sub").checked = b1;
-                        });
+                                document.getElementById("all_sub").checked = b1;
+                            });
+                        }
                     }
                 }
             });
@@ -122,6 +158,12 @@ document.addEventListener('DOMContentLoaded', function () {
             stateSelect.style.pointerEvents = 'none';
             citySelect.style.pointerEvents = 'none';
             document.querySelector('.country').addEventListener('change',function(){
+                if(document.querySelector('.country').value == "Select Country"){
+                    stateSelect.disabled = true;
+                    citySelect.disabled = true;
+                    stateSelect.selectedIndex = 1;
+                    citySelect.selectedIndex = 1;
+                }
                 stateSelect.disabled = false;
                 citySelect.disabled = true;
                 stateSelect.style.pointerEvents = 'auto';
@@ -168,6 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if(document.getElementById("save_btn") != undefined){
         document.getElementById("save_btn").addEventListener('click',function(){
+            document.getElementById('beep1').style.display = "none";
             let address = document.getElementById('address_display');
             let country = document.getElementById('country_display');
             let country_select = document.getElementById('country_select');
@@ -197,79 +240,86 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            fetch('edit_profile',{
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrf_token,
-                },
-                body: JSON.stringify({
-                    country: country_select.value,
-                    state: state_select.value,
-                    city: city_select.value,
-                    address: document.getElementById('address').value,
-                    bio: document.getElementById('bio').value,
-                    start_time: document.getElementById('start_time').value,
-                    end_time: document.getElementById('end_time').value,
-                    days: days_list,
-                    sub_specialties: subs_list
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                address_input.style.display='none';
-                bio_input.style.display='none';
-                country_input.style.display="none";
-                time_input.style.display="none";
-                day_input.style.display="none";
-                sub_specialties_input1.style.display="none";
-                sub_specialties_input2.style.display="none";
-                document.getElementById('country_display').textContent = country_select.value;
-                if(country_select.value != state_select.value){
-                    document.getElementById('country_display').textContent += ', ' + state_select.value;
-                }
-                if(city_select.value != state_select.value){
-                    document.getElementById('country_display').textContent += ', ' + state_select.value;
-                }
-                document.getElementById('address_display').textContent = document.getElementById('address').value;
-                document.getElementById('bio_display').textContent = document.getElementById('bio').value;
-                document.getElementById('start_time_display').textContent = document.getElementById('start_time').value;
-                document.getElementById('end_time_display').textContent = document.getElementById('end_time').value;
-                for(let i = 0 ; i < 7 ; i ++){
-                    if(days_list[i]){
-                        document.getElementById('d' + (i + 1)).classList.value = "toggle-control3";
-                    }
-                    else{
-                        document.getElementById('d' + (i + 1)).classList.value = "toggle-control4";
-                    }
-                }
-                document.getElementById('all_subs1').innerHTML = "";
-                let sm1 = 1;
-                let key = "";
-                for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
-                    if(parseInt(subs_list[0]) < sm1){
-                        break;
-                    }
-                    sm1 += specialties[Object.keys(specialties)[i]].length;
-                    key = Object.keys(specialties)[i];
-                }
-                sm1 -= specialties[key].length;
-                for(let i = 0 ; i < subs_list.length ; i ++){
-                    document.getElementById('all_subs1').innerHTML += '<p class="toggle-control2" id="sub' + subs_list[i] + '">' + specialties[key][parseInt(subs_list[i]) - sm1] + '</p>';
-                }
-                address.style.display="block";
-                document.getElementById('beep1').classList.value="alert alert-success";
-                document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Profile editted successfully';
+            if(document.getElementById('start_time').value == "" || document.getElementById('end_time').value == "" || country_select.value == "Select Country" || state_select.value == "Select State" || city_select.value == "Select City" || country_select.value == "" || state_select.value == "" || city_select.value == "" || document.getElementById('address').value == ""){
+                document.getElementById('beep1').classList.value="alert alert-danger";
+                document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Please fill in all fields.';
                 document.getElementById('beep1').style.display = "block";
-                time.style.display="flex";
-                country.style.display="block";
-                bio.style.display="block";
-                day.style.display="flex";
-                sub_specialties.style.display="flex";
-                document.getElementById('edit_btn').style.display="inline-block";
-                document.getElementById('save_btn').style.display="none";
-                document.getElementById('cancel_btn').style.display="none";
-            });
+            }
+            else{
+                fetch('edit_profile',{
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrf_token,
+                    },
+                    body: JSON.stringify({
+                        country: country_select.value,
+                        state: state_select.value,
+                        city: city_select.value,
+                        address: document.getElementById('address').value,
+                        bio: document.getElementById('bio').value,
+                        start_time: document.getElementById('start_time').value,
+                        end_time: document.getElementById('end_time').value,
+                        days: days_list,
+                        sub_specialties: subs_list
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    address_input.style.display='none';
+                    bio_input.style.display='none';
+                    country_input.style.display="none";
+                    time_input.style.display="none";
+                    day_input.style.display="none";
+                    sub_specialties_input1.style.display="none";
+                    sub_specialties_input2.style.display="none";
+                    document.getElementById('country_display').textContent = country_select.value;
+                    if(country_select.value != state_select.value){
+                        document.getElementById('country_display').textContent += ', ' + state_select.value;
+                    }
+                    if(city_select.value != state_select.value){
+                        document.getElementById('country_display').textContent += ', ' + state_select.value;
+                    }
+                    document.getElementById('address_display').textContent = 'Address: ' + document.getElementById('address').value;
+                    document.getElementById('bio_display').textContent = document.getElementById('bio').value;
+                    document.getElementById('start_time_display').textContent = convertTo12HourFormat(document.getElementById('start_time').value);
+                    document.getElementById('end_time_display').textContent = convertTo12HourFormat(document.getElementById('end_time').value);
+                    for(let i = 0 ; i < 7 ; i ++){
+                        if(days_list[i]){
+                            document.getElementById('d' + (i + 1)).classList.value = "toggle-control6";
+                        }
+                        else{
+                            document.getElementById('d' + (i + 1)).classList.value = "toggle-control5";
+                        }
+                    }
+                    document.getElementById('all_subs1').innerHTML = "";
+                    let sm1 = 1;
+                    let key = "";
+                    for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
+                        if(parseInt(subs_list[0]) < sm1){
+                            break;
+                        }
+                        sm1 += specialties[Object.keys(specialties)[i]].length;
+                        key = Object.keys(specialties)[i];
+                    }
+                    sm1 -= specialties[key].length;
+                    for(let i = 0 ; i < subs_list.length ; i ++){
+                        document.getElementById('all_subs1').innerHTML += '<p class="toggle-control2" id="sub' + subs_list[i] + '">' + specialties[key][parseInt(subs_list[i]) - sm1] + '</p>';
+                    }
+                    address.style.display="block";
+                    document.getElementById('beep1').classList.value="alert alert-success";
+                    document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Profile editted successfully';
+                    document.getElementById('beep1').style.display = "block";
+                    time.style.display="flex";
+                    country.style.display="block";
+                    bio.style.display="block";
+                    day.style.display="flex";
+                    sub_specialties.style.display="flex";
+                    document.getElementById('edit_btn').style.display="inline-block";
+                    document.getElementById('save_btn').style.display="none";
+                    document.getElementById('cancel_btn').style.display="none";
+                });
+            }
         });
     }
 
@@ -417,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             document.getElementById("all_sub").checked = b1;
 
-            let days = document.querySelectorAll('.toggle-control3');
+            let days = document.querySelectorAll('.toggle-control6');
             for(let i = 0 ; i < days.length ; i ++){
                 document.getElementById(days[i].id.slice(1) + 'd').checked = true;
             }
@@ -480,9 +530,9 @@ document.addEventListener('DOMContentLoaded', function () {
             address_input.style.display='block';
             bio_input.style.display='block';
             document.getElementById('bio').value = bio.innerHTML;
-            document.getElementById('address').value = address.innerHTML;
-            document.getElementById('start_time').value = document.getElementById('start_time_display').innerHTML;
-            document.getElementById('end_time').value = document.getElementById('end_time_display').innerHTML;
+            document.getElementById('address').value = address.innerHTML.slice(9);
+            document.getElementById('start_time').value = convertTo24HourFormat(document.getElementById('start_time_display').innerHTML);
+            document.getElementById('end_time').value = convertTo24HourFormat(document.getElementById('end_time_display').innerHTML);
             country_input.style.display="flex";
             time_input.style.display="flex";
             day_input.style.display="flex";
@@ -500,6 +550,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    if(document.getElementById('main_specialty') != undefined){
+        function fetchJson1(url) {
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    return response.json();
+                });
+        }
+        function load_specialties1(data){
+            specialties = data;
+            let first = document.querySelectorAll('.toggle-control2')[0].id.slice(3);
+            let idx = 1,idx1 = 0;
+            for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
+                if(first < idx){
+                    break;
+                }
+                idx += specialties[Object.keys(specialties)[i]].length;
+                idx1 ++;
+            }
+            document.getElementById('main_specialty').textContent = '-- ' + Object.keys(specialties)[idx1-1];
+        }
+        fetchJson1("../static/YOKO_Clinics/specialties.json")
+        .then(load_specialties1)
+        .catch(error => console.error('Error fetching JSON:', error));
+    }
+
     toggle.addEventListener('click',function() {
         let currentTheme = document.documentElement.getAttribute("data-theme");
         let targetTheme = "light";
@@ -507,10 +585,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if(document.getElementById('arrow1') != undefined){
             document.getElementById('arrow1').src="../static/YOKO_Clinics/right-arrow.png";
         }
+        if(document.getElementById('back_arrow') != undefined){
+            document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow.png";
+        }
         if (currentTheme === "light") {
             targetTheme = "dark";
             if(document.getElementById('arrow1') != undefined){
                 document.getElementById('arrow1').src="../static/YOKO_Clinics/right-arrow1.png";
+            }
+            if(document.getElementById('back_arrow') != undefined){
+                document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow1.png";
             }
         }
     
@@ -624,15 +708,41 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('page_dots').innerHTML = '<img src="../static/YOKO_Clinics/current_dot.png" class="lil_dot"> <img src="../static/YOKO_Clinics/dot.png" class="lil_dot">';
         });
     }
+    
+    if(document.getElementById("back_thing") != undefined){
+        document.getElementById("back_thing").addEventListener('click',function(){
+            window.history.back();
+        });
+        document.getElementById("back_arrow").addEventListener('click',function(){
+            window.history.back();
+        });
+    }
 
     if(document.getElementById("s1") != undefined){
         for(let i = 1 ; i < 6 ; i ++) {
             document.getElementById("s"+String(i)).addEventListener('click', function () {
-                for(let j = 1 ; j < i + 1 ; j ++) {
-                    document.getElementById("s"+String(j)).checked = true;
+                if(i == 1){
+                    if(document.getElementById("s"+String(i)).checked == false && document.getElementById("s2").checked == false && document.getElementById("s3").checked == false && document.getElementById("s4").checked == false && document.getElementById("s5").checked == false){
+                        for(let j = 1 ; j < 6 ; j ++) {
+                            document.getElementById("s"+String(j)).checked = false;
+                        }
+                    }
+                    else{
+                        for(let j = 1 ; j < i + 1 ; j ++) {
+                            document.getElementById("s"+String(j)).checked = true;
+                        }
+                        for(let j = i + 1 ; j < 6 ; j ++) {
+                            document.getElementById("s"+String(j)).checked = false;
+                        }
+                    }
                 }
-                for(let j = i + 1 ; j < 6 ; j ++) {
-                    document.getElementById("s"+String(j)).checked = false;
+                else{
+                    for(let j = 1 ; j < i + 1 ; j ++) {
+                        document.getElementById("s"+String(j)).checked = true;
+                    }
+                    for(let j = i + 1 ; j < 6 ; j ++) {
+                        document.getElementById("s"+String(j)).checked = false;
+                    }
                 }
             });
             document.getElementById("a"+String(i)).addEventListener('mouseenter', function () {

@@ -29,6 +29,7 @@
                 document.getElementById('address_display{{ doc.id }}').textContent = "{{ doc.address }}";
             </script>
         </div>
+        {% if doc.bio %}
         <h5>About</h5>
         <div id="bio_div">
             <p id="bio_display{{ doc.id }}"></p>
@@ -36,6 +37,7 @@
                 document.getElementById('bio_display{{ doc.id }}').textContent = "{{ doc.bio }}";
             </script>
         </div>
+        {% endif %}
     </div>
 </a>
 {% endfor %}

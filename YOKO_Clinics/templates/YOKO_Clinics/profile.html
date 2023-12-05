@@ -13,99 +13,74 @@
         <div class="alert" id="beep1" style="display:none;">
             <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
         </div>
-        <h3 id="target_username"></h3>
-        <script>
-            document.getElementById('target_username').textContent = "{{ target.username }}";
-        </script>
-        <h5>{{ target.rating }}</h5>
-        <div class="rating" id="rating">
-            
+
+        
+        <div class="back">
+            <img src="../static/YOKO_Clinics/left-arrow.png" style="width:1.75rem;height:1.75rem;margin-right:0.5rem;cursor: pointer;" id="back_arrow">
+            <p class="backp" id="back_thing">Back</p>
         </div>
-        <script>
-            document.getElementById('rating').style.width = Math.round(document.getElementById('rating').clientWidth * ({{ target.rating }} / 5)) + 'px';
-        </script>
-        <h5>Address</h5>
-        <div id="address_div">
-            <p id="country_display"></p>
-            <script>
-                document.getElementById('country_display').textContent = "{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}";
-            </script>
-            <p id="address_display"></p>
-            <script>
-                document.getElementById('address_display').textContent = "{{ target.address }}";
-            </script>
-            <div class="country_city" style="display:none;" id="country_input">
-                <div class="form-group" style="margin-right:0.5rem;">
-                    <select class="form-select country form-control" name="country" id="country_select">
-                        
-                    </select>
+        <div class="mini_profile_div">
+            <div>
+                <div class="main_specialty_container">
+                    <h1 id="target_username" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
+                    <h5 id="main_specialty" style="color: grey;font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h5>
                 </div>
-                <div class="form-group" style="margin-right:0.5rem;">
-                    <select class="form-select state form-control" name="state" id="state_select">
-                        
-                    </select>
+                <script>
+                    document.getElementById('target_username').textContent = "{{ target.username }}";
+                </script>
+                <div id="address_div" class="address_div">
+                    <p id="country_display"></p>
+                    <script>
+                        document.getElementById('country_display').textContent = "{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}";
+                    </script>
+                    <p id="address_display"></p>
+                    <script>
+                        document.getElementById('address_display').textContent = "Address: {{ target.address }}";
+                    </script>
                 </div>
-                <div class="form-group">
-                    <select class="form-select city form-control" name="city" id="city_select">
-                        
-                    </select>
+                <div class="country_city" style="display:none;" id="country_input">
+                    <div class="form-group" style="margin-right:0.5rem;">
+                        <select class="form-select country form-control" name="country" id="country_select">
+                            
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-right:0.5rem;">
+                        <select class="form-select state form-control" name="state" id="state_select">
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-select city form-control" name="city" id="city_select">
+                            
+                        </select>
+                    </div>
                 </div>
+                <div class="form-group" style="display:none;" id="address_input">
+                    <input class="form-control" type="text" name="address" value="{{ target.address }}" id="address">
+                </div>
+                {% if target.bio %}
+                <h5>About</h5>
+                <div id="bio_div">
+                    <p id="bio_display"></p>
+                    <script>
+                        document.getElementById('bio_display').textContent = "{{ target.bio }}";
+                    </script>
+                    <div class="form-group" id="bio_input" style="display:none;">
+                        <textarea name="bio" id="bio" class="form-control">{{ target.bio }}</textarea>
+                    </div>
+                </div>
+                {% endif %}
             </div>
-            <div class="form-group" style="display:none;" id="address_input">
-                <input class="form-control" type="text" name="address" value="{{ target.address }}" id="address">
-            </div>
-        </div>
-        <h5>About</h5>
-        <div id="bio_div">
-            <p id="bio_display"></p>
-            <script>
-                document.getElementById('bio_display').textContent = "{{ target.bio }}";
-            </script>
-            <div class="form-group" id="bio_input" style="display:none;">
-                <textarea name="bio" id="bio" class="form-control">{{ target.bio }}</textarea>
-            </div>
-        </div>
-        <p style="margin-bottom:0.2rem;">Normal working times:</p>
-        <div id="time_div">
-            <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
-                <p class="normal_p" id="start_time_display">{{ target.start_time|time:"H:i" }}</p>
-                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
-                <p class="normal_p" id="end_time_display">{{ target.end_time|time:"H:i" }}</p>
-            </div>
-            <div class="form-group form-group1" id="time_input" style="display:none;">
-                <input type="time" id="start_time" name="start_time" class="form-control" value="{{ target.start_time|time:"H:i" }}">
-                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow2">
-                <input type="time" id="end_time" name="end_time" class="form-control" value="{{ target.end_time|time:"H:i" }}">
+            <div class="pfp_and_rating">
+                <img src="../static/YOKO_Clinics/profile.png">
+                <h5>★ {{ target.rating }}</h5>
+                <!-- <div class="specialty-container">
+                    <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176.78 32.54" class="svg_container"><defs></defs><path class="cls-1" d="M3.11,31.54c-.76,0-1.44-.39-1.82-1.05-.38-.66-.38-1.45,0-2.11l5.87-10.04c.75-1.28,.75-2.86,0-4.14L1.29,4.16c-.38-.66-.39-1.44,0-2.1,.38-.66,1.06-1.06,1.82-1.06H173.68c.76,0,1.44,.39,1.82,1.05,.38,.66,.38,1.45,0,2.11l-5.87,10.04c-.75,1.28-.75,2.86,0,4.14l5.87,10.04c.38,.66,.39,1.44,0,2.11-.38,.66-1.06,1.05-1.82,1.05H3.11Z"></path><path d="M173.68,2c.58,0,.86,.39,.95,.55s.29,.61,0,1.1l-5.87,10.04c-.93,1.59-.93,3.56,0,5.15l5.87,10.04c.29,.5,.1,.94,0,1.1s-.38,.55-.95,.55H3.11c-.58,0-.86-.39-.95-.55s-.29-.61,0-1.1l5.87-10.04c.93-1.59,.93-3.56,0-5.15L2.15,3.66c-.29-.5-.1-.94,0-1.1s.38-.55,.95-.55H173.68m0-2H3.11C.71,0-.78,2.6,.43,4.66L6.29,14.71c.56,.97,.56,2.16,0,3.13L.43,27.88c-1.21,2.07,.28,4.66,2.68,4.66H173.68c2.39,0,3.88-2.6,2.68-4.66l-5.87-10.04c-.56-.97-.56-2.16,0-3.13l5.87-10.04c1.21-2.07-.28-4.66-2.68-4.66h0Z"></path></svg>
+                    <h5 id="main_specialty" class="main_specialty"></h5>
+                </div> -->
             </div>
         </div>
-        <div id="day_div">
-            <div class="form-group1 form-group2" style="margin-bottom: 1rem;" id="day_display">
-                <label class="{% if days.0 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d1">Sun</label>
-                <label class="{% if days.1 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d2">Mon</label>
-                <label class="{% if days.2 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d3">Tue</label>
-                <label class="{% if days.3 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d4">Wed</label>
-                <label class="{% if days.4 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d5">Thu</label>
-                <label class="{% if days.5 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d6">Fri</label>
-                <label class="{% if days.6 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d7">Sat</label>
-            </div>
-            <div class="form-group form-group1 form-group2" id="day_input" style="display: none;">
-                <input type="checkbox" id="1d" name="days" value="1" class="days_checker">
-                <label class="toggle-control" for="1d">Sun</label>
-                <input type="checkbox" id="2d" name="days" value="2" class="days_checker">
-                <label class="toggle-control" for="2d">Mon</label>
-                <input type="checkbox" id="3d" name="days" value="3" class="days_checker">
-                <label class="toggle-control" for="3d">Tue</label>
-                <input type="checkbox" id="4d" name="days" value="4" class="days_checker">
-                <label class="toggle-control" for="4d">Wed</label>
-                <input type="checkbox" id="5d" name="days" value="5" class="days_checker">
-                <label class="toggle-control" for="5d">Thu</label>
-                <input type="checkbox" id="6d" name="days" value="6" class="days_checker">
-                <label class="toggle-control" for="6d">Fri</label>
-                <input type="checkbox" id="7d" name="days" value="7" class="days_checker">
-                <label class="toggle-control" for="7d">Sat</label>
-            </div>
-        </div>
-        <h5>Specialties</h5>
+        <h5>Sub Specialties:</h5>
         <div id="sub_specialties_div">
             <div class="form-group form-group-wrap" id="sub_specialties_display">
                 <div id="all_subs1">
@@ -126,6 +101,47 @@
                 </div>
             </div>
         </div>
+        <h5 style="margin-bottom:1rem;">Normal working times:</h5>
+        <div id="time_div">
+            <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
+                <p class="normal_p" id="start_time_display">{{ target.start_time|date:"g:i A" }}</p>
+                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
+                <p class="normal_p" id="end_time_display">{{ target.end_time|date:"g:i A" }}</p>
+            </div>
+            <div class="form-group form-group1" id="time_input" style="display:none;">
+                <input type="time" id="start_time" name="start_time" class="form-control" value="{{ target.start_time|time:"H:i" }}">
+                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow2">
+                <input type="time" id="end_time" name="end_time" class="form-control" value="{{ target.end_time|time:"H:i" }}">
+            </div>
+        </div>
+        <div id="day_div">
+            
+            <div class="form-group1" style="margin-bottom: 1rem;" id="day_display">
+                <label class="{% if days.0 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d1">Sun</label>
+                <label class="{% if days.1 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d2">Mon</label>
+                <label class="{% if days.2 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d3">Tue</label>
+                <label class="{% if days.3 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d4">Wed</label>
+                <label class="{% if days.4 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d5">Thu</label>
+                <label class="{% if days.5 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d6">Fri</label>
+                <label class="{% if days.6 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d7">Sat</label>
+            </div>
+            <div class="form-group form-group1 form-group2" id="day_input" style="display: none;">
+                <input type="checkbox" id="1d" name="days" value="1" class="days_checker">
+                <label class="toggle-control" for="1d">Sun</label>
+                <input type="checkbox" id="2d" name="days" value="2" class="days_checker">
+                <label class="toggle-control" for="2d">Mon</label>
+                <input type="checkbox" id="3d" name="days" value="3" class="days_checker">
+                <label class="toggle-control" for="3d">Tue</label>
+                <input type="checkbox" id="4d" name="days" value="4" class="days_checker">
+                <label class="toggle-control" for="4d">Wed</label>
+                <input type="checkbox" id="5d" name="days" value="5" class="days_checker">
+                <label class="toggle-control" for="5d">Thu</label>
+                <input type="checkbox" id="6d" name="days" value="6" class="days_checker">
+                <label class="toggle-control" for="6d">Fri</label>
+                <input type="checkbox" id="7d" name="days" value="7" class="days_checker">
+                <label class="toggle-control" for="7d">Sat</label>
+            </div>
+        </div>
         <button class="btn btn-primary norm_btn" id="edit_btn">Edit Profile</button>
         <button class="btn btn-primary norm_btn" id="save_btn" style="display:none;">Save</button>
         <button class="btn btn-primary norm_btn" id="cancel_btn" style="display:none;">Cancel</button>
@@ -140,55 +156,50 @@
         <div class="alert" id="beep1" style="display:none;">
             <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
         </div>
-        <h3 id="target_username"></h3>
-        <script>
-            document.getElementById('target_username').textContent = "{{ target.username }}";
-        </script>
-        <h5>{{ target.rating }}</h5>
-        <div class="rating" id="rating">
-            
+        
+        <div class="back">
+            <img src="../static/YOKO_Clinics/left-arrow.png" style="width:1.75rem;height:1.75rem;margin-right:0.5rem;cursor: pointer;" id="back_arrow">
+            <p class="backp" id="back_thing">Back</p>
         </div>
-        <script>
-            document.getElementById('rating').style.width = Math.round(document.getElementById('rating').clientWidth * ({{ target.rating }} / 5)) + 'px';
-        </script>
-        <h5>Address</h5>
-        <div id="address_div">
-            <p id="country_display"></p>
-            <script>
-                document.getElementById('country_display').textContent = "{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}";
-            </script>
-            <p id="address_display"></p>
-            <script>
-                document.getElementById('address_display').textContent = "{{ target.address }}";
-            </script>
-        </div>
-        <h5>About</h5>
-        <div id="bio_div">
-            <p id="bio_display"></p>
-            <script>
-                document.getElementById('bio_display').textContent = "{{ target.bio }}";
-            </script>
-        </div>
-        <p style="margin-bottom:0.2rem;">Normal working times:</p>
-        <div id="time_div">
-            <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
-                <p class="normal_p" id="start_time_display">{{ target.start_time|time:"H:i" }}</p>
-                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
-                <p class="normal_p" id="end_time_display">{{ target.end_time|time:"H:i" }}</p>
+        <div class="mini_profile_div">
+            <div>
+                <div class="main_specialty_container">
+                    <h1 id="target_username" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
+                    <h5 id="main_specialty" style="color: grey;font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h5>
+                </div>
+                <script>
+                    document.getElementById('target_username').textContent = "{{ target.username }}";
+                </script>
+                <div id="address_div" class="address_div">
+                    <p id="country_display"></p>
+                    <script>
+                        document.getElementById('country_display').textContent = "{{ target.country }}{% if target.country != target.state %}, {{ target.state }}{% endif %}{% if target.city != target.state %}, {{ target.city }}{% endif %}";
+                    </script>
+                    <p id="address_display"></p>
+                    <script>
+                        document.getElementById('address_display').textContent = "Address: {{ target.address }}";
+                    </script>
+                </div>
+                {% if target.bio %}
+                <h5>About</h5>
+                <div id="bio_div">
+                    <p id="bio_display"></p>
+                    <script>
+                        document.getElementById('bio_display').textContent = "{{ target.bio }}";
+                    </script>
+                </div>
+                {% endif %}
+            </div>
+            <div class="pfp_and_rating">
+                <img src="../static/YOKO_Clinics/profile.png">
+                <h5>★ {{ target.rating }}</h5>
+                <!-- <div class="specialty-container">
+                    <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176.78 32.54" class="svg_container"><defs></defs><path class="cls-1" d="M3.11,31.54c-.76,0-1.44-.39-1.82-1.05-.38-.66-.38-1.45,0-2.11l5.87-10.04c.75-1.28,.75-2.86,0-4.14L1.29,4.16c-.38-.66-.39-1.44,0-2.1,.38-.66,1.06-1.06,1.82-1.06H173.68c.76,0,1.44,.39,1.82,1.05,.38,.66,.38,1.45,0,2.11l-5.87,10.04c-.75,1.28-.75,2.86,0,4.14l5.87,10.04c.38,.66,.39,1.44,0,2.11-.38,.66-1.06,1.05-1.82,1.05H3.11Z"></path><path d="M173.68,2c.58,0,.86,.39,.95,.55s.29,.61,0,1.1l-5.87,10.04c-.93,1.59-.93,3.56,0,5.15l5.87,10.04c.29,.5,.1,.94,0,1.1s-.38,.55-.95,.55H3.11c-.58,0-.86-.39-.95-.55s-.29-.61,0-1.1l5.87-10.04c.93-1.59,.93-3.56,0-5.15L2.15,3.66c-.29-.5-.1-.94,0-1.1s.38-.55,.95-.55H173.68m0-2H3.11C.71,0-.78,2.6,.43,4.66L6.29,14.71c.56,.97,.56,2.16,0,3.13L.43,27.88c-1.21,2.07,.28,4.66,2.68,4.66H173.68c2.39,0,3.88-2.6,2.68-4.66l-5.87-10.04c-.56-.97-.56-2.16,0-3.13l5.87-10.04c1.21-2.07-.28-4.66-2.68-4.66h0Z"></path></svg>
+                    <h5 id="main_specialty" class="main_specialty"></h5>
+                </div> -->
             </div>
         </div>
-        <div id="day_div">
-            <div class="form-group1 form-group2" style="margin-bottom: 1rem;" id="day_display">
-                <label class="{% if days.0 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d1">Sun</label>
-                <label class="{% if days.1 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d2">Mon</label>
-                <label class="{% if days.2 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d3">Tue</label>
-                <label class="{% if days.3 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d4">Wed</label>
-                <label class="{% if days.4 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d5">Thu</label>
-                <label class="{% if days.5 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d6">Fri</label>
-                <label class="{% if days.6 %}toggle-control3{% else %}toggle-control4{% endif %}" id="d7">Sat</label>
-            </div>
-        </div>
-        <h5>Specialties</h5>
+        <h5>Sub Specialties:</h5>
         <div id="sub_specialties_div">
             <div class="form-group form-group-wrap" id="sub_specialties_display">
                 <div id="all_subs1">
@@ -196,6 +207,25 @@
                         <p class="toggle-control2" id="sub{{ s.id }}">{{ s.type_name }}</p>
                     {% endfor %}
                 </div>
+            </div>
+        </div>
+        <h5 style="margin-bottom:1rem;">Normal working times:</h5>
+        <div id="time_div">
+            <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
+                <p class="normal_p" id="start_time_display">{{ target.start_time|date:"g:i A" }}</p>
+                <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
+                <p class="normal_p" id="end_time_display">{{ target.end_time|date:"g:i A" }}</p>
+            </div>
+        </div>
+        <div id="day_div">
+            <div class="form-group1" style="margin-bottom: 1rem;" id="day_display">
+                <label class="{% if days.0 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d1">Sun</label>
+                <label class="{% if days.1 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d2">Mon</label>
+                <label class="{% if days.2 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d3">Tue</label>
+                <label class="{% if days.3 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d4">Wed</label>
+                <label class="{% if days.4 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d5">Thu</label>
+                <label class="{% if days.5 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d6">Fri</label>
+                <label class="{% if days.6 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d7">Sat</label>
             </div>
         </div>
     </div>
