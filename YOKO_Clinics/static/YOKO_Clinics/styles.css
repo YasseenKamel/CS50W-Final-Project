@@ -581,3 +581,20 @@ input[type="checkbox"].toggle1:checked+label::after {
     color: inherit;
     text-decoration: none;
 }
+
+.pagination{
+    display:flex;
+    flex-direction: row;
+}
+
+.left_links{
+
+    margin: 10px;
+}
+
+.right_links{
+    
+    margin: 10px;
+    margin-left: auto;
+    
+}

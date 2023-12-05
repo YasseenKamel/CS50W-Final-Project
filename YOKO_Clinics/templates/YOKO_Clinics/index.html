@@ -8,8 +8,8 @@
 <div class="search_frame">
     <h2>Search for a doctor</h2>
     <br>
-    <form action="{% url 'search' %}" method="post" class="search_form">
-        {% csrf_token %}
+    <form action="{% url 'search' %}" class="search_form">
+        <input type="hidden" value="1" name="page">
         <div class="country_city1">
             <div class="form-elements-container1">
                 <div class="form-group" style="margin-right:0.5rem;">

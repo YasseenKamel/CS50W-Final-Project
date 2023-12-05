@@ -41,17 +41,121 @@
 {% endfor %}
 
 <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+    {% if page_obj.has_previous %}
+    <div class="left_links">
+        <button class="btn btn-primary" onclick="page1()">&laquo; First</button>
+        <button class="btn btn-primary" onclick="page2()">Previous</button>
+    </div>
+    {% endif %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+    {% if page_obj.has_next %}
+    <div class="right_links">
+        <button class="btn btn-primary" onclick="page3()">Next</button>
+        <button class="btn btn-primary" onclick="page4()">Last &raquo;</button>
+    </div>
+    {% endif %}
 </div>
+
+<script>
+    
+    {% if page_obj.has_previous %}
+    function page1() {
+        let currentUrl = window.location.href;
+        let startIndex = currentUrl.indexOf('page=');
+        let substringToReplace = "";
+        let b = false;
+        let s="";
+        for(let i = 5 ; i < currentUrl.length - 4 ; i ++){
+            if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                b = true;
+                s+=currentUrl[i];
+            }
+            else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                s+=currentUrl[i];
+            }
+            else if(b){
+                break;
+            }
+        }
+        substringToReplace = 'page='+s;
+        let newParameter = 'page=1';
+        let newUrl = currentUrl.replace(substringToReplace, newParameter);
+        window.location.href = newUrl;
+    }
+    
+    function page2() {
+        let currentUrl = window.location.href;
+        let startIndex = currentUrl.indexOf('page=');
+        let substringToReplace = "";
+        let b = false;
+        let s="";
+        for(let i = 5 ; i < currentUrl.length - 4 ; i ++){
+            if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                b = true;
+                s+=currentUrl[i];
+            }
+            else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                s+=currentUrl[i];
+            }
+            else if(b){
+                break;
+            }
+        }
+        substringToReplace = 'page='+s;
+        let newParameter = 'page={{ page_obj.previous_page_number }}';
+        let newUrl = currentUrl.replace(substringToReplace, newParameter);
+        window.location.href = newUrl;
+    }
+    {% endif %}
+    
+    {% if page_obj.has_next %}
+    function page3() {
+        let currentUrl = window.location.href;
+        let startIndex = currentUrl.indexOf('page=');
+        let substringToReplace = "";
+        let b = false;
+        let s="";
+        for(let i = 5 ; i < currentUrl.length - 4 ; i ++){
+            if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                b = true;
+                s+=currentUrl[i];
+            }
+            else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                s+=currentUrl[i];
+            }
+            else if(b){
+                break;
+            }
+        }
+        substringToReplace = 'page='+s;
+        let newParameter = 'page={{ page_obj.next_page_number }}';
+        let newUrl = currentUrl.replace(substringToReplace, newParameter);
+        window.location.href = newUrl;
+    }
+    function page4() {
+        let currentUrl = window.location.href;
+        let startIndex = currentUrl.indexOf('page=');
+        let substringToReplace = "";
+        let b = false;
+        let s="";
+        for(let i = 5 ; i < currentUrl.length - 4 ; i ++){
+            if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                b = true;
+                s+=currentUrl[i];
+            }
+            else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                s+=currentUrl[i];
+            }
+            else if(b){
+                break;
+            }
+        }
+        substringToReplace = 'page='+s;
+        let newParameter = 'page={{ page_obj.paginator.num_pages }}';
+        let newUrl = currentUrl.replace(substringToReplace, newParameter);
+        window.location.href = newUrl;
+    }
+    {% endif %}
+</script>
 
 {% endblock %}

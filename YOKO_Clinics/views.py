@@ -193,44 +193,41 @@ def appointments(request):
 
 @login_required
 def search(request):
-    if request.method == "POST":
-        country = request.POST.get('country')
-        state = request.POST.get('state')
-        city = request.POST.get('city')
-        name = request.POST.get('name')
-        rating = len(request.POST.getlist('star'))
-        specialties = request.POST.getlist('sub_specialties')
+    if request.method == "GET":
+        country = request.GET.get('country')
+        state = request.GET.get('state')
+        city = request.GET.get('city')
+        name = request.GET.get('name')
+        rating = len(request.GET.getlist('star'))
+        specialties = request.GET.getlist('sub_specialties')
         docs = []
-        if request.POST['submit'] == 'All Doctors':
-            docs = User.objects.filter(is_doctor=True)
-        else:
-            if country == None:
-                country = ""
-            if state == None:
-                state = ""
-            if city == None:
-                city = ""
-            if specialties != []:
-                docs = expertise.objects.filter(type_id__in=specialties).values_list('doctor_id',flat=True)
-            if docs == []:
-                if country == "":
-                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, is_doctor=True)
-                elif state == "":
-                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, is_doctor=True)
-                elif city == "":
-                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, state=state, is_doctor=True)
-                else:
-                    docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, state=state, city=city, is_doctor=True)
+        if country == None:
+            country = ""
+        if state == None:
+            state = ""
+        if city == None:
+            city = ""
+        if specialties != []:
+            docs = expertise.objects.filter(type_id__in=specialties).values_list('doctor_id',flat=True)
+        if docs == []:
+            if country == "":
+                docs = User.objects.filter(username__icontains=name, rating__gte=rating, is_doctor=True)
+            elif state == "":
+                docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, is_doctor=True)
+            elif city == "":
+                docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, state=state, is_doctor=True)
             else:
-                if country == "":
-                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, is_doctor=True)
-                elif state == "":
-                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, is_doctor=True)
-                elif city == "":
-                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, state=state, is_doctor=True)
-                else:
-                    docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, state=state, city=city, is_doctor=True)
-        print(docs)
+                docs = User.objects.filter(username__icontains=name, rating__gte=rating, country=country, state=state, city=city, is_doctor=True)
+        else:
+            if country == "":
+                docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, is_doctor=True)
+            elif state == "":
+                docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, is_doctor=True)
+            elif city == "":
+                docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, state=state, is_doctor=True)
+            else:
+                docs = User.objects.filter(id__in=docs, username__icontains=name, rating__gte=rating, country=country, state=state, city=city, is_doctor=True)
+        # print(docs)
         docs = docs.order_by('-rating')
         paginator = Paginator(docs, 10)
         page_num = request.GET.get('page')
