@@ -20,7 +20,7 @@
         </script>
         <h5>Address</h5>
         <div id="address_div">
-            <p id="country_displa{{ doc.id }}y"></p>
+            <p id="country_display{{ doc.id }}"></p>
             <script>
                 document.getElementById('country_display{{ doc.id }}').textContent = "{{ doc.country }}{% if doc.country != doc.state %}, {{ doc.state }}{% endif %}{% if doc.city != doc.state %}, {{ doc.city }}{% endif %}";
             </script>

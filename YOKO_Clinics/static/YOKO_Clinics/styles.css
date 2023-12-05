@@ -42,6 +42,9 @@
     --alert_success_background: #d4edda;
     --alert_success_text: #155724;
     --alert_success_border: #c3e6cb;
+    --alert_danger_background: #f8d7da;
+    --alert_danger_text: #721c24;
+    --alert_danger_border: #f5c6cb;
   }
   :root[data-theme="dark"] {
     --text: #ebe5f0;
@@ -57,6 +60,9 @@
     --alert_success_background: rgb(33, 79, 44);
     --alert_success_text: rgb(153, 230, 171);
     --alert_success_border: rgb(41, 97, 54);
+    --alert_danger_background: #721c24;
+    --alert_danger_text: #f9cfd3;
+    --alert_danger_border: #60161e;;
   }
   
 
@@ -597,4 +603,10 @@ input[type="checkbox"].toggle1:checked+label::after {
     margin: 10px;
     margin-left: auto;
     
+}
+
+.alert-danger {
+    color: var(--alert_danger_text);
+    background-color: var(--alert_danger_background);
+    border-color: var(--alert_danger_border);
 }

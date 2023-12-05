@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 option.value = Object.keys(data)[i];
                 option.textContent = Object.keys(data)[i];
                 option.id = "subs"+(i + 1);
+                option.tabindex="-1";
                 document.getElementById("specialty").appendChild(option);
             }
             document.getElementById("specialty").addEventListener('change',function(){
@@ -567,12 +568,28 @@ document.addEventListener('DOMContentLoaded', function () {
         let countrySelect = document.querySelector('.country'),
             stateSelect = document.querySelector('.state'),
             citySelect = document.querySelector('.city');
+        let em = document.getElementById("email").value;
+        let b1 = false,b2 = false;
+        for(let i = 0 ; i < em.length ; i ++){
+            if(!b1 && em[i] == '@'){
+                b1 = true;
+            }
+            if(b1 && em[i] == '.'){
+                b2 = true;
+            }
+        }
         if(countrySelect.value.trim() === '' || citySelect.value.trim() === '' || stateSelect.value.trim() === '' || document.getElementById("address").value.trim() === '' || document.getElementById("start_time").value.trim() === '' || document.getElementById("end_time").value.trim() === '' || document.getElementById("username").value.trim() === '' || document.getElementById("email").value.trim() === '' || document.getElementById("password").value.trim() === '' || document.getElementById("confirmation").value.trim() === ''){
             document.getElementById("beep1").style.display='block';
             return false;
         }
         else if(document.getElementById("password").value.trim() != document.getElementById("confirmation").value.trim()){
             document.getElementById("beep2").style.display='block';
+            document.getElementById("beep2").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Passwords do not match.';
+            return false;
+        }
+        else if(!(b1 && b2)){
+            document.getElementById("beep2").style.display='block';
+            document.getElementById("beep2").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Email format invalid.';
             return false;
         }
         else{
