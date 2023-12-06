@@ -23,7 +23,7 @@
             <div>
                 <div class="main_specialty_container">
                     <h1 id="target_username" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
-                    <h5 id="main_specialty" style="color: grey;font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h5>
+                    <h5 id="main_specialty" style="color: grey;font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">-- {{ target.main_specialty }}</h5>
                 </div>
                 <script>
                     document.getElementById('target_username').textContent = "{{ target.username }}";
@@ -73,7 +73,7 @@
             </div>
             <div class="pfp_and_rating">
                 <img src="../static/YOKO_Clinics/profile.png">
-                <h5>★ {{ target.rating }}</h5>
+                <h5>★ {{ target.rating|floatformat:1 }}</h5>
                 <!-- <div class="specialty-container">
                     <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176.78 32.54" class="svg_container"><defs></defs><path class="cls-1" d="M3.11,31.54c-.76,0-1.44-.39-1.82-1.05-.38-.66-.38-1.45,0-2.11l5.87-10.04c.75-1.28,.75-2.86,0-4.14L1.29,4.16c-.38-.66-.39-1.44,0-2.1,.38-.66,1.06-1.06,1.82-1.06H173.68c.76,0,1.44,.39,1.82,1.05,.38,.66,.38,1.45,0,2.11l-5.87,10.04c-.75,1.28-.75,2.86,0,4.14l5.87,10.04c.38,.66,.39,1.44,0,2.11-.38,.66-1.06,1.05-1.82,1.05H3.11Z"></path><path d="M173.68,2c.58,0,.86,.39,.95,.55s.29,.61,0,1.1l-5.87,10.04c-.93,1.59-.93,3.56,0,5.15l5.87,10.04c.29,.5,.1,.94,0,1.1s-.38,.55-.95,.55H3.11c-.58,0-.86-.39-.95-.55s-.29-.61,0-1.1l5.87-10.04c.93-1.59,.93-3.56,0-5.15L2.15,3.66c-.29-.5-.1-.94,0-1.1s.38-.55,.95-.55H173.68m0-2H3.11C.71,0-.78,2.6,.43,4.66L6.29,14.71c.56,.97,.56,2.16,0,3.13L.43,27.88c-1.21,2.07,.28,4.66,2.68,4.66H173.68c2.39,0,3.88-2.6,2.68-4.66l-5.87-10.04c-.56-.97-.56-2.16,0-3.13l5.87-10.04c1.21-2.07-.28-4.66-2.68-4.66h0Z"></path></svg>
                     <h5 id="main_specialty" class="main_specialty"></h5>
@@ -165,7 +165,7 @@
             <div>
                 <div class="main_specialty_container">
                     <h1 id="target_username" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
-                    <h5 id="main_specialty" style="color: grey;font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h5>
+                    <h5 style="color: grey;font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">-- {{ target.main_specialty }}</h5>
                 </div>
                 <script>
                     document.getElementById('target_username').textContent = "{{ target.username }}";
@@ -192,7 +192,7 @@
             </div>
             <div class="pfp_and_rating">
                 <img src="../static/YOKO_Clinics/profile.png">
-                <h5>★ {{ target.rating }}</h5>
+                <h5>★ {{ target.rating|floatformat:1 }}</h5>
                 <!-- <div class="specialty-container">
                     <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176.78 32.54" class="svg_container"><defs></defs><path class="cls-1" d="M3.11,31.54c-.76,0-1.44-.39-1.82-1.05-.38-.66-.38-1.45,0-2.11l5.87-10.04c.75-1.28,.75-2.86,0-4.14L1.29,4.16c-.38-.66-.39-1.44,0-2.1,.38-.66,1.06-1.06,1.82-1.06H173.68c.76,0,1.44,.39,1.82,1.05,.38,.66,.38,1.45,0,2.11l-5.87,10.04c-.75,1.28-.75,2.86,0,4.14l5.87,10.04c.38,.66,.39,1.44,0,2.11-.38,.66-1.06,1.05-1.82,1.05H3.11Z"></path><path d="M173.68,2c.58,0,.86,.39,.95,.55s.29,.61,0,1.1l-5.87,10.04c-.93,1.59-.93,3.56,0,5.15l5.87,10.04c.29,.5,.1,.94,0,1.1s-.38,.55-.95,.55H3.11c-.58,0-.86-.39-.95-.55s-.29-.61,0-1.1l5.87-10.04c.93-1.59,.93-3.56,0-5.15L2.15,3.66c-.29-.5-.1-.94,0-1.1s.38-.55,.95-.55H173.68m0-2H3.11C.71,0-.78,2.6,.43,4.66L6.29,14.71c.56,.97,.56,2.16,0,3.13L.43,27.88c-1.21,2.07,.28,4.66,2.68,4.66H173.68c2.39,0,3.88-2.6,2.68-4.66l-5.87-10.04c-.56-.97-.56-2.16,0-3.13l5.87-10.04c1.21-2.07-.28-4.66-2.68-4.66h0Z"></path></svg>
                     <h5 id="main_specialty" class="main_specialty"></h5>

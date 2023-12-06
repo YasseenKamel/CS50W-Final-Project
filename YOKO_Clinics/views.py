@@ -94,6 +94,10 @@ def register(request):
                 return render(request, "YOKO_Clinics/register.html", {
                     "message": "Please fill in all fields."
                 })
+            if start_time == end_time:
+                return render(request, "YOKO_Clinics/register.html", {
+                    "message": "Start time cannot be equal to end time."
+                })
             try:
                 user = User.objects.create_user(username=username, email=email, password=password, is_doctor=True, country=country, state=state, city=city, address=address, bio=bio, start_time=start_time, end_time=end_time)
             except IntegrityError as e:
@@ -138,7 +142,6 @@ def profile(request,id):
     if request.method == "POST":
         pass
     else:
-        target.rating = round(target.rating,1)
         specialties = expertise.objects.filter(doctor_id=id).values_list('type_id',flat=True)
         day = repeated_vacations.objects.filter(doctor_id=id).values_list('day',flat=True)
         days = [0,0,0,0,0,0,0]
@@ -176,6 +179,7 @@ def edit_profile(request,banana):
         doc.bio = bio
         doc.start_time = start_time
         doc.end_time = end_time
+        doc.main_specialty = data['main_specialty']
         doc.save()
         repeated_vacations.objects.filter(doctor_id=request.user.id).delete()
         idx = 1

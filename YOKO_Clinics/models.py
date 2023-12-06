@@ -12,6 +12,7 @@ class User(AbstractUser):
     bio = models.CharField(null=True, max_length=10000, blank=True)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
+    main_specialty = models.CharField(max_length=1000, default="")
 
 
 class types(models.Model):

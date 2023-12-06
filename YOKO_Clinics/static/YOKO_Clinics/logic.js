@@ -229,9 +229,10 @@ document.addEventListener('DOMContentLoaded', function () {
             let sub_specialties_input2 = document.getElementById('sub_specialties1');
             let days_list = [0,0,0,0,0,0,0];
             let subs_list = [];
-
+            let day_selected = false;
             for(let i = 0 ; i < 7 ; i ++){
                 days_list[i] = document.getElementById((i + 1) + 'd').checked;
+                day_selected |= document.getElementById((i + 1) + 'd').checked;
             }
             
             for(let i = 0 ; i < document.querySelectorAll('.sub_checker').length ; i ++){
@@ -240,10 +241,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            if(document.getElementById('start_time').value == "" || document.getElementById('end_time').value == "" || country_select.value == "Select Country" || state_select.value == "Select State" || city_select.value == "Select City" || country_select.value == "" || state_select.value == "" || city_select.value == "" || document.getElementById('address').value == ""){
+            if(document.getElementById('start_time').value == "" || document.getElementById('end_time').value == "" || country_select.value == "Select Country" || state_select.value == "Select State" || city_select.value == "Select City" || country_select.value == "" || state_select.value == "" || city_select.value == "" || document.getElementById('address').value == "" || subs_list.length == 0 || day_selected == false){
                 document.getElementById('beep1').classList.value="alert alert-danger";
                 document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Please fill in all fields.';
                 document.getElementById('beep1').style.display = "block";
+            }
+            else if(document.getElementById("start_time").value === document.getElementById("end_time").value){
+                document.getElementById('beep1').classList.value="alert alert-danger";
+                document.getElementById("beep1").style.display='block';
+                document.getElementById("beep1").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Start time cannot be the same as end time.';
             }
             else{
                 fetch('edit_profile',{
@@ -261,7 +267,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         start_time: document.getElementById('start_time').value,
                         end_time: document.getElementById('end_time').value,
                         days: days_list,
-                        sub_specialties: subs_list
+                        sub_specialties: subs_list,
+                        main_specialty: document.getElementById('specialty').value
                     })
                 })
                 .then(response => response.json())
@@ -273,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     day_input.style.display="none";
                     sub_specialties_input1.style.display="none";
                     sub_specialties_input2.style.display="none";
+                    document.getElementById('main_specialty').textContent = '-- ' + document.getElementById('specialty').value;
                     document.getElementById('country_display').textContent = country_select.value;
                     if(country_select.value != state_select.value){
                         document.getElementById('country_display').textContent += ', ' + state_select.value;
@@ -550,34 +558,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if(document.getElementById('main_specialty') != undefined){
-        function fetchJson1(url) {
-            return fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok: ${response.statusText}`);
-                    }
-                    return response.json();
-                });
-        }
-        function load_specialties1(data){
-            specialties = data;
-            let first = document.querySelectorAll('.toggle-control2')[0].id.slice(3);
-            let idx = 1,idx1 = 0;
-            for(let i = 0 ; i < Object.keys(specialties).length ; i ++){
-                if(first < idx){
-                    break;
-                }
-                idx += specialties[Object.keys(specialties)[i]].length;
-                idx1 ++;
-            }
-            document.getElementById('main_specialty').textContent = '-- ' + Object.keys(specialties)[idx1-1];
-        }
-        fetchJson1("../static/YOKO_Clinics/specialties.json")
-        .then(load_specialties1)
-        .catch(error => console.error('Error fetching JSON:', error));
-    }
-
     toggle.addEventListener('click',function() {
         let currentTheme = document.documentElement.getAttribute("data-theme");
         let targetTheme = "light";
@@ -674,6 +654,11 @@ document.addEventListener('DOMContentLoaded', function () {
         else if(!(b1 && b2)){
             document.getElementById("beep2").style.display='block';
             document.getElementById("beep2").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Email format invalid.';
+            return false;
+        }
+        else if(document.getElementById("start_time").value === document.getElementById("end_time").value){
+            document.getElementById("beep2").style.display='block';
+            document.getElementById("beep2").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Start time cannot be the same as end time.';
             return false;
         }
         else{
