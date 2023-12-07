@@ -127,7 +127,9 @@ def bookings(request):
 
 @login_required
 def vacation(request):
-    pass
+    return render(request, "YOKO_Clinics/vacations.html",{
+        'current_time': datetime.datetime.now()
+    })
 
 @login_required
 def appointment(request,id):

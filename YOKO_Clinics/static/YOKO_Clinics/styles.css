@@ -752,3 +752,95 @@ input[type="checkbox"].toggle1:checked+label::after {
     margin-top: 1rem;
     margin-bottom: 2rem;
 }
+
+.calendar_container{
+    justify-content: center;
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:5rem;
+}
+
+  
+  .calendar-month {
+    position: relative;
+    overflow: hidden;
+    border: solid 1px var(--accent);
+    background-color: var(--accent);
+    border-radius: 1rem;
+  }
+  
+  /* Month indicator and selectors positioning */
+  .calendar-month-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary);
+    padding: 10px;
+  }
+  
+  /* Month indicator */
+  .calendar-month-header-selected-month {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  /* Month selectors positioning */
+  .calendar-month-header-selectors {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80px;
+  }
+  
+  .calendar-month-header-selectors > * {
+    cursor: pointer;
+  }
+  
+  .day-of-week {
+    font-size: 18px;
+    background-color: var(--primary);
+    padding-bottom: 5px;
+    padding-top: 10px;
+  }
+  
+  ol {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .day-of-week,
+  .days-grid {
+    /* 7 equal columns for weekdays and days cells */
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  
+  .day-of-week > * {
+    /* Position the weekday label within the cell */
+    text-align: right;
+    padding-right: 5px;
+  }
+  
+  .days-grid {
+    height: 100%;
+    position: relative;
+    border-top: solid 1px var(--accent);
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+  }
+  
+  .calendar-day {
+    position: relative;
+    min-height: 6.5rem;
+    background-color: var(--primary);
+    padding: 5px;
+  }
+  /* Position the day label within the day cell */
+  .calendar-day > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0.5rem;
+  }
