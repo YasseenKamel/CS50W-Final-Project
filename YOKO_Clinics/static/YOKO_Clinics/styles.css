@@ -761,6 +761,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     margin-left: auto;
     margin-right: auto;
     margin-top:5rem;
+    margin-bottom:5rem;
 }
 
   
@@ -769,15 +770,18 @@ input[type="checkbox"].toggle1:checked+label::after {
     overflow: hidden;
     border: solid 1px var(--accent);
     background-color: var(--accent);
+    height: 78dvh;
     border-radius: 1rem;
   }
   
+
   /* Month indicator and selectors positioning */
   .calendar-month-header {
     display: flex;
     justify-content: space-between;
     background-color: var(--primary);
     padding: 10px;
+    height: 7dvh;
   }
   
   /* Month indicator */
@@ -803,6 +807,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     background-color: var(--primary);
     padding-bottom: 5px;
     padding-top: 10px;
+    height: 5dvh;
   }
   
   ol {
@@ -834,7 +839,7 @@ input[type="checkbox"].toggle1:checked+label::after {
   
   .calendar-day {
     position: relative;
-    min-height: 6.5rem;
+    min-height: 11dvh;
     background-color: var(--primary);
     padding: 5px;
   }
@@ -862,7 +867,7 @@ input[type="checkbox"].toggle1:checked+label::after {
   }
 
   .cal_slid1{
-    left: -80rem;
+    left: -83dvw;
     height: auto;
     max-height: 0;
     max-width: 0;
@@ -871,7 +876,7 @@ input[type="checkbox"].toggle1:checked+label::after {
 }
 
 .cal_slid2{
-    left: 80rem;
+    left: 83dvw;
     height: auto;
     max-height: 0;
     max-width: 0;

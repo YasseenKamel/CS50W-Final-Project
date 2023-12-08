@@ -816,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('calendar_slide1').remove();
         document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
         document.getElementById('next-month-selector0').removeEventListener('click',next_month);
-        // document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
+        document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
 
         // renaming ids
         document.getElementById('calendar_slide0').id = 'calendar_slide1';
@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // redeclaring event listeners
         document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
         document.getElementById('next-month-selector0').addEventListener('click',next_month);
-        // document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+        document.getElementById('present-month-selector0').addEventListener('click',cur_month);
 
     }
 
@@ -865,15 +865,16 @@ document.addEventListener('DOMContentLoaded', function () {
         year_next = year + (month == 11);
 
         weekday_prev = weekday;
-        weekday = weekday_prev;
-        weekday_next = (weekday_this + month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1)) % 7;
+        weekday = weekday_next;
+        weekday_next = (weekday + month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1)) % 7;
+        weekday_next += 7 * (weekday_next == 0);
 
         //// cycling divs and renaming ids and redeclaring event listeners
 
         document.getElementById('calendar_slide-1').remove();
         document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
         document.getElementById('next-month-selector0').removeEventListener('click',next_month);
-        // document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
+        document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
 
         // renaming ids
         document.getElementById('calendar_slide0').id = 'calendar_slide-1';
@@ -903,8 +904,97 @@ document.addEventListener('DOMContentLoaded', function () {
         // redeclaring event listeners
         document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
         document.getElementById('next-month-selector0').addEventListener('click',next_month);
-        // document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+        document.getElementById('present-month-selector0').addEventListener('click',cur_month);
 
+    }
+
+
+    function cur_month(){
+        if(year > year_this || (year == year_this && month > month_this)){
+
+            /// edit content of -1 first so it slides in ready
+            document.getElementById('calendar_slide-1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
+
+            document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
+            document.getElementById('calendar_slide-1').classList.toggle('cal_slid1');
+
+            document.getElementById('calendar_slide1').remove();
+            document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
+            document.getElementById('next-month-selector0').removeEventListener('click',next_month);
+            document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
+
+            weekday = weekday_this;
+            weekday_prev = weekday_this_prev;
+            weekday_next = weekday_this_next;
+
+            year = year_this;
+            year_prev = year_this_prev;
+            year_next = year_this_next;
+
+            month = month_this;
+            month_prev = month_this_prev;
+            month_next = month_this_next;
+
+
+            document.getElementById('calendar_slide0').innerHTML = load_month(year_next,month_next,weekday_next,'1');
+            document.getElementById('calendar_slide0').id = 'calendar_slide1';
+
+            document.getElementById('calendar_slide-1').id = 'calendar_slide0';
+
+
+            let prev_div = document.createElement('div');
+            prev_div.id = 'calendar_slide-1';
+            prev_div.classList.value = 'calendar_slide cal_slid1';
+            prev_div.innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
+
+            document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
+
+            document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
+            document.getElementById('next-month-selector0').addEventListener('click',next_month);
+            document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+
+        }
+        else if(year < year_this || (year == year_this && month < month_this)){
+            document.getElementById('calendar_slide1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
+
+            document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
+            document.getElementById('calendar_slide1').classList.toggle('cal_slid2');
+
+            document.getElementById('calendar_slide-1').remove();
+            document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
+            document.getElementById('next-month-selector0').removeEventListener('click',next_month);
+            document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
+
+            weekday = weekday_this;
+            weekday_prev = weekday_this_prev;
+            weekday_next = weekday_this_next;
+
+            year = year_this;
+            year_prev = year_this_prev;
+            year_next = year_this_next;
+
+            month = month_this;
+            month_prev = month_this_prev;
+            month_next = month_this_next;
+
+
+            document.getElementById('calendar_slide0').innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
+            document.getElementById('calendar_slide0').id = 'calendar_slide-1';
+
+            document.getElementById('calendar_slide1').id = 'calendar_slide0';
+
+
+            let next_div = document.createElement('div');
+            next_div.id = 'calendar_slide1';
+            next_div.classList.value = 'calendar_slide cal_slid2';
+            next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
+
+            document.getElementById('calendar-month').appendChild(next_div);
+
+            document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
+            document.getElementById('next-month-selector0').addEventListener('click',next_month);
+            document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+        }
     }
 
 
@@ -925,7 +1015,8 @@ document.addEventListener('DOMContentLoaded', function () {
         weekday_this = first_day;
         weekday_this_prev = (weekday_this - (month_days[((date.getMonth() - 1) < 0 ? 11 : (date.getMonth() - 1))] + ((date.getFullYear() % 4 == 0) && (date.getFullYear() % 100 != 0 || date.getFullYear() % 400 == 0) && date.getMonth() == 2))) % 7 + 7;
         weekday_this_next = (weekday_this + month_days[date.getMonth()] + ((date.getFullYear() % 4 == 0) && (date.getFullYear() % 100 != 0 || date.getFullYear() % 400 == 0) && date.getMonth() == 1)) % 7;
-
+        weekday_this_next += 7 * (weekday_this_next == 0);
+        
         month_this = date.getMonth();
         month_this_prev = (month_this - 1) % 12 + (12 * (month_this == 0));
         month_this_next = (month_this + 1) % 12;
@@ -956,8 +1047,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         ////////////////////////////////////////////////////////////
         document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
-
         document.getElementById('next-month-selector0').addEventListener('click',next_month);
+        document.getElementById('present-month-selector0').addEventListener('click',cur_month);
 
     }
 
