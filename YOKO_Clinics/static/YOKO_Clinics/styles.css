@@ -862,7 +862,7 @@ input[type="checkbox"].toggle1:checked+label::after {
   }
 
   .cal_slid1{
-    left: -2000px;
+    left: -80rem;
     height: auto;
     max-height: 0;
     max-width: 0;
@@ -871,7 +871,7 @@ input[type="checkbox"].toggle1:checked+label::after {
 }
 
 .cal_slid2{
-    left: 2000px;
+    left: 80rem;
     height: auto;
     max-height: 0;
     max-width: 0;
