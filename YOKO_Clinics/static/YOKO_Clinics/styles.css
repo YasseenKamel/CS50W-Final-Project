@@ -45,6 +45,7 @@
     --alert_danger_background: #f8d7da;
     --alert_danger_text: #721c24;
     --alert_danger_border: #f5c6cb;
+    --disabled_day: #dfd1e6;
   }
   :root[data-theme="dark"] {
     --text: #ebe5f0;
@@ -62,7 +63,8 @@
     --alert_success_border: rgb(41, 97, 54);
     --alert_danger_background: #721c24;
     --alert_danger_text: #f9cfd3;
-    --alert_danger_border: #60161e;;
+    --alert_danger_border: #60161e;
+    --disabled_day: #55495c;
   }
   
 
@@ -844,3 +846,35 @@ input[type="checkbox"].toggle1:checked+label::after {
     position: absolute;
     right: 0.5rem;
   }
+
+  .disabled_day{
+    background-color: var(--disabled_day);
+  }
+
+  .calendar_slide{
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    left: 0px;
+    height:auto;
+    max-height: 1000px;
+    transition: 0.75s;
+  }
+
+  .cal_slid1{
+    left: -2000px;
+    height: auto;
+    max-height: 0;
+    max-width: 0;
+    width: auto;
+    transition: 0.75s;
+}
+
+.cal_slid2{
+    left: 2000px;
+    height: auto;
+    max-height: 0;
+    max-width: 0;
+    width: auto;
+    transition: 0.75s;
+}
