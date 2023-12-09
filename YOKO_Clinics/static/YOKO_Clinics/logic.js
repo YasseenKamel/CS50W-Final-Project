@@ -788,6 +788,17 @@ document.addEventListener('DOMContentLoaded', function () {
         clicked.classList.toggle('selected_day');
     }
 
+    function cancel_vacation(event){
+        if(event.target != document.getElementById('input_container')){
+            return;
+        }
+        document.getElementById('input_container').style.display = 'none';
+        /// TODO: reset it all
+        document.querySelectorAll('.selected_day').forEach(banana => {
+            banana.classList.toggle('selected_day');
+        });
+    }
+
     function getup(event){
         if(mousedown == -1){
             return;
@@ -806,6 +817,9 @@ document.addEventListener('DOMContentLoaded', function () {
             [mousedown, mouseup] = [mouseup, mousedown];
         }
         console.log(mousedown + ' -> ' + mouseup);
+        
+        document.getElementById('input_container').style.display = 'flex';
+
         mousedown = -1;
         mouseup = -1;
     }
@@ -848,6 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let day1 = '<li class="calendar-day" id="calendar-day', day02 = '"><span>',day2 = '</span></li>';
         let day3 = '<li class="calendar-day" id="calendar-day', day04 = '"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
         let no_day1 = '<li class="calendar-day disabled_day"><span>',no_day2 = '</span></li>';
+        let past_day1 = '<li class="calendar-day past_day"><span>',past_day2 = '</span></li>';
         let last_month = month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2);
         let sm = 0;
         let currentDate1 = new Date();
@@ -862,6 +877,9 @@ document.addEventListener('DOMContentLoaded', function () {
         for(let i = 1 ; i <= days_num ; i ++){
             if(year == year_this && month == month_this && i == today_date1){
                 template += day3 + idx + i + day04 + i + day4;
+            }
+            else if(year < year_this || (year == year_this && month < month_this) || (year == year_this && month == month_this && i < today_date1)){
+                template += past_day1 + i + past_day2;
             }
             else{
                 template += day1 + idx + i + day02 + i + day2;
@@ -1189,6 +1207,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         document.addEventListener('mousedown', getdown);
         document.addEventListener('mouseup', getup);
+        document.getElementById('input_container').addEventListener('click', cancel_vacation);
 
     }
 

@@ -878,6 +878,16 @@ input[type="checkbox"].toggle1:checked+label::after {
     cursor: auto;
   }
 
+  .past_day{
+    background-color: var(--primary);
+    cursor: auto;
+  }
+
+  .past_day:hover{
+    background-color: var(--primary);
+    cursor: auto;
+  }
+
   .selected_day{
     background-color: var(--selected_day);
   }
@@ -914,4 +924,30 @@ input[type="checkbox"].toggle1:checked+label::after {
     background-color: grey;
     border-radius:1rem;
     color:white;
+}
+
+.input_container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input_vacation_frame{
+    border-radius: 0.5rem;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 2px;
+    background-color: var(--secondary);
+    padding: 3rem;
+    padding-top:2rem;
+    width:60%;
+    margin: auto;
+    box-shadow: var(--shadow-elevation-medium);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
