@@ -46,6 +46,8 @@
     --alert_danger_text: #721c24;
     --alert_danger_border: #f5c6cb;
     --disabled_day: #dfd1e6;
+    --selected_day: #bfa2cd;
+    --hovered_day: #cdaddc;
   }
   :root[data-theme="dark"] {
     --text: #ebe5f0;
@@ -65,6 +67,8 @@
     --alert_danger_text: #f9cfd3;
     --alert_danger_border: #60161e;
     --disabled_day: #55495c;
+    --selected_day: #3e2949;
+    --hovered_day: #4b3259;
   }
   
 
@@ -842,6 +846,12 @@ input[type="checkbox"].toggle1:checked+label::after {
     min-height: 11dvh;
     background-color: var(--primary);
     padding: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: pointer;
   }
   /* Position the day label within the day cell */
   .calendar-day > span {
@@ -852,8 +862,24 @@ input[type="checkbox"].toggle1:checked+label::after {
     right: 0.5rem;
   }
 
+  .calendar-day:hover{
+    background-color: var(--hovered_day);
+  }
+  .disabled_day:hover{
+    background-color: var(--disabled_day) !important;
+  }
+  .selected_day:hover{
+    background-color: var(--selected_day) !important;
+  }
+
+
   .disabled_day{
     background-color: var(--disabled_day);
+    cursor: auto;
+  }
+
+  .selected_day{
+    background-color: var(--selected_day);
   }
 
   .calendar_slide{

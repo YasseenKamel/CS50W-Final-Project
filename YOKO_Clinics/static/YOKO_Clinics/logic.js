@@ -772,12 +772,81 @@ document.addEventListener('DOMContentLoaded', function () {
     let month_prev;
     let month_next;
 
+    let mousedown = -1, mouseup = -1;
+
+    function getdown(event){
+        const clicked = event.target;
+        if(clicked.classList.value != "calendar-day"){
+            mousedown = -1;
+            mouseup = -1;
+            return;
+        }
+        mousedown = parseInt(clicked.id.slice(13));
+        document.querySelectorAll('.selected_day').forEach(banana => {
+            banana.classList.toggle('selected_day');
+        });
+        clicked.classList.toggle('selected_day');
+    }
+
+    function getup(event){
+        if(mousedown == -1){
+            return;
+        }
+        const clicked = event.target;
+        if(clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day"){
+            mousedown = -1;
+            mouseup = -1;
+            document.querySelectorAll('.selected_day').forEach(banana => {
+                banana.classList.toggle('selected_day');
+            });
+            return;
+        }
+        mouseup = parseInt(clicked.id.slice(13));
+        if(mousedown > mouseup){
+            [mousedown, mouseup] = [mouseup, mousedown];
+        }
+        console.log(mousedown + ' -> ' + mouseup);
+        mousedown = -1;
+        mouseup = -1;
+    }
+
+    function enter_element(event){
+        if(mousedown == -1){
+            return;
+        }
+        const clicked = event.target;
+        if(clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day"){
+            return;
+        }
+        let mouse_target = parseInt(clicked.id.slice(13));
+        document.querySelectorAll('.selected_day').forEach(banana => {
+            let id = parseInt(banana.id.slice(13));
+            if(!((mousedown >= id && mouse_target <= id) || (mousedown <= id && mouse_target >= id))){
+                banana.classList.toggle('selected_day');
+            }
+        });
+        if(mouse_target < mousedown){
+            for(let i = mouse_target ; i <= mousedown ; i ++){
+                if(!document.getElementById('calendar-day0' + i).classList.contains('selected_day')){
+                    document.getElementById('calendar-day0' + i).classList.toggle('selected_day')
+                }
+            }
+        }
+        else if(mouse_target > mousedown){
+            for(let i = mousedown ; i <= mouse_target ; i ++){
+                if(!document.getElementById('calendar-day0' + i).classList.contains('selected_day')){
+                    document.getElementById('calendar-day0' + i).classList.toggle('selected_day')
+                }
+            }
+        }
+    }
+
     function load_month(year, month, weekday, idx){
         let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
         let template_close = '</ol>';
         let days_num = month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1);
-        let day1 = '<li class="calendar-day"><span>',day2 = '</span></li>';
-        let day3 = '<li class="calendar-day"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
+        let day1 = '<li class="calendar-day" id="calendar-day', day02 = '"><span>',day2 = '</span></li>';
+        let day3 = '<li class="calendar-day" id="calendar-day', day04 = '"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
         let no_day1 = '<li class="calendar-day disabled_day"><span>',no_day2 = '</span></li>';
         let last_month = month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2);
         let sm = 0;
@@ -792,10 +861,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         for(let i = 1 ; i <= days_num ; i ++){
             if(year == year_this && month == month_this && i == today_date1){
-                template += day3 + i + day4;
+                template += day3 + idx + i + day04 + i + day4;
             }
             else{
-                template += day1 + i + day2;
+                template += day1 + idx + i + day02 + i + day2;
             }
             sm ++;
         }
@@ -805,15 +874,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return template + template_close;
     }
 
-    
-
-    function highlight_day(){
-        if(year == year_this && month == month_this){
-            
-            console.log(today_date1);
-            document.getElementById('day0'+today_date1).firstChild.classList.value = 'number_thing';
-        }
-    }
 
     function prev_month(){
         document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
@@ -855,6 +915,24 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('next-month-selector-1').id = 'next-month-selector0';
         document.getElementById('days-of-week-1').id = 'days-of-week0';
         document.getElementById('calendar-days-1').id = 'calendar-days0';
+
+        document.querySelectorAll('.calendar-day').forEach(slot => {
+            if(slot.id.length > 12){
+                if(slot.id[12] == '0'){
+                    slot.id = slot.id.slice(0,12) + '1' + slot.id.slice(13);
+                    slot.removeEventListener('mouseenter',enter_element);
+                }
+            }
+        });
+
+        document.querySelectorAll('.calendar-day').forEach(slot => {
+            if(slot.id.length > 12){
+                if(slot.id[12] == '-'){
+                    slot.id = slot.id.slice(0,12) + '0' + slot.id.slice(14);
+                    slot.addEventListener('mouseenter',enter_element);
+                }
+            }
+        });
 
         // adding first div
         let prev_div = document.createElement('div');
@@ -914,6 +992,24 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('days-of-week1').id = 'days-of-week0';
         document.getElementById('calendar-days1').id = 'calendar-days0';
 
+        document.querySelectorAll('.calendar-day').forEach(slot => {
+            if(slot.id.length > 12){
+                if(slot.id[12] == '0'){
+                    slot.id = slot.id.slice(0,12) + '-1' + slot.id.slice(13);
+                    slot.removeEventListener('mouseenter',enter_element);
+                }
+            }
+        });
+
+        document.querySelectorAll('.calendar-day').forEach(slot => {
+            if(slot.id.length > 12){
+                if(slot.id[12] == '1'){
+                    slot.id = slot.id.slice(0,12) + '0' + slot.id.slice(13);
+                    slot.addEventListener('mouseenter',enter_element);
+                }
+            }
+        });
+
         // adding first div
         let next_div = document.createElement('div');
         next_div.id = 'calendar_slide1';
@@ -968,6 +1064,14 @@ document.addEventListener('DOMContentLoaded', function () {
             prev_div.classList.value = 'calendar_slide cal_slid1';
             prev_div.innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
 
+            document.querySelectorAll('.calendar-day').forEach(slot => {
+                if(slot.id.length > 12){
+                    if(slot.id[12] == '0'){
+                        slot.addEventListener('mouseenter',enter_element);
+                    }
+                }
+            });
+
             document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
 
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
@@ -1009,6 +1113,14 @@ document.addEventListener('DOMContentLoaded', function () {
             next_div.id = 'calendar_slide1';
             next_div.classList.value = 'calendar_slide cal_slid2';
             next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
+
+            document.querySelectorAll('.calendar-day').forEach(slot => {
+                if(slot.id.length > 12){
+                    if(slot.id[12] == '0'){
+                        slot.addEventListener('mouseenter',enter_element);
+                    }
+                }
+            });
 
             document.getElementById('calendar-month').appendChild(next_div);
 
@@ -1068,6 +1180,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
         document.getElementById('next-month-selector0').addEventListener('click',next_month);
         document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+        document.querySelectorAll('.calendar-day').forEach(slot => {
+            if(slot.id.length > 12){
+                if(slot.id[12] == '0'){
+                    slot.addEventListener('mouseenter',enter_element);
+                }
+            }
+        });
+        document.addEventListener('mousedown', getdown);
+        document.addEventListener('mouseup', getup);
 
     }
 
