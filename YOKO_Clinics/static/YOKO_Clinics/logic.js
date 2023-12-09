@@ -753,28 +753,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let month_days = [31,28,31,30,31,30,31,31,30,31,30,31];
     let month_names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    function load_month(year, month, weekday, idx){
-        let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
-        let template_close = '</ol>';
-        let days_num = month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1);
-        let day1 = '<li class="calendar-day"><span>',day2 = '</span></li>';
-        let no_day1 = '<li class="calendar-day disabled_day"><span>',no_day2 = '</span></li>';
-        let last_month = month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2);
-        let sm = 0;
-        for(let i = last_month - weekday + 2 ; i <= last_month ; i ++){
-            template += no_day1 + i + no_day2;
-            sm ++;
-        }
-        for(let i = 1 ; i <= days_num ; i ++){
-            template += day1 + i + day2;
-            sm ++;
-        }
-        for(let i = 1 ; i <= 42 - sm ; i ++){
-            template += no_day1 + i + no_day2;
-        }
-        return template + template_close;
-    }
-
     let weekday_this;
     let weekday_this_prev;
     let weekday_this_next;
@@ -793,6 +771,49 @@ document.addEventListener('DOMContentLoaded', function () {
     let month;
     let month_prev;
     let month_next;
+
+    function load_month(year, month, weekday, idx){
+        let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
+        let template_close = '</ol>';
+        let days_num = month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1);
+        let day1 = '<li class="calendar-day"><span>',day2 = '</span></li>';
+        let day3 = '<li class="calendar-day"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
+        let no_day1 = '<li class="calendar-day disabled_day"><span>',no_day2 = '</span></li>';
+        let last_month = month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2);
+        let sm = 0;
+        let currentDate1 = new Date();
+        let userTimeZone1 = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        let options1 = { timeZone: userTimeZone1, year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'long', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        let date1 = new Date(currentDate1.toLocaleString(undefined, options1));
+        let today_date1 = date1.getDate();
+        for(let i = last_month - weekday + 2 ; i <= last_month ; i ++){
+            template += no_day1 + i + no_day2;
+            sm ++;
+        }
+        for(let i = 1 ; i <= days_num ; i ++){
+            if(year == year_this && month == month_this && i == today_date1){
+                template += day3 + i + day4;
+            }
+            else{
+                template += day1 + i + day2;
+            }
+            sm ++;
+        }
+        for(let i = 1 ; i <= 42 - sm ; i ++){
+            template += no_day1 + i + no_day2;
+        }
+        return template + template_close;
+    }
+
+    
+
+    function highlight_day(){
+        if(year == year_this && month == month_this){
+            
+            console.log(today_date1);
+            document.getElementById('day0'+today_date1).firstChild.classList.value = 'number_thing';
+        }
+    }
 
     function prev_month(){
         document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
@@ -1043,8 +1064,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('calendar_slide-1').innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
         document.getElementById('calendar_slide0').innerHTML = load_month(year,month,weekday,'0');
         document.getElementById('calendar_slide1').innerHTML = load_month(year_next,month_next,weekday_next,'1');
-        
-
         ////////////////////////////////////////////////////////////
         document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
         document.getElementById('next-month-selector0').addEventListener('click',next_month);

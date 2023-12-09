@@ -883,3 +883,9 @@ input[type="checkbox"].toggle1:checked+label::after {
     width: auto;
     transition: 0.75s;
 }
+
+.number_thing1{
+    background-color: grey;
+    border-radius:1rem;
+    color:white;
+}
