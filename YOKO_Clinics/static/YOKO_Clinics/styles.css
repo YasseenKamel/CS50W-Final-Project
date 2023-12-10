@@ -130,6 +130,12 @@ label{
     color:white;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {transition: background-color 600000s 0s, color 600000s 0s;}
+input[data-autocompleted] {background-color: transparent !important;}
+
 
 input[type="checkbox"].toggle+label {
     /*visible label*/
