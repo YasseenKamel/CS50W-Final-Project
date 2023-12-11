@@ -1211,4 +1211,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+
+    if(document.getElementById('is_vacation') != undefined){
+        document.getElementById('is_vacation').addEventListener('click',function(){
+            if(document.getElementById('is_vacation').checked){
+                document.getElementById('start_time').disabled = true;
+                document.getElementById('end_time').disabled = true;
+            }
+            else{
+                document.getElementById('start_time').disabled = false;
+                document.getElementById('end_time').disabled = false;
+            }
+        });
+    }
+
 });
