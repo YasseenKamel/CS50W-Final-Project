@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getdown(event){
         const clicked = event.target;
-        if(clicked.classList.value != "calendar-day"){
+        if(clicked.classList.value != "calendar-day" || event.button === 2){
             mousedown = -1;
             mouseup = -1;
             return;
@@ -793,14 +793,19 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         document.getElementById('input_container').style.display = 'none';
-        /// TODO: reset it all
+        document.getElementById('start_time').value = "";
+        document.getElementById('end_time').value = "";
+        document.getElementById('start_time').disabled = false;
+        document.getElementById('end_time').disabled = false;
+        document.getElementById('is_vacation').checked = false;
+
         document.querySelectorAll('.selected_day').forEach(banana => {
             banana.classList.toggle('selected_day');
         });
     }
 
     function getup(event){
-        if(mousedown == -1){
+        if(mousedown == -1 || event.button === 2){
             return;
         }
         const clicked = event.target;
@@ -820,12 +825,39 @@ document.addEventListener('DOMContentLoaded', function () {
         
         document.getElementById('input_container').style.display = 'flex';
 
+        let sf1 = "th",sf2 = "th";
+        if(mousedown == 1 || mousedown == 21 || mousedown == 31){
+            sf1 = "st";
+        }
+        if(mouseup == 1 || mouseup == 21 || mouseup == 31){
+            sf2 = "st";
+        }
+
+        if(mousedown == 2 || mousedown == 22){
+            sf1 = "nd";
+        }
+        if(mouseup == 2 || mouseup == 22){
+            sf2 = "nd";
+        }
+
+        if(mousedown == 3 || mousedown == 23){
+            sf1 = "rd";
+        }
+        if(mouseup == 3|| mouseup == 23){
+            sf2 = "rd";
+        }
+
+        document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected days. (" + mousedown + sf1 + ' till ' + mouseup + sf2 + ')';
+        if(mousedown == mouseup){
+            document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected day. (" + mousedown + sf1 + ')';
+        }
         mousedown = -1;
         mouseup = -1;
     }
 
+
     function enter_element(event){
-        if(mousedown == -1){
+        if(mousedown == -1 || event.button === 2){
             return;
         }
         const clicked = event.target;
@@ -854,6 +886,108 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
+    function gettouchdown(event){
+        let touch = event.touches[0];
+        let clicked = document.elementFromPoint(touch.clientX, touch.clientY);
+        if(clicked == null || clicked == undefined || clicked.classList.value != "calendar-day"){
+            mousedown = -1;
+            mouseup = -1;
+            return;
+        }
+        document.body.style.overflow = 'hidden';
+        mousedown = parseInt(clicked.id.slice(13));
+        document.querySelectorAll('.selected_day').forEach(banana => {
+            banana.classList.toggle('selected_day');
+        });
+        clicked.classList.toggle('selected_day');
+    }
+
+    function gettouchmove(event){
+        if(mousedown == -1){
+            return;
+        }
+        let touch = event.touches[0];
+        let clicked = document.elementFromPoint(touch.clientX, touch.clientY);
+        if(clicked == null || clicked == undefined || (clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day")){
+            return;
+        }
+        let mouse_target = parseInt(clicked.id.slice(13));
+        document.querySelectorAll('.selected_day').forEach(banana => {
+            let id = parseInt(banana.id.slice(13));
+            if(!((mousedown >= id && mouse_target <= id) || (mousedown <= id && mouse_target >= id))){
+                banana.classList.toggle('selected_day');
+            }
+        });
+        if(mouse_target < mousedown){
+            for(let i = mouse_target ; i <= mousedown ; i ++){
+                if(!document.getElementById('calendar-day0' + i).classList.contains('selected_day')){
+                    document.getElementById('calendar-day0' + i).classList.toggle('selected_day')
+                }
+            }
+        }
+        else if(mouse_target > mousedown){
+            for(let i = mousedown ; i <= mouse_target ; i ++){
+                if(!document.getElementById('calendar-day0' + i).classList.contains('selected_day')){
+                    document.getElementById('calendar-day0' + i).classList.toggle('selected_day')
+                }
+            }
+        }
+    }
+
+    function gettouchup(event){
+        document.body.style.overflow = 'auto';
+        if(mousedown == -1){
+            return;
+        }
+        let clicked = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+        if(clicked == null || clicked == undefined || (clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day")){
+            mousedown = -1;
+            mouseup = -1;
+            document.querySelectorAll('.selected_day').forEach(banana => {
+                banana.classList.toggle('selected_day');
+            });
+            return;
+        }
+        mouseup = parseInt(clicked.id.slice(13));
+        if(mousedown > mouseup){
+            [mousedown, mouseup] = [mouseup, mousedown];
+        }
+        console.log(mousedown + ' -> ' + mouseup);
+        
+        document.getElementById('input_container').style.display = 'flex';
+
+        let sf1 = "th",sf2 = "th";
+        if(mousedown == 1 || mousedown == 21 || mousedown == 31){
+            sf1 = "st";
+        }
+        if(mouseup == 1 || mouseup == 21 || mouseup == 31){
+            sf2 = "st";
+        }
+
+        if(mousedown == 2 || mousedown == 22){
+            sf1 = "nd";
+        }
+        if(mouseup == 2 || mouseup == 22){
+            sf2 = "nd";
+        }
+
+        if(mousedown == 3 || mousedown == 23){
+            sf1 = "rd";
+        }
+        if(mouseup == 3|| mouseup == 23){
+            sf2 = "rd";
+        }
+
+        document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected days. (" + mousedown + sf1 + ' till ' + mouseup + sf2 + ')';
+        if(mousedown == mouseup){
+            document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected day. (" + mousedown + sf1 + ')';
+        }
+
+        mousedown = -1;
+        mouseup = -1;
+    }
+
 
     function load_month(year, month, weekday, idx){
         let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
@@ -1207,6 +1341,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         document.addEventListener('mousedown', getdown);
         document.addEventListener('mouseup', getup);
+        document.addEventListener('touchstart', gettouchdown);
+        document.addEventListener('touchmove', gettouchmove);
+        document.addEventListener('touchend', gettouchup);
+
         document.getElementById('input_container').addEventListener('click', cancel_vacation);
 
     }
