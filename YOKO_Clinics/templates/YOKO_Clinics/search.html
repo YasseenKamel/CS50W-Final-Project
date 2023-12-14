@@ -5,9 +5,9 @@
 {% block body %}
 
 {% for doc in page_obj %}
-<a href="{% url 'profile' doc.id %}" class="no_link">
     <div class="profile_frame">
 
+<a href="{% url 'profile' doc.id %}" class="no_link">
         <div class="mini_profile_div">
             <div>
                 <div class="main_specialty_container">
@@ -48,8 +48,8 @@
                 </div> -->
             </div>
         </div>
-    </div>
 </a>
+    </div>
 {% endfor %}
 
 <div class="pagination">
