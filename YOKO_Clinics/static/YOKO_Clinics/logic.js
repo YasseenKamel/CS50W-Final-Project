@@ -821,36 +821,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if(mousedown > mouseup){
             [mousedown, mouseup] = [mouseup, mousedown];
         }
-        console.log(mousedown + ' -> ' + mouseup);
-        
         document.getElementById('input_container').style.display = 'flex';
-
-        let sf1 = "th",sf2 = "th";
-        if(mousedown == 1 || mousedown == 21 || mousedown == 31){
-            sf1 = "st";
-        }
-        if(mouseup == 1 || mouseup == 21 || mouseup == 31){
-            sf2 = "st";
-        }
-
-        if(mousedown == 2 || mousedown == 22){
-            sf1 = "nd";
-        }
-        if(mouseup == 2 || mouseup == 22){
-            sf2 = "nd";
-        }
-
-        if(mousedown == 3 || mousedown == 23){
-            sf1 = "rd";
-        }
-        if(mouseup == 3|| mouseup == 23){
-            sf2 = "rd";
-        }
-
-        document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected days. (" + mousedown + sf1 + ' till ' + mouseup + sf2 + ')';
-        if(mousedown == mouseup){
-            document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected day. (" + mousedown + sf1 + ')';
-        }
+        document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
         mousedown = -1;
         mouseup = -1;
     }
@@ -953,37 +925,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if(mousedown > mouseup){
             [mousedown, mouseup] = [mouseup, mousedown];
         }
-        console.log(mousedown + ' -> ' + mouseup);
-        
         document.getElementById('input_container').style.display = 'flex';
-
-        let sf1 = "th",sf2 = "th";
-        if(mousedown == 1 || mousedown == 21 || mousedown == 31){
-            sf1 = "st";
-        }
-        if(mouseup == 1 || mouseup == 21 || mouseup == 31){
-            sf2 = "st";
-        }
-
-        if(mousedown == 2 || mousedown == 22){
-            sf1 = "nd";
-        }
-        if(mouseup == 2 || mouseup == 22){
-            sf2 = "nd";
-        }
-
-        if(mousedown == 3 || mousedown == 23){
-            sf1 = "rd";
-        }
-        if(mouseup == 3|| mouseup == 23){
-            sf2 = "rd";
-        }
-
-        document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected days. (" + mousedown + sf1 + ' till ' + mouseup + sf2 + ')';
-        if(mousedown == mouseup){
-            document.getElementById('vacation_input_title').textContent = "Select your new working times for each of the selected day. (" + mousedown + sf1 + ')';
-        }
-
+        document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
         mousedown = -1;
         mouseup = -1;
     }
