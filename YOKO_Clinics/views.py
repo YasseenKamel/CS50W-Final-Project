@@ -134,10 +134,39 @@ def vacation(request):
     for i in days:
         if(i not in vacay):
             vaycays.append(i)
-    return render(request, "YOKO_Clinics/vacations.html",{
-        'current_time': datetime.datetime.now(),
-        'repeated': vaycays
-    })
+    if request.method == 'GET':
+        return render(request, "YOKO_Clinics/vacations.html",{
+            'current_time': datetime.datetime.now(),
+            'repeated': vaycays
+        })
+    else:
+        is_vacation = request.POST.get('is_vacation')
+        if is_vacation == None:
+            is_vacation = False
+        else:
+            is_vacation = True
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        start_day = request.POST.get('start_day').split('/')[0]
+        end_day = request.POST.get('end_day').split('/')[0]
+        month = request.POST.get('start_day').split('/')[1]
+        year = request.POST.get('start_day').split('/')[2]
+        print(is_vacation)
+        print(start_time)
+        print(end_time)
+        print(start_day)
+        print(end_day)
+        print(month)
+        print(year)
+        if is_vacation:
+            pass
+        else:
+            pass
+        return render(request, "YOKO_Clinics/vacations.html",{
+            'current_time': datetime.datetime.now(),
+            'repeated': vaycays
+        })
+
 
 @login_required
 def appointment(request,id):
@@ -269,9 +298,23 @@ def get_cal_data(request):
             years.append(year + 1)
         print(data)
         appoints = appointments.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years)
+        vacays = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
+        altered = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
         print(appoints)
         if appoints != None:
             appoints = serialize('json', appoints)
         else:
             appoints = 0
-        return JsonResponse({'appointments' : appoints})
+        if vacays != None:
+            vacays = serialize('json', vacays)
+        else:
+            vacays = 0
+        if altered != None:
+            altered = serialize('json', altered)
+        else:
+            altered = 0
+        return JsonResponse({
+            'appointments' : appoints,
+            'vacays': vacays,
+            'altered': altered
+        })

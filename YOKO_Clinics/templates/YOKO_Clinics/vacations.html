@@ -25,13 +25,14 @@
 
 <div class="input_container" style="display:none;" id="input_container">
     <div class="input_vacation_frame">
-        <form class="vertical_align">
+        <form class="vertical_align" action="{% url 'vacation' %}" method="post">
+            {% csrf_token %}
             <h4 style="margin-bottom:2rem;" id="vacation_input_title">Select your new working times for each of the selected days.</h4>
             <div class="banana1">
                 <div class="form-group1">
-                    <input type="time" id="start_time" name="start_time" class="form-control" tabindex="-1">
+                    <input type="time" id="start_time" name="start_time" class="form-control" tabindex="-1" required>
                     <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
-                    <input type="time" id="end_time" name="end_time" class="form-control" tabindex="-1">
+                    <input type="time" id="end_time" name="end_time" class="form-control" tabindex="-1" required>
                 </div>
                 <div style="margin-left: 1rem;">
                     <label class="checkbox-container1">Vacation
@@ -40,7 +41,12 @@
                     </label>
                 </div>
             </div>
-            <input class="btn btn-primary" type="submit" value="Set Schedule" id="submit" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
+            <div>
+                <input type="hidden" id="start_day" value="" name="start_day">
+                <input type="hidden" id="end_day" value="" name="end_day">
+                <input class="btn btn-primary" type="button" id="cancel_vacay" value="Cancel" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
+                <input class="btn btn-primary" type="submit" value="Set Schedule" id="submit" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
+            </div>
         </form>
     </div>
 </div>
