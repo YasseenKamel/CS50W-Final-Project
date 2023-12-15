@@ -13,5 +13,6 @@ urlpatterns = [
     path("appointments", views.appointments, name="appointments"),
     path("search", views.search, name="search"),
     #fetch
-    path("<str:banana>/edit_profile", views.edit_profile, name="edit_profile")
+    path("<str:banana>/edit_profile", views.edit_profile, name="edit_profile"),
+    path("get_cal_data", views.get_cal_data, name="get_cal_data")
 ]

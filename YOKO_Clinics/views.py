@@ -10,6 +10,7 @@ from django.contrib import messages
 from django import forms
 from django.core.paginator import Paginator
 import datetime
+from django.core.serializers import serialize
 import json
 from django.contrib.auth.decorators import login_required
 from .models import User,types,reviews,expertise,repeated_vacations,vacations,appointments,bookings,messages
@@ -127,8 +128,15 @@ def bookings(request):
 
 @login_required
 def vacation(request):
+    vacay = repeated_vacations.objects.filter(doctor_id=request.user.id).values_list('day',flat=True)
+    days = [1,2,3,4,5,6,7]
+    vaycays = []
+    for i in days:
+        if(i not in vacay):
+            vaycays.append(i)
     return render(request, "YOKO_Clinics/vacations.html",{
-        'current_time': datetime.datetime.now()
+        'current_time': datetime.datetime.now(),
+        'repeated': vaycays
     })
 
 @login_required
@@ -198,7 +206,7 @@ def edit_profile(request,banana):
 
 
 @login_required
-def appointments(request):
+def appointment(request):
     pass
 
 @login_required
@@ -248,3 +256,22 @@ def search(request):
             'page_obj': page_obj
         })
 
+@login_required
+def get_cal_data(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        month = data['month']
+        year = data['year']
+        years = [year]
+        if month == 1:
+            years.append(year - 1)
+        if month == 12:
+            years.append(year + 1)
+        print(data)
+        appoints = appointments.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years)
+        print(appoints)
+        if appoints != None:
+            appoints = serialize('json', appoints)
+        else:
+            appoints = 0
+        return JsonResponse({'appointments' : appoints})

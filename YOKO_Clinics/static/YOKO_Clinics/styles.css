@@ -1028,3 +1028,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     align-items: center;
     flex-direction: column;
 }
+
+.day_off{
+    
+}

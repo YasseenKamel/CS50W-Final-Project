@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getdown(event){
         const clicked = event.target;
-        if(clicked.classList.value != "calendar-day" || event.button === 2){
+        if(!(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day")) || event.button === 2){
             mousedown = -1;
             mouseup = -1;
             return;
@@ -809,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         const clicked = event.target;
-        if(clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day"){
+        if(!(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day"))){
             mousedown = -1;
             mouseup = -1;
             document.querySelectorAll('.selected_day').forEach(banana => {
@@ -833,7 +833,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         const clicked = event.target;
-        if(clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day"){
+        if(!clicked.classList.contains("calendar-day")){
             return;
         }
         let mouse_target = parseInt(clicked.id.slice(13));
@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function gettouchdown(event){
         let touch = event.touches[0];
         let clicked = document.elementFromPoint(touch.clientX, touch.clientY);
-        if(clicked == null || clicked == undefined || clicked.classList.value != "calendar-day"){
+        if(clicked == null || clicked == undefined || !(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day"))){
             mousedown = -1;
             mouseup = -1;
             return;
@@ -881,7 +881,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         let touch = event.touches[0];
         let clicked = document.elementFromPoint(touch.clientX, touch.clientY);
-        if(clicked == null || clicked == undefined || (clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day")){
+        if(clicked == null || clicked == undefined || !(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day"))){
             return;
         }
         let mouse_target = parseInt(clicked.id.slice(13));
@@ -913,7 +913,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         let clicked = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-        if(clicked == null || clicked == undefined || (clicked.classList.value != "calendar-day" && clicked.classList.value != "calendar-day selected_day")){
+        if(clicked == null || clicked == undefined || !(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day"))){
             mousedown = -1;
             mouseup = -1;
             document.querySelectorAll('.selected_day').forEach(banana => {
@@ -933,6 +933,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function load_month(year, month, weekday, idx){
+        console.log(repeated_vacations);
         let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
         let template_close = '</ol>';
         let days_num = month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1);
@@ -951,17 +952,43 @@ document.addEventListener('DOMContentLoaded', function () {
             template += no_day1 + i + no_day2;
             sm ++;
         }
+
+        
+        let day11 = '<li class="calendar-day day_off" id="calendar-day', day021 = '"><span>',day21 = '</span></li>';
+        let day31 = '<li class="calendar-day day_off" id="calendar-day', day041 = '"><span class="number_thing1">&nbsp',day41 = '&nbsp</span></li>';
+        let past_day11 = '<li class="calendar-day past_day day_off"><span>',past_day21 = '</span></li>';
+
+        let cur_weekday = weekday;
         for(let i = 1 ; i <= days_num ; i ++){
             if(year == year_this && month == month_this && i == today_date1){
-                template += day3 + idx + i + day04 + i + day4;
+                if(repeated_vacations.includes(cur_weekday)){
+                    template += day31 + idx + i + day041 + i + day41;
+                }
+                else{
+                    template += day3 + idx + i + day04 + i + day4;
+                }
             }
             else if(year < year_this || (year == year_this && month < month_this) || (year == year_this && month == month_this && i < today_date1)){
-                template += past_day1 + i + past_day2;
+                if(repeated_vacations.includes(cur_weekday)){
+                    template += past_day11 + i + past_day21;
+                }
+                else{
+                    template += past_day1 + i + past_day2;
+                }
             }
             else{
-                template += day1 + idx + i + day02 + i + day2;
+                if(repeated_vacations.includes(cur_weekday)){
+                    template += day11 + idx + i + day021 + i + day21;
+                }
+                else{
+                    template += day1 + idx + i + day02 + i + day2;
+                }
             }
             sm ++;
+            cur_weekday ++;
+            if(cur_weekday > 7){
+                cur_weekday -= 7;
+            }
         }
         for(let i = 1 ; i <= 42 - sm ; i ++){
             template += no_day1 + i + no_day2;
@@ -971,10 +998,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function prev_month(){
-        document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
-        document.getElementById('calendar_slide-1').classList.toggle('cal_slid1');
-        ////
-
         month_next = month;
         month = month_prev;
         month_prev = (month - 1) % 12 + (12 * (month == 0));
@@ -986,6 +1009,24 @@ document.addEventListener('DOMContentLoaded', function () {
         weekday_next = weekday;
         weekday = weekday_prev;
         weekday_prev = (weekday - (month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2))) % 7 + 7;
+
+        fetch('get_cal_data',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                year: year,
+                month: (month + 1)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {});
+
+        document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
+        document.getElementById('calendar_slide-1').classList.toggle('cal_slid1');
+        ////
 
         //// cycling divs and renaming ids and redeclaring event listeners
 
@@ -1046,10 +1087,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function next_month(){
-        document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
-        document.getElementById('calendar_slide1').classList.toggle('cal_slid2');
-        ////
-        
         month_prev = month;
         month = month_next;
         month_next = (month + 1) % 12;
@@ -1063,6 +1100,24 @@ document.addEventListener('DOMContentLoaded', function () {
         weekday_next = (weekday + month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1)) % 7;
         weekday_next += 7 * (weekday_next == 0);
 
+        fetch('get_cal_data',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                year: year,
+                month: (month + 1)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {});
+
+        document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
+        document.getElementById('calendar_slide1').classList.toggle('cal_slid2');
+        ////
+        
         //// cycling divs and renaming ids and redeclaring event listeners
 
         document.getElementById('calendar_slide-1').remove();
@@ -1124,8 +1179,23 @@ document.addEventListener('DOMContentLoaded', function () {
     function cur_month(){
         if(year > year_this || (year == year_this && month > month_this)){
 
+            fetch('get_cal_data',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token,
+                },
+                body: JSON.stringify({
+                    year: year_this,
+                    month: (month_this + 1)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {});
+
             /// edit content of -1 first so it slides in ready
             document.getElementById('calendar_slide-1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
+
 
             document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
             document.getElementById('calendar_slide-1').classList.toggle('cal_slid1');
@@ -1175,6 +1245,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
         else if(year < year_this || (year == year_this && month < month_this)){
+
+            fetch('get_cal_data',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token,
+                },
+                body: JSON.stringify({
+                    year: year_this,
+                    month: (month_this + 1)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {});
+
             document.getElementById('calendar_slide1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
 
             document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
@@ -1271,6 +1356,21 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('calendar_slide-1').innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
         document.getElementById('calendar_slide0').innerHTML = load_month(year,month,weekday,'0');
         document.getElementById('calendar_slide1').innerHTML = load_month(year_next,month_next,weekday_next,'1');
+
+        fetch('get_cal_data',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                year: year_this,
+                month: (month_this + 1)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {});
+
         ////////////////////////////////////////////////////////////
         document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
         document.getElementById('next-month-selector0').addEventListener('click',next_month);
