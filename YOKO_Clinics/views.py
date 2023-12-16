@@ -306,11 +306,9 @@ def get_cal_data(request):
             years.append(year - 1)
         if month == 12:
             years.append(year + 1)
-        print(data)
         appoints = appointments.objects.filter(doctor_id = request.user.id,start_date__month=month,start_date__year = year)
         vacays = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
         altered = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
-        print(appoints)
         if appoints != None:
             appoints = serialize('json', appoints)
         else:

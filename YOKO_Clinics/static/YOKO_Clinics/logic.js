@@ -796,12 +796,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         document.getElementById('input_container').style.display = 'none';
+        document.getElementById('submit_vacation').value = "Set Schedule";
         document.getElementById('error_div').innerHTML = "";
         document.getElementById('start_time').value = "";
         document.getElementById('end_time').value = "";
         document.getElementById('start_time').disabled = false;
         document.getElementById('end_time').disabled = false;
         document.getElementById('is_vacation').checked = false;
+        set_vacation = 0;
 
         document.querySelectorAll('.selected_day').forEach(banana => {
             banana.classList.toggle('selected_day');
@@ -1409,7 +1411,6 @@ document.addEventListener('DOMContentLoaded', function () {
             appointments = JSON.parse(data['appointments']);
             vacations = JSON.parse(data['vacays']);
             altered = JSON.parse(data['altered']);
-            console.log(appointments);
             ////////////////////////////////////////////////////////////
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -1446,12 +1447,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function validateTime(id) {
+        var timeInput = document.getElementById(id);
+        if (timeInput.value.trim() === '') {
+            return false;
+        }
+    
+        var isValidTime = isValidTimeFormat(timeInput.value);
+    
+        if (isValidTime) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    function isValidTimeFormat(time) {
+        var timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        return timeRegex.test(time);
+    }
+
     function bs_appointment_days(tar){
         let s = 0,e = appointments.length - 1;
         let mid = parseInt((s + e) / 2);
         while(s < e){
             mid = parseInt((s + e) / 2);
-            console.log(mid);
             let day = new Date(appointments[mid]['fields']['start_date']);
             day = day.getDate();
             if(day < tar){
@@ -1464,32 +1484,57 @@ document.addEventListener('DOMContentLoaded', function () {
         return s;
     }
 
+    function bs_appointment_time(tar){
+        //// TODO: complete binary search for times function
+    }
+
+    let set_vacation = 0;
+
     if(document.getElementById('submit_vacation') != undefined){
         document.getElementById('submit_vacation').addEventListener('click',function(){
-            if(appointments.length != 0){
-                let start = bs_appointment_days(starting),end = bs_appointment_days(ending);
-                console.log(starting + ' -> ' + ending);
-                let day = new Date(appointments[start]['fields']['start_date']);
-                day = day.getDate();
-                if(day < starting){
-                    start ++;
-                }
-                day = new Date(appointments[end]['fields']['start_date']);
-                day = day.getDate();
-                if(day > ending){
-                    end --;
-                }
-                if(start <= end){
-                    document.getElementById('error_div').innerHTML = "";
-                    for(let i = start ; i <= end ; i ++){
-                        let day = new Date(appointments[i]['fields']['start_date']);
-                        let day1 = day;
-                        day = day.getDate();
-                        let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        let error_msg = '<div class="alert alert-danger" id="beep' + i + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + i + ')">×</a>You have an appointment on the ' + day + ((day == 1 || day == 21 || day == 31) ? "st" : ((day == 2 || day == 22) ? "nd" : ((day == 3 || day == 23) ? "rd" : "th"))) + ' at ' + day1.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: true, timeZone }) + '.</div>';
-                        document.getElementById('error_div').innerHTML += error_msg;
+            if(set_vacation == 0){
+                set_vacation ++;
+                if(appointments.length != 0){
+                    let start = bs_appointment_days(starting),end = bs_appointment_days(ending);
+                    let day = new Date(appointments[start]['fields']['start_date']);
+                    day = day.getDate();
+                    if(day < starting){
+                        start ++;
+                    }
+                    day = new Date(appointments[end]['fields']['start_date']);
+                    day = day.getDate();
+                    if(day > ending){
+                        end --;
+                    }
+                    if(start <= end){
+                        if(document.getElementById('is_vacation').checked == true){
+                            document.getElementById('error_div').innerHTML = "";
+                            document.getElementById('submit_vacation').value = "Set Anyway";
+                            document.getElementById('vacation_input_title').innerHTML += " (These appointments will be cancelled if schedule is set)";
+                            for(let i = start ; i <= end ; i ++){
+                                let day = new Date(appointments[i]['fields']['start_date']);
+                                let day1 = day;
+                                day = day.getDate();
+                                let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                                let error_msg = '<div class="alert alert-danger" id="beep' + i + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + i + ')">×</a>You have an appointment on the ' + day + ((day == 1 || day == 21 || day == 31) ? "st" : ((day == 2 || day == 22) ? "nd" : ((day == 3 || day == 23) ? "rd" : "th"))) + ' at ' + day1.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: true, timeZone }) + '.</div>';
+                                document.getElementById('error_div').innerHTML += error_msg;
+                            }
+                        }
+                        else{
+                            if(!validateTime("start_time") || !validateTime("end_time")){
+                                let error_msg = '<div class="alert alert-danger" id="beep1"><a class="close" data-dismiss="alert" href="#" onclick="hide1">×</a>Please set a valid time.</div>';
+                                document.getElementById('error_div').innerHTML = error_msg;
+                            }
+                            else{
+                                /// binary search on times
+                            }
+                        }
                     }
                 }
+            }
+            else{
+                set_vacation = 0;
+                //// TODO: fetch and edit and post vacation
             }
         });
     }
