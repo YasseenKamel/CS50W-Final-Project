@@ -774,6 +774,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let mousedown = -1, mouseup = -1;
 
+    let appointments,vacations,altered;
+    let starting = -1,ending = -1;
+
     function getdown(event){
         const clicked = event.target;
         if(!(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day")) || event.button === 2){
@@ -793,6 +796,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         document.getElementById('input_container').style.display = 'none';
+        document.getElementById('error_div').innerHTML = "";
         document.getElementById('start_time').value = "";
         document.getElementById('end_time').value = "";
         document.getElementById('start_time').disabled = false;
@@ -825,6 +829,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
         document.getElementById('input_container').style.display = 'flex';
         document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
+        starting = mousedown;
+        ending = mouseup;
         mousedown = -1;
         mouseup = -1;
     }
@@ -931,6 +937,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
         document.getElementById('input_container').style.display = 'flex';
         document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
+        starting = mousedown;
+        ending = mouseup;
         mousedown = -1;
         mouseup = -1;
     }
@@ -1027,6 +1035,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
 
+            appointments = JSON.parse(data['appointments']);
+            vacations = JSON.parse(data['vacays']);
+            altered = JSON.parse(data['altered']);
+
             document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
             document.getElementById('calendar_slide-1').classList.toggle('cal_slid1');
             ////
@@ -1121,6 +1133,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
 
+            appointments = JSON.parse(data['appointments']);
+            vacations = JSON.parse(data['vacays']);
+            altered = JSON.parse(data['altered']);
+
             document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
             document.getElementById('calendar_slide1').classList.toggle('cal_slid2');
             ////
@@ -1201,7 +1217,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
 
-                
+                appointments = JSON.parse(data['appointments']);
+                vacations = JSON.parse(data['vacays']);
+                altered = JSON.parse(data['altered']);
                 /// edit content of -1 first so it slides in ready
                 document.getElementById('calendar_slide-1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
 
@@ -1271,6 +1289,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
 
+                    
+                appointments = JSON.parse(data['appointments']);
+                vacations = JSON.parse(data['vacays']);
+                altered = JSON.parse(data['altered']);
                 document.getElementById('calendar_slide1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
 
                 document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
@@ -1383,6 +1405,11 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+            
+            appointments = JSON.parse(data['appointments']);
+            vacations = JSON.parse(data['vacays']);
+            altered = JSON.parse(data['altered']);
+            console.log(appointments);
             ////////////////////////////////////////////////////////////
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -1415,6 +1442,54 @@ document.addEventListener('DOMContentLoaded', function () {
             else{
                 document.getElementById('start_time').disabled = false;
                 document.getElementById('end_time').disabled = false;
+            }
+        });
+    }
+
+    function bs_appointment_days(tar){
+        let s = 0,e = appointments.length - 1;
+        let mid = parseInt((s + e) / 2);
+        while(s < e){
+            mid = parseInt((s + e) / 2);
+            console.log(mid);
+            let day = new Date(appointments[mid]['fields']['start_date']);
+            day = day.getDate();
+            if(day < tar){
+                s = mid + 1;
+            }
+            else{
+                e = mid;
+            }
+        }
+        return s;
+    }
+
+    if(document.getElementById('submit_vacation') != undefined){
+        document.getElementById('submit_vacation').addEventListener('click',function(){
+            if(appointments.length != 0){
+                let start = bs_appointment_days(starting),end = bs_appointment_days(ending);
+                console.log(starting + ' -> ' + ending);
+                let day = new Date(appointments[start]['fields']['start_date']);
+                day = day.getDate();
+                if(day < starting){
+                    start ++;
+                }
+                day = new Date(appointments[end]['fields']['start_date']);
+                day = day.getDate();
+                if(day > ending){
+                    end --;
+                }
+                if(start <= end){
+                    document.getElementById('error_div').innerHTML = "";
+                    for(let i = start ; i <= end ; i ++){
+                        let day = new Date(appointments[i]['fields']['start_date']);
+                        let day1 = day;
+                        day = day.getDate();
+                        let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                        let error_msg = '<div class="alert alert-danger" id="beep' + i + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + i + ')">×</a>You have an appointment on the ' + day + ((day == 1 || day == 21 || day == 31) ? "st" : ((day == 2 || day == 22) ? "nd" : ((day == 3 || day == 23) ? "rd" : "th"))) + ' at ' + day1.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: true, timeZone }) + '.</div>';
+                        document.getElementById('error_div').innerHTML += error_msg;
+                    }
+                }
             }
         });
     }

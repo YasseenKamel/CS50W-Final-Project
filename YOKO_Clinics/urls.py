@@ -14,5 +14,6 @@ urlpatterns = [
     path("search", views.search, name="search"),
     #fetch
     path("<str:banana>/edit_profile", views.edit_profile, name="edit_profile"),
-    path("get_cal_data", views.get_cal_data, name="get_cal_data")
+    path("get_cal_data", views.get_cal_data, name="get_cal_data"),
+    path("vacation_add", views.vacation_add, name="vacation_add")
 ]

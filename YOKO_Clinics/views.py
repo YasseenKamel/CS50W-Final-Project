@@ -134,12 +134,22 @@ def vacation(request):
     for i in days:
         if(i not in vacay):
             vaycays.append(i)
-    if request.method == 'GET':
-        return render(request, "YOKO_Clinics/vacations.html",{
-            'current_time': datetime.datetime.now(),
-            'repeated': vaycays
-        })
-    else:
+    return render(request, "YOKO_Clinics/vacations.html",{
+        'current_time': datetime.datetime.now(),
+        'repeated': vaycays
+    })
+        
+
+
+@login_required
+def vacation_add(request):
+    if request.method == 'PUT':
+        vacay = repeated_vacations.objects.filter(doctor_id=request.user.id).values_list('day',flat=True)
+        days = [1,2,3,4,5,6,7]
+        vaycays = []
+        for i in days:
+            if(i not in vacay):
+                vaycays.append(i)
         is_vacation = request.POST.get('is_vacation')
         if is_vacation == None:
             is_vacation = False
@@ -297,7 +307,7 @@ def get_cal_data(request):
         if month == 12:
             years.append(year + 1)
         print(data)
-        appoints = appointments.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years)
+        appoints = appointments.objects.filter(doctor_id = request.user.id,start_date__month=month,start_date__year = year)
         vacays = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
         altered = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
         print(appoints)
