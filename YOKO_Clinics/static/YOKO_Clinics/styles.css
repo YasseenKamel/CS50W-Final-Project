@@ -979,6 +979,15 @@ input[type="checkbox"].toggle1:checked+label::after {
     display: none;
   }
 
+  .checkbox-container1 input:disabled + .checkmark1 {
+    cursor: auto;
+  }
+
+  .checkbox-container1 input:disabled:checked + .checkmark1 {
+    background-color: var(--disabled);
+    border: 1px solid var(--disabled);
+  }
+
   .checkmark1 {
     position: absolute;
     top: 0;

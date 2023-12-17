@@ -803,11 +803,20 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('start_time').disabled = false;
         document.getElementById('end_time').disabled = false;
         document.getElementById('is_vacation').checked = false;
+        document.getElementById('is_vacation').disabled = false;
+        document.getElementById("checker_vacation").style.cursor = "pointer";
         set_vacation = 0;
 
         document.querySelectorAll('.selected_day').forEach(banana => {
             banana.classList.toggle('selected_day');
         });
+    }
+
+    function reset_vacation(event){
+        document.getElementById('submit_vacation').value = "Set Schedule";
+        document.getElementById('vacation_input_title').textContent = ((starting == ending) ? ("Select your new working times for each of the selected day. (" + starting + ((starting == 1 || starting == 21 || starting == 31) ? "st" : ((starting == 2 || starting == 22) ? "nd" : ((starting == 3 || starting == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + starting + ((starting == 1 || starting == 21 || starting == 31) ? "st" : ((starting == 2 || starting == 22) ? "nd" : ((starting == 3 || starting == 23) ? "rd" : "th"))) + ' till ' + ending + ((ending == 1 || ending == 21 || ending == 31) ? "st" : ((ending == 2 || ending == 22) ? "nd" : ((ending == 3 || ending == 23) ? "rd" : "th"))) + ')'));
+        document.getElementById('error_div').innerHTML = "";
+        set_vacation = 0;
     }
 
     function getup(event){
@@ -1485,10 +1494,44 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function bs_appointment_time(tar){
-        //// TODO: complete binary search for times function
+        let s = 0,e = appointments.length - 1;
+        let mid = parseInt((s + e) / 2);
+        while(s < e){
+            mid = parseInt((s + e) / 2);
+            let day = new Date(appointments[mid]['fields']['start_date']);
+            if(day < tar){
+                s = mid + 1;
+            }
+            else{
+                e = mid;
+            }
+        }
+        return s;
+    }
+
+    function bs_appointment_time2(tar){
+        let s = 0,e = appointments.length - 1;
+        let mid = parseInt((s + e) / 2);
+        while(s < e){
+            mid = parseInt((s + e) / 2);
+            let day = new Date(appointments[mid]['fields']['end_date']);
+            if(day < tar){
+                s = mid + 1;
+            }
+            else{
+                e = mid;
+            }
+        }
+        return s;
     }
 
     let set_vacation = 0;
+
+    function submit_vacation(start, end, is_vacation){
+        console.log(start);
+        console.log(end);
+        console.log(is_vacation);
+    }
 
     if(document.getElementById('submit_vacation') != undefined){
         document.getElementById('submit_vacation').addEventListener('click',function(){
@@ -1521,22 +1564,98 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }
                         else{
-                            if(!validateTime("start_time") || !validateTime("end_time")){
-                                let error_msg = '<div class="alert alert-danger" id="beep1"><a class="close" data-dismiss="alert" href="#" onclick="hide1">×</a>Please set a valid time.</div>';
+                            if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){
+                                let error_msg = '<div class="alert alert-danger" id="beep1"><a class="close" data-dismiss="alert" href="#" onclick="hide(1)">×</a>Please set a valid time.</div>';
                                 document.getElementById('error_div').innerHTML = error_msg;
+                                set_vacation = 0;
                             }
                             else{
-                                /// binary search on times
+                                let bad_appointments = 0;
+                                for(let i = starting ; i <= ending ; i ++){
+                                    let start_tar = new Date(year, month, i, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10));
+                                    let end_tar = new Date(year, month, i + (document.getElementById("end_time").value < document.getElementById("start_time").value), parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10));
+                                    let start = bs_appointment_time(start_tar),end = bs_appointment_time(end_tar);
+                                    let start2 = bs_appointment_time2(start_tar),end2 = bs_appointment_time2(end_tar);
+                                    let day = new Date(appointments[start]['fields']['start_date']);
+                                    if(day <= start_tar){
+                                        start ++;
+                                    }
+                                    day = new Date(appointments[end]['fields']['start_date']);
+                                    if(day <= end_tar){
+                                        end ++;
+                                    }
+                                    
+                                    day = new Date(appointments[start]['fields']['end_date']);
+                                    if(day <= start_tar){
+                                        start2 ++;
+                                    }
+                                    day = new Date(appointments[end]['fields']['end_date']);
+                                    if(day <= end_tar){
+                                        end2 ++;
+                                    }
+                                    if(start < end || start > start2 || start > end2){
+                                        bad_appointments = 1;
+                                        document.getElementById('error_div').innerHTML = "";
+                                        document.getElementById('submit_vacation').value = "Set Anyway";
+                                        document.getElementById('vacation_input_title').innerHTML += " (These appointments will be cancelled if schedule is set)";
+                                        for(let j = start2 ; j < end ; j ++){
+                                            let day = new Date(appointments[j]['fields']['start_date']);
+                                            let day1 = day;
+                                            day = day.getDate();
+                                            let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                                            let error_msg = '<div class="alert alert-danger" id="beep' + j + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + j + ')">×</a>You have an appointment on the ' + day + ((day == 1 || day == 21 || day == 31) ? "st" : ((day == 2 || day == 22) ? "nd" : ((day == 3 || day == 23) ? "rd" : "th"))) + ' at ' + day1.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: true, timeZone }) + '.</div>';
+                                            document.getElementById('error_div').innerHTML += error_msg;
+                                        }
+                                    }
+                                }
+                                if(bad_appointments == 0){
+                                    submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                                }
                             }
+                        }
+                    }
+                    else{
+                        ///No bad appointments
+                        if(document.getElementById('is_vacation').checked == true){
+                            submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                        }
+                        else{
+                            if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){
+                                let error_msg = '<div class="alert alert-danger" id="beep1"><a class="close" data-dismiss="alert" href="#" onclick="hide(1)">×</a>Please set a valid time.</div>';
+                                document.getElementById('error_div').innerHTML = error_msg;
+                                set_vacation = 0;
+                            }
+                            else{
+                                submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(document.getElementById('is_vacation').checked == true){
+                        submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                    }
+                    else{
+                        if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){
+                            let error_msg = '<div class="alert alert-danger" id="beep1"><a class="close" data-dismiss="alert" href="#" onclick="hide(1)">×</a>Please set a valid time.</div>';
+                            document.getElementById('error_div').innerHTML = error_msg;
+                            set_vacation = 0;
+                        }
+                        else{
+                            submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
                         }
                     }
                 }
             }
             else{
                 set_vacation = 0;
-                //// TODO: fetch and edit and post vacation
+                submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
             }
         });
+
+        document.getElementById('start_time').addEventListener('change',reset_vacation);
+        document.getElementById('end_time').addEventListener('change',reset_vacation);
+        document.getElementById('is_vacation').addEventListener('change',reset_vacation);
     }
 
 });
