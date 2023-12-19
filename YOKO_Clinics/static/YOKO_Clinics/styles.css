@@ -1039,15 +1039,15 @@ input[type="checkbox"].toggle1:checked+label::after {
 }
 
 .day_off{
-    filter: hue-rotate(60deg);
+    filter: hue-rotate(30deg);
 }
 
 .altered{
-    filter: hue-rotate(60deg);
+    filter: hue-rotate(-120deg) !important;
 }
 
 .day_off_new{
-    filter: hue-rotate(60deg);
+    filter: hue-rotate(-60deg) !important;
 }
 
 .error_div{

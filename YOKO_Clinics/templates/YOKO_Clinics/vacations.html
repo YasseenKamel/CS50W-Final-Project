@@ -6,9 +6,15 @@
 
 <script>
     let repeated_vacations = {{ repeated }};
+    function hide(i){
+        document.getElementById("beep" + i).style.display = "none";
+    }
 </script>
 
 <div id="calendar_container" class="calendar_container">
+    <div id="success_vacay">
+
+    </div>
     <div class="calendar-month" id="calendar-month">
         <div id="calendar_slide-1" class="calendar_slide cal_slid1">
             
@@ -27,11 +33,6 @@
     <div class="input_vacation_frame">
         <form class="vertical_align">
             {% csrf_token %}
-            <script>
-            function hide(i){
-                document.getElementById("beep" + i).style.display = "none";
-            }
-            </script>
             <div id="error_div" class="error_div">
 
             </div>

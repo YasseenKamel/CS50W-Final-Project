@@ -792,8 +792,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function cancel_vacation(event){
-        if(event.target != document.getElementById('input_container') && event.target != document.getElementById('cancel_vacay')){
-            return;
+        if(event != "overriding_banana"){
+            if(event.target != document.getElementById('input_container') && event.target != document.getElementById('cancel_vacay')){
+                return;
+            }
         }
         document.getElementById('input_container').style.display = 'none';
         document.getElementById('submit_vacation').value = "Set Schedule";
@@ -840,6 +842,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
         document.getElementById('input_container').style.display = 'flex';
         document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
+        document.getElementById('success_vacay').innerHTML = "";
         starting = mousedown;
         ending = mouseup;
         mousedown = -1;
@@ -948,6 +951,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
         document.getElementById('input_container').style.display = 'flex';
         document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
+        document.getElementById('success_vacay').innerHTML = "";
         starting = mousedown;
         ending = mouseup;
         mousedown = -1;
@@ -962,7 +966,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let day1 = '<li class="calendar-day" id="calendar-day', day02 = '"><span>',day2 = '</span></li>';
         let day3 = '<li class="calendar-day" id="calendar-day', day04 = '"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
         let no_day1 = '<li class="calendar-day disabled_day"><span>',no_day2 = '</span></li>';
-        let past_day1 = '<li class="calendar-day past_day"><span>',past_day2 = '</span></li>';
+        let past_day1 = '<li class="calendar-day past_day" id="calendar-day',past_day02 = '"><span>',past_day2 = '</span></li>';
         let last_month = month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2);
         let sm = 0;
         let currentDate1 = new Date();
@@ -978,7 +982,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         let day11 = '<li class="calendar-day day_off" id="calendar-day', day021 = '"><span>',day21 = '</span></li>';
         let day31 = '<li class="calendar-day day_off" id="calendar-day', day041 = '"><span class="number_thing1">&nbsp',day41 = '&nbsp</span></li>';
-        let past_day11 = '<li class="calendar-day past_day day_off"><span>',past_day21 = '</span></li>';
+        let past_day11 = '<li class="calendar-day past_day day_off" id="calendar-day',past_day021 = '"><span>',past_day21 = '</span></li>';
 
         let cur_weekday = weekday;
         for(let i = 1 ; i <= days_num ; i ++){
@@ -992,10 +996,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else if(year < year_this || (year == year_this && month < month_this) || (year == year_this && month == month_this && i < today_date1)){
                 if(repeated_vacations.includes(cur_weekday)){
-                    template += past_day11 + i + past_day21;
+                    template += past_day11 + idx + i + past_day021 + i + past_day21;
                 }
                 else{
-                    template += past_day1 + i + past_day2;
+                    template += past_day1 + idx + i + past_day02 + i + past_day2;
                 }
             }
             else{
@@ -1088,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             document.querySelectorAll('.calendar-day').forEach(slot => {
-                if(slot.id.length > 12){
+                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
                     if(slot.id[12] == '-'){
                         slot.id = slot.id.slice(0,12) + '0' + slot.id.slice(14);
                         slot.addEventListener('mouseenter',enter_element);
@@ -1103,7 +1107,34 @@ document.addEventListener('DOMContentLoaded', function () {
             prev_div.innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
 
             document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
-
+            for(let i = 0 ; i < vacations.length ; i ++){
+                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
+                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                    if(day.getMonth() == month_prev){
+                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+                    }
+                    else if(day.getMonth() == month){
+                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                    }
+                    else if(day.getMonth() == month_next){
+                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                    }
+                }
+            }
+            for(let i = 0 ; i < altered.length ; i ++){
+                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
+                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                    if(day.getMonth() == month_prev){
+                        document.getElementById('calendar-day-1' + j).classList.add("altered");
+                    }
+                    else if(day.getMonth() == month){
+                        document.getElementById('calendar-day0' + j).classList.add("altered");
+                    }
+                    else if(day.getMonth() == month_next){
+                        document.getElementById('calendar-day1' + j).classList.add("altered");
+                    }
+                }
+            }
             // redeclaring event listeners
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -1186,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             document.querySelectorAll('.calendar-day').forEach(slot => {
-                if(slot.id.length > 12){
+                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
                     if(slot.id[12] == '1'){
                         slot.id = slot.id.slice(0,12) + '0' + slot.id.slice(13);
                         slot.addEventListener('mouseenter',enter_element);
@@ -1201,7 +1232,34 @@ document.addEventListener('DOMContentLoaded', function () {
             next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
             document.getElementById('calendar-month').appendChild(next_div);
-
+            for(let i = 0 ; i < vacations.length ; i ++){
+                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
+                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                    if(day.getMonth() == month_prev){
+                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+                    }
+                    else if(day.getMonth() == month){
+                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                    }
+                    else if(day.getMonth() == month_next){
+                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                    }
+                }
+            }
+            for(let i = 0 ; i < altered.length ; i ++){
+                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
+                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                    if(day.getMonth() == month_prev){
+                        document.getElementById('calendar-day-1' + j).classList.add("altered");
+                    }
+                    else if(day.getMonth() == month){
+                        document.getElementById('calendar-day0' + j).classList.add("altered");
+                    }
+                    else if(day.getMonth() == month_next){
+                        document.getElementById('calendar-day1' + j).classList.add("altered");
+                    }
+                }
+            }
             // redeclaring event listeners
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -1268,7 +1326,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 prev_div.innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
 
                 document.querySelectorAll('.calendar-day').forEach(slot => {
-                    if(slot.id.length > 12){
+                    if(slot.id.length > 12 && !slot.classList.contains('past_day')){
                         if(slot.id[12] == '0'){
                             slot.addEventListener('mouseenter',enter_element);
                         }
@@ -1276,7 +1334,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
-
+                for(let i = 0 ; i < vacations.length ; i ++){
+                    let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
+                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                        if(day.getMonth() == month_prev){
+                            document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+                        }
+                        else if(day.getMonth() == month){
+                            document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                        }
+                        else if(day.getMonth() == month_next){
+                            document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                        }
+                    }
+                }
+                for(let i = 0 ; i < altered.length ; i ++){
+                    let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
+                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                        if(day.getMonth() == month_prev){
+                            document.getElementById('calendar-day-1' + j).classList.add("altered");
+                        }
+                        else if(day.getMonth() == month){
+                            document.getElementById('calendar-day0' + j).classList.add("altered");
+                        }
+                        else if(day.getMonth() == month_next){
+                            document.getElementById('calendar-day1' + j).classList.add("altered");
+                        }
+                    }
+                }
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
                 document.getElementById('present-month-selector0').addEventListener('click',cur_month);
@@ -1339,7 +1424,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
                 document.querySelectorAll('.calendar-day').forEach(slot => {
-                    if(slot.id.length > 12){
+                    if(slot.id.length > 12 && !slot.classList.contains('past_day')){
                         if(slot.id[12] == '0'){
                             slot.addEventListener('mouseenter',enter_element);
                         }
@@ -1347,7 +1432,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 document.getElementById('calendar-month').appendChild(next_div);
-
+                for(let i = 0 ; i < vacations.length ; i ++){
+                    let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
+                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                        if(day.getMonth() == month_prev){
+                            document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+                        }
+                        else if(day.getMonth() == month){
+                            document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                        }
+                        else if(day.getMonth() == month_next){
+                            document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                        }
+                    }
+                }
+                for(let i = 0 ; i < altered.length ; i ++){
+                    let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
+                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                        if(day.getMonth() == month_prev){
+                            document.getElementById('calendar-day-1' + j).classList.add("altered");
+                        }
+                        else if(day.getMonth() == month){
+                            document.getElementById('calendar-day0' + j).classList.add("altered");
+                        }
+                        else if(day.getMonth() == month_next){
+                            document.getElementById('calendar-day1' + j).classList.add("altered");
+                        }
+                    }
+                }
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
                 document.getElementById('present-month-selector0').addEventListener('click',cur_month);
@@ -1420,12 +1532,40 @@ document.addEventListener('DOMContentLoaded', function () {
             appointments = JSON.parse(data['appointments']);
             vacations = JSON.parse(data['vacays']);
             altered = JSON.parse(data['altered']);
+            for(let i = 0 ; i < vacations.length ; i ++){
+                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
+                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                    if(day.getMonth() == month_prev){
+                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+                    }
+                    else if(day.getMonth() == month){
+                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                    }
+                    else if(day.getMonth() == month_next){
+                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                    }
+                }
+            }
+            for(let i = 0 ; i < altered.length ; i ++){
+                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
+                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
+                    if(day.getMonth() == month_prev){
+                        document.getElementById('calendar-day-1' + j).classList.add("altered");
+                    }
+                    else if(day.getMonth() == month){
+                        document.getElementById('calendar-day0' + j).classList.add("altered");
+                    }
+                    else if(day.getMonth() == month_next){
+                        document.getElementById('calendar-day1' + j).classList.add("altered");
+                    }
+                }
+            }
             ////////////////////////////////////////////////////////////
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
             document.getElementById('present-month-selector0').addEventListener('click',cur_month);
             document.querySelectorAll('.calendar-day').forEach(slot => {
-                if(slot.id.length > 12){
+                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
                     if(slot.id[12] == '0'){
                         slot.addEventListener('mouseenter',enter_element);
                     }
@@ -1493,29 +1633,42 @@ document.addEventListener('DOMContentLoaded', function () {
         return s;
     }
 
-    function bs_appointment_time(tar){
-        let s = 0,e = appointments.length - 1;
-        let mid = parseInt((s + e) / 2);
-        while(s < e){
-            mid = parseInt((s + e) / 2);
-            let day = new Date(appointments[mid]['fields']['start_date']);
-            day = day.getDate();
-            if(day < tar){
-                s = mid + 1;
-            }
-            else{
-                e = mid;
-            }
-        }
-        return s;
-    }
-
     let set_vacation = 0;
 
     function submit_vacation(start, end, is_vacation){
         console.log(start);
         console.log(end);
         console.log(is_vacation);
+        fetch('vacation_add',{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                start: start,
+                end: end,
+                is_vacation: is_vacation
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(is_vacation){
+                let s = start.getDate(),e = end.getDate();
+                for(let i = s ; i <= e ; i ++){
+                    document.getElementById('calendar-day0' + i).classList.add("day_off_new");
+                }
+            }
+            else{
+                let s = start.getDate(),e = end.getDate();
+                for(let i = s ; i <= e ; i ++){
+                    document.getElementById('calendar-day0' + i).classList.add("altered");
+                }
+            }
+            let msg = '<div class="alert alert-success" id="beep' + (-1) + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + (-1) + ')">×</a>Schedule set successfully.</div>';
+            document.getElementById('success_vacay').innerHTML = msg;
+            cancel_vacation("overriding_banana");
+        });
     }
 
     if(document.getElementById('submit_vacation') != undefined){
@@ -1560,7 +1713,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 for(let i = starting ; i <= ending ; i ++){
                                     let start_tar = new Date(year, month, i, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10));
                                     let end_tar = new Date(year, month, i + (document.getElementById("end_time").value < document.getElementById("start_time").value), parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10));
-                                    let start = bs_appointment_time(i),end = bs_appointment_time(i + 1);
+                                    let start = bs_appointment_days(i),end = bs_appointment_days(i + 1);
                                     let day = new Date(appointments[start]['fields']['start_date']);
                                     if(day.getDate() != i){
                                         continue;
@@ -1595,7 +1748,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     else{
                         ///No bad appointments
                         if(document.getElementById('is_vacation').checked == true){
-                            submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                            submit_vacation(new Date(year, month, starting, 12, 30, 45, 500),new Date(year, month, ending, 12, 30, 45, 500),document.getElementById('is_vacation').checked);
                         }
                         else{
                             if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){
@@ -1611,7 +1764,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 else{
                     if(document.getElementById('is_vacation').checked == true){
-                        submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                        submit_vacation(new Date(year, month, starting, 12, 30, 45, 500),new Date(year, month, ending, 12, 30, 45, 500),document.getElementById('is_vacation').checked);
                     }
                     else{
                         if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){

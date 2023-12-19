@@ -10,7 +10,7 @@ urlpatterns = [
     path("vacation", views.vacation, name="vacation"),
     path("appointment/<int:id>", views.appointment, name="appointment"),
     path("profile/<int:id>", views.profile, name="profile"),
-    path("appointments", views.appointments, name="appointments"),
+    path("appointments", views.appointments1, name="appointments"),
     path("search", views.search, name="search"),
     #fetch
     path("<str:banana>/edit_profile", views.edit_profile, name="edit_profile"),

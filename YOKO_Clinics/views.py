@@ -144,38 +144,17 @@ def vacation(request):
 @login_required
 def vacation_add(request):
     if request.method == 'PUT':
-        vacay = repeated_vacations.objects.filter(doctor_id=request.user.id).values_list('day',flat=True)
-        days = [1,2,3,4,5,6,7]
-        vaycays = []
-        for i in days:
-            if(i not in vacay):
-                vaycays.append(i)
-        is_vacation = request.POST.get('is_vacation')
-        if is_vacation == None:
-            is_vacation = False
-        else:
-            is_vacation = True
-        start_time = request.POST.get('start_time')
-        end_time = request.POST.get('end_time')
-        start_day = request.POST.get('start_day').split('/')[0]
-        end_day = request.POST.get('end_day').split('/')[0]
-        month = request.POST.get('start_day').split('/')[1]
-        year = request.POST.get('start_day').split('/')[2]
+        data = json.loads(request.body)
+        start = data['start']
+        end = data['end']
+        is_vacation = data['is_vacation']
+        print(start)
+        print(end)
         print(is_vacation)
-        print(start_time)
-        print(end_time)
-        print(start_day)
-        print(end_day)
-        print(month)
-        print(year)
-        if is_vacation:
-            pass
-        else:
-            pass
-        return render(request, "YOKO_Clinics/vacations.html",{
-            'current_time': datetime.datetime.now(),
-            'repeated': vaycays
-        })
+        item = vacations(start_date=start,end_date=end,doctor_id=request.user.id,vacation=is_vacation)
+        item.save()
+        #TODO: cancel appointments in the way and handle clashing vacations
+        return JsonResponse({'message': 'Vacation added successfully.'})
 
 
 @login_required
@@ -241,11 +220,11 @@ def edit_profile(request,banana):
         for x in sub_specialties:
             item = expertise(type_id=int(x),doctor_id=request.user.id)
             item.save()
-        return JsonResponse({'message': 'Post edited successfully.'})
+        return JsonResponse({'message': 'Profile edited successfully.'})
 
 
 @login_required
-def appointment(request):
+def appointments1(request):
     pass
 
 @login_required
