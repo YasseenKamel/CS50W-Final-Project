@@ -15,7 +15,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from .models import User,types,reviews,expertise,repeated_vacations,vacations,appointments,bookings,messages
 from django.http import JsonResponse
-
+from django.db.models import Q
 # Create your views here.
 
 def login_view(request):
@@ -145,15 +145,72 @@ def vacation(request):
 def vacation_add(request):
     if request.method == 'PUT':
         data = json.loads(request.body)
-        start = data['start']
-        end = data['end']
+        start = datetime.datetime.fromisoformat(data['start'][:-1])
+        end = datetime.datetime.fromisoformat(data['end'][:-1])
         is_vacation = data['is_vacation']
         print(start)
         print(end)
         print(is_vacation)
+        
+        vacays = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=True,doctor_id = request.user.id)
+        altered = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=False,doctor_id = request.user.id)
+        appoints = appointments.objects.filter((~Q(status="Canceled")) & Q(start_date__date__lte=end.date(), start_date__date__gte=start.date()) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),doctor_id = request.user.id)
+        for i in vacays:
+            if i.start_date.date() >= start.date() and i.end_date.date() <= end.date():
+                i.delete()
+            elif i.start_date.date() < start.date() and i.end_date.date() > end.date():
+                s1 = i.start_date
+                idx = i.doctor_id
+                e2 = i.end_date
+                e1 = start - datetime.timedelta(days=1)
+                s2 = end + datetime.timedelta(days=1)
+                i.delete()
+                item = vacations(start_date=s1,end_date=e1,doctor_id=idx,vacation=True)
+                item.save()
+                item = vacations(start_date=s2,end_date=e2,doctor_id=idx,vacation=True)
+                item.save()
+                #split and delete middle
+            elif i.start_date.date() >= start.date() and i.start_date.date() <= end.date():
+                i.start_date = i.start_date.replace(day=(end.day + 1))
+                i.save()
+                #trim start
+            elif i.end_date.date() >= start.date() and i.end_date.date() <= end.date():
+                i.end_date = i.end_date.replace(day=(start.day - 1))
+                i.save()
+                #trim end
+        
+        for i in altered:
+            if i.start_date.date() >= start.date() and i.end_date.date() <= end.date():
+                i.delete()
+            elif i.start_date.date() < start.date() and i.end_date.date() > end.date():
+                s1 = i.start_date
+                idx = i.doctor_id
+                e2 = i.end_date
+                e1 = start - datetime.timedelta(days=1)
+                s2 = end + datetime.timedelta(days=1)
+                i.delete()
+                item = vacations(start_date=s1,end_date=e1,doctor_id=idx,vacation=False)
+                item.save()
+                item = vacations(start_date=s2,end_date=e2,doctor_id=idx,vacation=False)
+                item.save()
+                #split and delete middle
+            elif i.start_date.date() >= start.date() and i.start_date.date() <= end.date():
+                i.start_date = i.start_date.replace(day=(end.day + 1))
+                i.save()
+                #trim start
+            elif i.end_date.date() >= start.date() and i.end_date.date() <= end.date():
+                i.end_date = i.end_date.replace(day=(start.day - 1))
+                i.save()
+                #trim end
+        
+        for i in appoints:
+            i.status = "Canceled"
+            i.save()
+            msg = messages(patient_id=i.patient_id,doctor_id=i.doctor_id,status="Unread",content=("Your appointment has been canceled due to some circumstances. Please book your appointment again."))
+            msg.save()
+
         item = vacations(start_date=start,end_date=end,doctor_id=request.user.id,vacation=is_vacation)
         item.save()
-        #TODO: cancel appointments in the way and handle clashing vacations
         return JsonResponse({'message': 'Vacation added successfully.'})
 
 
@@ -285,7 +342,7 @@ def get_cal_data(request):
             years.append(year - 1)
         if month == 12:
             years.append(year + 1)
-        appoints = appointments.objects.filter(doctor_id = request.user.id,start_date__month=month,start_date__year = year)
+        appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = request.user.id,start_date__month=month,start_date__year = year)
         vacays = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
         altered = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
         if appoints != None:

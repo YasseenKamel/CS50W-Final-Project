@@ -1657,12 +1657,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 let s = start.getDate(),e = end.getDate();
                 for(let i = s ; i <= e ; i ++){
                     document.getElementById('calendar-day0' + i).classList.add("day_off_new");
+                    document.getElementById('calendar-day0' + i).classList.remove("altered");
                 }
             }
             else{
                 let s = start.getDate(),e = end.getDate();
                 for(let i = s ; i <= e ; i ++){
                     document.getElementById('calendar-day0' + i).classList.add("altered");
+                    document.getElementById('calendar-day0' + i).classList.remove("day_off_new");
                 }
             }
             let msg = '<div class="alert alert-success" id="beep' + (-1) + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + (-1) + ')">×</a>Schedule set successfully.</div>';
@@ -1780,7 +1782,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else{
                 set_vacation = 0;
-                submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                if(document.getElementById('is_vacation').checked == false){
+                    submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
+                }
+                else{
+                    submit_vacation(new Date(year, month, starting, 12, 30, 45, 500),new Date(year, month, ending, 12, 30, 45, 500),document.getElementById('is_vacation').checked);
+                }
             }
         });
 

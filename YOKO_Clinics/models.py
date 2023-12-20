@@ -45,6 +45,7 @@ class appointments(models.Model):
     end_date = models.DateTimeField()
     description = models.CharField(max_length=10000)
     left_review = models.BooleanField(default=False)
+    status = models.CharField(max_length=100,default="Booked")
 
 class bookings(models.Model):
     patient_id = models.IntegerField()
@@ -58,4 +59,5 @@ class bookings(models.Model):
 class messages(models.Model):
     patient_id = models.IntegerField()
     doctor_id = models.IntegerField()
+    content = models.CharField(max_length=10000,default="")
     status = models.CharField(max_length=100)

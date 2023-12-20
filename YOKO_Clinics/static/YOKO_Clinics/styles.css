@@ -1078,7 +1078,6 @@ input[type="checkbox"].toggle1:checked+label::after {
 }
 
 .main_body{
-    position: relative;
     overflow-y: auto;
     min-height: 91dvh;
 }
