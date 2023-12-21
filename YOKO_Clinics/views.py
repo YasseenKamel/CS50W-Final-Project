@@ -254,6 +254,54 @@ def edit_profile(request,banana):
         end_time = data['end_time']
         days = data['days']
         sub_specialties = data['sub_specialties']
+        #TODO: check if new default schedule clashes with already booked appointments
+        appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = request.user.id,start_date__gte=datetime.datetime.now())
+        bad_appoints = []
+        for i in appoints:
+            #check if there's a special schedule set:
+            altered = vacations.objects.filter(Q(start_date__lte=i.start_date,end_date__gte=i.end_date),doctor_id = request.user.id,vacation=False).count()
+            if altered != 0:
+                continue
+            weekday = int(i.start_date.strftime("%w"))
+            if days[weekday] == False:
+                bad_appoints.append({
+                    'id': i.id,
+                    'patient_id': i.patient_id,
+                    'doctor_id': i.doctor_id,
+                    'start_date': i.start_date.isoformat(),
+                    'end_date': i.end_date.isoformat(),
+                    'description': i.description,
+                    'left_review': i.left_review,
+                    'status': i.status
+                })
+                continue
+            start1 = i.start_date
+            if(len(str(start_time).split(':')) == 2):
+                start_time = str(start_time) + ":00"
+            if(len(str(end_time).split(':')) == 2):
+                end_time = str(end_time) + ":00"
+            start1 = start1.replace(hour=datetime.datetime.strptime(start_time, "%H:%M:%S").time().hour, minute=datetime.datetime.strptime(start_time, "%H:%M:%S").time().minute, second=datetime.datetime.strptime(start_time, "%H:%M:%S").time().second)
+            end1 = i.end_date
+            if start_time > end_time:
+                end1 += datetime.timedelta(days=1)
+            end1 = end1.replace(hour=datetime.datetime.strptime(end_time, "%H:%M:%S").time().hour, minute=datetime.datetime.strptime(end_time, "%H:%M:%S").time().minute, second=datetime.datetime.strptime(end_time, "%H:%M:%S").time().second)
+            if not(i.start_date >= start1 and i.end_date <= end1):
+                bad_appoints.append({
+                    'id': i.id,
+                    'patient_id': i.patient_id,
+                    'doctor_id': i.doctor_id,
+                    'start_date': i.start_date.isoformat(),
+                    'end_date': i.end_date.isoformat(),
+                    'description': i.description,
+                    'left_review': i.left_review,
+                    'status': i.status
+                })
+                continue
+        if len(bad_appoints) > 0:
+            return JsonResponse({
+                'message': 'Bad',
+                'appointments': bad_appoints
+            })
         doc = User.objects.get(id=request.user.id)
         if doc == None:
             return JsonResponse({'message': 'Failed'})

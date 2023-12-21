@@ -9,16 +9,22 @@
             function hide1(){
                 document.getElementById("beep1").style.display = "none";
             }
+            function hide(i){
+                document.getElementById("beepo" + i).style.display = "none";
+            }
         </script>
-        <div class="alert" id="beep1" style="display:none;">
-            <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
-        </div>
-
-        
         <div class="back">
             <img src="../static/YOKO_Clinics/left-arrow.png" style="width:1.75rem;height:1.75rem;margin-right:0.5rem;cursor: pointer;" id="back_arrow">
             <p class="backp" id="back_thing">Back</p>
         </div>
+        <div class="alert" id="beep1" style="display:none;">
+            <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
+        </div>
+        <div id="error_msgs">
+
+        </div>
+
+        
         <div class="mini_profile_div">
             <div>
                 <div class="main_specialty_container">

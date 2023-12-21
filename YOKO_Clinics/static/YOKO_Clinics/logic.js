@@ -211,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(document.getElementById("save_btn") != undefined){
         document.getElementById("save_btn").addEventListener('click',function(){
             document.getElementById('beep1').style.display = "none";
+            document.getElementById("error_msgs").innerHTML = "";
             let address = document.getElementById('address_display');
             let country = document.getElementById('country_display');
             let country_select = document.getElementById('country_select');
@@ -245,10 +246,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('beep1').classList.value="alert alert-danger";
                 document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Please fill in all fields.';
                 document.getElementById('beep1').style.display = "block";
+                document.getElementById("error_msgs").innerHTML = "";
             }
             else if(document.getElementById("start_time").value === document.getElementById("end_time").value){
                 document.getElementById('beep1').classList.value="alert alert-danger";
                 document.getElementById("beep1").style.display='block';
+                document.getElementById("error_msgs").innerHTML = "";
                 document.getElementById("beep1").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Start time cannot be the same as end time.';
             }
             else{
@@ -273,6 +276,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    if(data['message'] == 'Failed'){
+                        document.getElementById('beep1').classList.value="alert alert-danger";
+                        document.getElementById("beep1").style.display='block';
+                        document.getElementById("beep1").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide2()">×</a>Failed to update profile.';
+                        return;
+                    }
+                    if(data['message'] == 'Bad'){
+                        console.log(data['appointments']);
+                        for(let i = 0 ; i < data['appointments'].length ; i ++){
+                            let start = data['appointments'][i]['start_date'],end = data['appointments'][i]['end_date'];
+                            start = new Date(start);
+                            end = new Date(end);
+                            start = start.toLocaleString();
+                            end = end.toLocaleString();
+                            document.getElementById("error_msgs").innerHTML += '<div class="alert alert-danger" id="beepo' + i + '"><a class="close" data-dismiss="alert" href="#" onclick="hide(' + i + ')">×</a>The newly set schedule can not be set due to your appointment on ' + start + ' till ' + end + '. You may cancel the appointment from your home page or manually add a vacation from your vacations page.' + '</div>';
+                        }
+                        return;
+                    }
                     address_input.style.display='none';
                     bio_input.style.display='none';
                     country_input.style.display="none";
@@ -315,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('all_subs1').innerHTML += '<p class="toggle-control2" id="sub' + subs_list[i] + '">' + specialties[key][parseInt(subs_list[i]) - sm1] + '</p>';
                     }
                     address.style.display="block";
+                    document.getElementById("error_msgs").innerHTML = "";
                     document.getElementById('beep1').classList.value="alert alert-success";
                     document.getElementById('beep1').innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>Profile editted successfully';
                     document.getElementById('beep1').style.display = "block";
@@ -363,6 +385,8 @@ document.addEventListener('DOMContentLoaded', function () {
             bio.style.display="block";
             day.style.display="flex";
             sub_specialties.style.display="flex";
+            document.getElementById("error_msgs").innerHTML = "";
+            document.getElementById('beep1').style.display = "none";
             document.getElementById('edit_btn').style.display="inline-block";
             document.getElementById('save_btn').style.display="none";
             document.getElementById('cancel_btn').style.display="none";
