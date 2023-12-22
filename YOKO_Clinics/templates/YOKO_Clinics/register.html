@@ -1,7 +1,8 @@
 {% extends "YOKO_Clinics/layout.html" %}
+{% load static %}
 
 {% block title %}Sign Up{% endblock %}
-
+{% block script %}<script src="{% static 'YOKO_Clinics/register.js' %}"></script>{% endblock %}
 {% block body %}
     <div class="log_frame">
     <h2 style="margin-bottom:20px;">Sign Up</h2>

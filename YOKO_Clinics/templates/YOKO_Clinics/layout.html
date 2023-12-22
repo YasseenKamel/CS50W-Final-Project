@@ -10,6 +10,7 @@
             var csrf_token = "{{ csrf_token }}";
         </script>
         <script src="{% static 'YOKO_Clinics/logic.js' %}"></script>
+        {% block script %}{% endblock %}
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light">

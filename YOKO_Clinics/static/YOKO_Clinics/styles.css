@@ -1075,6 +1075,11 @@ input[type="checkbox"].toggle1:checked+label::after {
     border-radius: 1rem;
     min-width: 1.5rem;
     margin-right: 0.5rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .main_body{

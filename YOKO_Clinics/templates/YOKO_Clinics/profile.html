@@ -1,6 +1,8 @@
 {% extends "YOKO_Clinics/layout.html" %}
+{% load static %}
 
 {% block title %}{{target.username}}{% endblock %}
+{% block script %}<script src="{% static 'YOKO_Clinics/profile.js' %}"></script>{% endblock %}
 
 {% block body %}
 {% if user.id == target.id %}
