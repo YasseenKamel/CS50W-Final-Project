@@ -235,10 +235,17 @@ def profile(request,id):
         sub = []
         for specialty in specialties:
             sub.append(types.objects.get(id=specialty))
+        vacay = repeated_vacations.objects.filter(doctor_id=id).values_list('day',flat=True)
+        days1 = [1,2,3,4,5,6,7]
+        vaycays = []
+        for i in days1:
+            if(i not in vacay):
+                vaycays.append(i)
         return render(request, "YOKO_Clinics/profile.html",{
             'target': target,
             'sub': sub,
-            'days': days
+            'days': days,
+            'repeated': vaycays
         })
     
 @login_required
@@ -380,9 +387,10 @@ def search(request):
         })
 
 @login_required
-def get_cal_data(request):
+def get_cal_data(request,banana="banana"):
     if request.method == "POST":
         data = json.loads(request.body)
+        id1 = data.get('id1',request.user.id)
         month = data['month']
         year = data['year']
         years = [year]
@@ -390,9 +398,9 @@ def get_cal_data(request):
             years.append(year - 1)
         if month == 12:
             years.append(year + 1)
-        appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = request.user.id,start_date__month=month,start_date__year = year)
-        vacays = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
-        altered = vacations.objects.filter(doctor_id = request.user.id,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
+        appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__month=month,start_date__year = year)
+        vacays = vacations.objects.filter(doctor_id = id1,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
+        altered = vacations.objects.filter(doctor_id = id1,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
         if appoints != None:
             appoints = serialize('json', appoints)
         else:

@@ -2,8 +2,7 @@
 {% load static %}
 
 {% block title %}{{target.username}}{% endblock %}
-{% block script %}<script src="{% static 'YOKO_Clinics/profile.js' %}"></script>{% endblock %}
-
+{% block script %}{% if user.id == target.id %}<script src="{% static 'YOKO_Clinics/profile.js' %}"></script>{% else %}<script src="{% static 'YOKO_Clinics/booking.js' %}"></script>{% endif %}{% endblock %}
 {% block body %}
 {% if user.id == target.id %}
     <div class="profile_frame">
@@ -155,6 +154,10 @@
         <button class="btn btn-primary norm_btn" id="cancel_btn" style="display:none;">Cancel</button>
     </div>
     {% else %}
+    <script>
+        let repeated_vacations = {{ repeated }};
+        let doctors_id = {{ target.id }};
+    </script>
     <div class="profile_frame">
         <script>
             function hide1(){
@@ -234,6 +237,43 @@
                 <label class="{% if days.4 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d5">Thu</label>
                 <label class="{% if days.5 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d6">Fri</label>
                 <label class="{% if days.6 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d7">Sat</label>
+            </div>
+        </div>
+        <button class="btn btn-primary norm_btn" id="book_btn">Book</button>
+    </div>
+    <div class="input_container" style="display:none;" id="input_container">
+        <div id="calendar_container" class="calendar_container">
+            <div id="success_vacay">
+        
+            </div>
+            <div class="color_keys">
+                <div class="color_key">
+                    <p class="key_color">&nbsp</p>
+                    <h5>Normal working day</h5>
+                </div>
+                <div class="color_key">
+                    <p class="key_color day_off">&nbsp</p>
+                    <h5>Normal day off</h5>
+                </div>
+                <div class="color_key">
+                    <p class="key_color altered">&nbsp</p>
+                    <h5>Altered schedule</h5>
+                </div>
+                <div class="color_key">
+                    <p class="key_color day_off_new">&nbsp</p>
+                    <h5>Custom added day off</h5>
+                </div>
+            </div>
+            <div class="calendar-month" id="calendar-month">
+                <div id="calendar_slide-1" class="calendar_slide cal_slid1">
+                    
+                </div>
+                <div id="calendar_slide0" class="calendar_slide">
+                    
+                </div>
+                <div id="calendar_slide1" class="calendar_slide cal_slid2">
+                    
+                </div>
             </div>
         </div>
     </div>
