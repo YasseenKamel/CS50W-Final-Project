@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
         weekday = weekday_prev;
         weekday_prev = (weekday - (month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2))) % 7 + 7;
 
-        fetch('get_cal_data',{
+        fetch('get_cal_data1',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
         weekday_next = (weekday + month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1)) % 7;
         weekday_next += 7 * (weekday_next == 0);
 
-        fetch('get_cal_data',{
+        fetch('get_cal_data1',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function cur_month(){
         if(year > year_this || (year == year_this && month > month_this)){
 
-            fetch('get_cal_data',{
+            fetch('get_cal_data1',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         else if(year < year_this || (year == year_this && month < month_this)){
 
-            fetch('get_cal_data',{
+            fetch('get_cal_data1',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('calendar_slide0').innerHTML = load_month(year,month,weekday,'0');
         document.getElementById('calendar_slide1').innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
-        fetch('get_cal_data',{
+        fetch('get_cal_data1',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -594,7 +594,6 @@ document.addEventListener('DOMContentLoaded', function () {
             appointments = JSON.parse(data['appointments']);
             vacations = JSON.parse(data['vacays']);
             altered = JSON.parse(data['altered']);
-            console.log(altered);
             for(let i = 0 ; i < vacations.length ; i ++){
                 let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
                 for(let j = day.getDate() ; j <= day1.getDate() ; j ++){

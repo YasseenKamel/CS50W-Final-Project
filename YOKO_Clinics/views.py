@@ -418,3 +418,37 @@ def get_cal_data(request,banana="banana"):
             'vacays': vacays,
             'altered': altered
         })
+    
+@login_required
+def get_cal_data1(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        id1 = data.get('id1',request.user.id)
+        month = data['month']
+        year = data['year']
+        years = [year]
+        if month == 1:
+            years.append(year - 1)
+        if month == 12:
+            years.append(year + 1)
+        appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__month=month,start_date__year = year)
+        vacays = vacations.objects.filter(doctor_id = id1,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
+        altered = vacations.objects.filter(doctor_id = id1,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
+        if appoints != None:
+            appoints = serialize('json', appoints)
+        else:
+            appoints = 0
+        if vacays != None:
+            vacays = serialize('json', vacays)
+        else:
+            vacays = 0
+        if altered != None:
+            altered = serialize('json', altered)
+        else:
+            altered = 0
+        return JsonResponse({
+            'appointments' : appoints,
+            'vacays': vacays,
+            'altered': altered
+        })
+    
