@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', function () {
     let appointments,vacations,altered;
     let starting = -1,ending = -1;
 
+    const hue_initial=279, saturation_initial=1, brightness_initial=1;
+    const hue_final=279, saturation_final=0.4, brightness_final=0.5;
+    function set_business(val,el) {
+        let t=val/100;
+        let h= (1-t)*hue_final + t*hue_initial;
+        let s= (1-t)*saturation_final + t*saturation_initial;
+        let b= (1-t)*brightness_final + t*brightness_initial;
+        el.style.filter=`hue-rotate(${h-hue_initial}deg) saturate(${s}) brightness(${b})`;
+    }
+
     function load_month(year, month, weekday, idx){
         let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
         let template_close = '</ol>';
@@ -118,10 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
 
-            appointments = JSON.parse(data['appointments']);
-            vacations = JSON.parse(data['vacays']);
-            altered = JSON.parse(data['altered']);
-
             document.getElementById('calendar_slide0').classList.toggle('cal_slid2');
             document.getElementById('calendar_slide-1').classList.toggle('cal_slid1');
             ////
@@ -173,34 +179,54 @@ document.addEventListener('DOMContentLoaded', function () {
             prev_div.innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
 
             document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
-            for(let i = 0 ; i < vacations.length ; i ++){
-                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+            prev_month_data = data['prev_month_data'];
+                prev_month_shifts = data['prev_month_shifts'];
+                month_data = data['month_data'];
+                month_shifts = data['month_shifts'];
+                next_month_data = data['next_month_data'];
+                next_month_shifts = data['next_month_shifts'];
+                let idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days-1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days-1').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
-                    else if(day.getMonth() == month){
-                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                    if(prev_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
                     }
-                    else if(day.getMonth() == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                    else{
+                        set_business(prev_month_data[idx],cur);
                     }
+                    idx ++;
                 }
-            }
-            for(let i = 0 ; i < altered.length ; i ++){
-                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("altered");
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days0').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days0').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
-                    else if(day.getMonth() == month){
-                        document.getElementById('calendar-day0' + j).classList.add("altered");
+                    if(month_data[idx] == -1){
+                        cur.classList.add("day_off1");
                     }
-                    else if(day.getMonth() == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("altered");
+                    else{
+                        set_business(month_data[idx],cur);
                     }
+                    idx ++;
                 }
-            }
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days1').children[i];
+                    if(cur.id == ""){
+                        continue;
+                    }
+                    if(next_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(next_month_data[idx],cur);
+                    }
+                    idx ++;
+                }
             // redeclaring event listeners
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -241,11 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-
-            appointments = JSON.parse(data['appointments']);
-            vacations = JSON.parse(data['vacays']);
-            altered = JSON.parse(data['altered']);
-
             document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
             document.getElementById('calendar_slide1').classList.toggle('cal_slid2');
             ////
@@ -297,36 +318,54 @@ document.addEventListener('DOMContentLoaded', function () {
             next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
             document.getElementById('calendar-month').appendChild(next_div);
-            for(let i = 0 ; i < vacations.length ; i ++){
-                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
-                console.log(day);
-                console.log(day1);
-                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+            prev_month_data = data['prev_month_data'];
+                prev_month_shifts = data['prev_month_shifts'];
+                month_data = data['month_data'];
+                month_shifts = data['month_shifts'];
+                next_month_data = data['next_month_data'];
+                next_month_shifts = data['next_month_shifts'];
+                let idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days-1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days-1').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
-                    else if(day.getMonth() == month){
-                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                    if(prev_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
                     }
-                    else if(day.getMonth() == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                    else{
+                        set_business(prev_month_data[idx],cur);
                     }
+                    idx ++;
                 }
-            }
-            for(let i = 0 ; i < altered.length ; i ++){
-                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("altered");
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days0').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days0').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
-                    else if(day.getMonth() == month){
-                        document.getElementById('calendar-day0' + j).classList.add("altered");
+                    if(month_data[idx] == -1){
+                        cur.classList.add("day_off1");
                     }
-                    else if(day.getMonth() == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("altered");
+                    else{
+                        set_business(month_data[idx],cur);
                     }
+                    idx ++;
                 }
-            }
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days1').children[i];
+                    if(cur.id == ""){
+                        continue;
+                    }
+                    if(next_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(next_month_data[idx],cur);
+                    }
+                    idx ++;
+                }
             // redeclaring event listeners
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -354,9 +393,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
 
-                appointments = JSON.parse(data['appointments']);
-                vacations = JSON.parse(data['vacays']);
-                altered = JSON.parse(data['altered']);
                 /// edit content of -1 first so it slides in ready
                 document.getElementById('calendar_slide-1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
 
@@ -395,33 +431,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                 document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
-                for(let i = 0 ; i < vacations.length ; i ++){
-                    let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                        }
-                        else if(day.getMonth() == month){
-                            document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                        }
-                        else if(day.getMonth() == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                        }
+                prev_month_data = data['prev_month_data'];
+                prev_month_shifts = data['prev_month_shifts'];
+                month_data = data['month_data'];
+                month_shifts = data['month_shifts'];
+                next_month_data = data['next_month_data'];
+                next_month_shifts = data['next_month_shifts'];
+                let idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days-1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days-1').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
+                    if(prev_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(prev_month_data[idx],cur);
+                    }
+                    idx ++;
                 }
-                for(let i = 0 ; i < altered.length ; i ++){
-                    let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("altered");
-                        }
-                        else if(day.getMonth() == month){
-                            document.getElementById('calendar-day0' + j).classList.add("altered");
-                        }
-                        else if(day.getMonth() == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("altered");
-                        }
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days0').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days0').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
+                    if(month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(month_data[idx],cur);
+                    }
+                    idx ++;
+                }
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days1').children[i];
+                    if(cur.id == ""){
+                        continue;
+                    }
+                    if(next_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(next_month_data[idx],cur);
+                    }
+                    idx ++;
                 }
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -447,10 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
 
-                    
-                appointments = JSON.parse(data['appointments']);
-                vacations = JSON.parse(data['vacays']);
-                altered = JSON.parse(data['altered']);
+                
                 document.getElementById('calendar_slide1').innerHTML = load_month(year_this,month_this,weekday_this,'0');
 
                 document.getElementById('calendar_slide0').classList.toggle('cal_slid1');
@@ -486,33 +539,53 @@ document.addEventListener('DOMContentLoaded', function () {
                 next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
                 document.getElementById('calendar-month').appendChild(next_div);
-                for(let i = 0 ; i < vacations.length ; i ++){
-                    let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                        }
-                        else if(day.getMonth() == month){
-                            document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                        }
-                        else if(day.getMonth() == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                        }
+                prev_month_data = data['prev_month_data'];
+                prev_month_shifts = data['prev_month_shifts'];
+                month_data = data['month_data'];
+                month_shifts = data['month_shifts'];
+                next_month_data = data['next_month_data'];
+                next_month_shifts = data['next_month_shifts'];
+                let idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days-1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days-1').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
+                    if(prev_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(prev_month_data[idx],cur);
+                    }
+                    idx ++;
                 }
-                for(let i = 0 ; i < altered.length ; i ++){
-                    let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("altered");
-                        }
-                        else if(day.getMonth() == month){
-                            document.getElementById('calendar-day0' + j).classList.add("altered");
-                        }
-                        else if(day.getMonth() == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("altered");
-                        }
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days0').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days0').children[i];
+                    if(cur.id == ""){
+                        continue;
                     }
+                    if(month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(month_data[idx],cur);
+                    }
+                    idx ++;
+                }
+                idx = 0;
+                for(let i = 0 ; i < document.getElementById('calendar-days1').children.length ; i ++){
+                    let cur = document.getElementById('calendar-days1').children[i];
+                    if(cur.id == ""){
+                        continue;
+                    }
+                    if(next_month_data[idx] == -1){
+                        cur.classList.add("day_off1");
+                    }
+                    else{
+                        set_business(next_month_data[idx],cur);
+                    }
+                    idx ++;
                 }
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -590,37 +663,53 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            
-            appointments = JSON.parse(data['appointments']);
-            vacations = JSON.parse(data['vacays']);
-            altered = JSON.parse(data['altered']);
-            for(let i = 0 ; i < vacations.length ; i ++){
-                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                    }
-                    else if(day.getMonth() == month){
-                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                    }
-                    else if(day.getMonth() == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                    }
+            prev_month_data = data['prev_month_data'];
+            prev_month_shifts = data['prev_month_shifts'];
+            month_data = data['month_data'];
+            month_shifts = data['month_shifts'];
+            next_month_data = data['next_month_data'];
+            next_month_shifts = data['next_month_shifts'];
+            let idx = 0;
+            for(let i = 0 ; i < document.getElementById('calendar-days-1').children.length ; i ++){
+                let cur = document.getElementById('calendar-days-1').children[i];
+                if(cur.id == ""){
+                    continue;
                 }
+                if(prev_month_data[idx] == -1){
+                    cur.classList.add("day_off1");
+                }
+                else{
+                    set_business(prev_month_data[idx],cur);
+                }
+                idx ++;
             }
-            for(let i = 0 ; i < altered.length ; i ++){
-                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("altered");
-                    }
-                    else if(day.getMonth() == month){
-                        document.getElementById('calendar-day0' + j).classList.add("altered");
-                    }
-                    else if(day.getMonth() == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("altered");
-                    }
+            idx = 0;
+            for(let i = 0 ; i < document.getElementById('calendar-days0').children.length ; i ++){
+                let cur = document.getElementById('calendar-days0').children[i];
+                if(cur.id == ""){
+                    continue;
                 }
+                if(month_data[idx] == -1){
+                    cur.classList.add("day_off1");
+                }
+                else{
+                    set_business(month_data[idx],cur);
+                }
+                idx ++;
+            }
+            idx = 0;
+            for(let i = 0 ; i < document.getElementById('calendar-days1').children.length ; i ++){
+                let cur = document.getElementById('calendar-days1').children[i];
+                if(cur.id == ""){
+                    continue;
+                }
+                if(next_month_data[idx] == -1){
+                    cur.classList.add("day_off1");
+                }
+                else{
+                    set_business(next_month_data[idx],cur);
+                }
+                idx ++;
             }
             ////////////////////////////////////////////////////////////
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);

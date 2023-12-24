@@ -1103,3 +1103,16 @@ input[type="checkbox"].toggle1:checked+label::after {
     border: 0.5rem solid var(--primary);
     border-radius: 2rem;
 }
+
+
+.day_off1{
+    filter: hue-rotate(120deg) !important;
+}
+
+.busy1{
+    filter: hue-rotate(40deg);
+}
+
+.empty1{
+    filter: hue-rotate(-120deg) !important;
+}

@@ -16,6 +16,8 @@ from django.contrib.auth.decorators import login_required
 from .models import User,types,reviews,expertise,repeated_vacations,vacations,appointments,bookings,messages
 from django.http import JsonResponse
 from django.db.models import Q
+import calendar
+import pytz
 # Create your views here.
 
 def login_view(request):
@@ -426,29 +428,109 @@ def get_cal_data1(request):
         id1 = data.get('id1',request.user.id)
         month = data['month']
         year = data['year']
-        years = [year]
+        prev_month = month - 1
+        next_month = month + 1
+        prev_year = year
+        next_year = year
         if month == 1:
-            years.append(year - 1)
+            prev_month = 12
+            prev_year -= 1
         if month == 12:
-            years.append(year + 1)
-        appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__month=month,start_date__year = year)
-        vacays = vacations.objects.filter(doctor_id = id1,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=True)
-        altered = vacations.objects.filter(doctor_id = id1,start_date__month__in=[month,(month - 1 + (month == 1) * 12),(month + 1) % 12 + (month == 11) * 12],start_date__year__in = years,vacation=False)
-        if appoints != None:
-            appoints = serialize('json', appoints)
-        else:
-            appoints = 0
-        if vacays != None:
-            vacays = serialize('json', vacays)
-        else:
-            vacays = 0
-        if altered != None:
-            altered = serialize('json', altered)
-        else:
-            altered = 0
+            next_month = 1
+            next_year += 1
+        banana = User.objects.get(id=id1)
+        default_start = banana.start_time
+        default_end = banana.end_time
+        # prev_month
+        _, num_days_prev = calendar.monthrange(prev_year, prev_month)
+        prev_month_data = []
+        prev_month_shifts = []
+        for i in range(1,num_days_prev + 1):
+            vacays = vacations.objects.filter(Q(start_date__day__lte=i,end_date__day__gte=i),doctor_id = id1,start_date__month=prev_month,start_date__year = prev_year,vacation=True).count()
+            if vacays != 0:
+                prev_month_data.append(-1)
+                prev_month_shifts.append({'start':datetime.datetime.now(),'end':datetime.datetime.now()})
+                continue
+            vacays = vacations.objects.filter(Q(start_date__day__lte=i,end_date__day__gte=i),doctor_id = id1,start_date__month=prev_month,start_date__year = prev_year,vacation=False)
+            if len(vacays) > 0:
+                prev_month_shifts.append({'start':datetime.time(vacays[0].start_date.hour,vacays[0].start_date.minute,0),'end':datetime.time(vacays[0].end_date.hour,vacays[0].end_date.minute,0)})
+            else:
+                prev_month_shifts.append({'start':default_start,'end':default_end})
+            # search for appointments in this day
+            shift_start = datetime.datetime(prev_year,prev_month,i,prev_month_shifts[i - 1]['start'].hour,prev_month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC)
+            shift_end = datetime.datetime(prev_year,prev_month,i,prev_month_shifts[i - 1]['end'].hour,prev_month_shifts[i - 1]['end'].minute,0, tzinfo=pytz.UTC)
+            if prev_month_shifts[i - 1]['start'] > prev_month_shifts[i - 1]['end']:
+                shift_end += datetime.timedelta(days=1)
+            time_frame = shift_end - shift_start
+            appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__gte=shift_start,end_date__lte=shift_end).order_by('start_date')
+            if len(appoints) > 0:
+                time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
+                for j in range(1,len(appoints)):
+                    time_frame = max(appoints[j].start_date - appoints[j - 1].end_date,time_frame)
+            prev_month_data.append((time_frame.total_seconds() % (24 * 60 * 60)) / (24 * 60 * 60) * 100)
+
+        # cur_month
+        _, num_days = calendar.monthrange(year, month)
+        month_data = []
+        month_shifts = []
+        for i in range(1,num_days + 1):
+            vacays = vacations.objects.filter(Q(start_date__day__lte=i,end_date__day__gte=i),doctor_id = id1,start_date__month=month,start_date__year = year,vacation=True).count()
+            if vacays != 0:
+                month_data.append(-1)
+                month_shifts.append({'start':datetime.datetime.now(),'end':datetime.datetime.now()})
+                continue
+            vacays = vacations.objects.filter(Q(start_date__day__lte=i,end_date__day__gte=i),doctor_id = id1,start_date__month=month,start_date__year = year,vacation=False)
+            if len(vacays) > 0:
+                month_shifts.append({'start':datetime.time(vacays[0].start_date.hour,vacays[0].start_date.minute,0),'end':datetime.time(vacays[0].end_date.hour,vacays[0].end_date.minute,0)})
+            else:
+                month_shifts.append({'start':default_start,'end':default_end})
+            # search for appointments in this day
+            shift_start = datetime.datetime(year,month,i,month_shifts[i - 1]['start'].hour,month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC)
+            shift_end = datetime.datetime(year,month,i,month_shifts[i - 1]['end'].hour,month_shifts[i - 1]['end'].minute,0, tzinfo=pytz.UTC)
+            if month_shifts[i - 1]['start'] > month_shifts[i - 1]['end']:
+                shift_end += datetime.timedelta(days=1)
+            time_frame = shift_end - shift_start
+            appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__gte=shift_start,end_date__lte=shift_end).order_by('start_date')
+            if len(appoints) > 0:
+                time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
+                for j in range(1,len(appoints)):
+                    time_frame = max(appoints[j].start_date - appoints[j - 1].end_date,time_frame)
+            month_data.append((time_frame.total_seconds() % (24 * 60 * 60)) / (24 * 60 * 60) * 100)
+
+        # next_month
+        _, num_days_next = calendar.monthrange(next_year, next_month)
+        next_month_data = []
+        next_month_shifts = []
+        for i in range(1,num_days_next + 1):
+            vacays = vacations.objects.filter(Q(start_date__day__lte=i,end_date__day__gte=i),doctor_id = id1,start_date__month=next_month,start_date__year = next_year,vacation=True).count()
+            if vacays != 0:
+                next_month_data.append(-1)
+                next_month_shifts.append({'start':datetime.datetime.now(),'end':datetime.datetime.now()})
+                continue
+            vacays = vacations.objects.filter(Q(start_date__day__lte=i,end_date__day__gte=i),doctor_id = id1,start_date__month=next_month,start_date__year = next_year,vacation=False)
+            if len(vacays) > 0:
+                next_month_shifts.append({'start':datetime.time(vacays[0].start_date.hour,vacays[0].start_date.minute,0),'end':datetime.time(vacays[0].end_date.hour,vacays[0].end_date.minute,0)})
+            else:
+                next_month_shifts.append({'start':default_start,'end':default_end})
+            # search for appointments in this day
+            shift_start = datetime.datetime(next_year,next_month,i,next_month_shifts[i - 1]['start'].hour,next_month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC)
+            shift_end = datetime.datetime(next_year,next_month,i,next_month_shifts[i - 1]['end'].hour,next_month_shifts[i - 1]['end'].minute,0, tzinfo=pytz.UTC)
+            if next_month_shifts[i - 1]['start'] > next_month_shifts[i - 1]['end']:
+                shift_end += datetime.timedelta(days=1)
+            time_frame = shift_end - shift_start
+            appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__gte=shift_start,end_date__lte=shift_end).order_by('start_date')
+            if len(appoints) > 0:
+                time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
+                for j in range(1,len(appoints)):
+                    time_frame = max(appoints[j].start_date - appoints[j - 1].end_date,time_frame)
+            next_month_data.append((time_frame.total_seconds() % (24 * 60 * 60)) / (24 * 60 * 60) * 100)
+
         return JsonResponse({
-            'appointments' : appoints,
-            'vacays': vacays,
-            'altered': altered
+            'prev_month_data': prev_month_data,
+            'prev_month_shifts': prev_month_shifts,
+            'month_data': month_data,
+            'month_shifts': month_shifts,
+            'next_month_data': next_month_data,
+            'next_month_shifts': next_month_shifts
         })
     
