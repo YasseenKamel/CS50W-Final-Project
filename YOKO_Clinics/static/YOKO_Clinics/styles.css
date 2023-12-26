@@ -1106,13 +1106,5 @@ input[type="checkbox"].toggle1:checked+label::after {
 
 
 .day_off1{
-    filter: hue-rotate(120deg) !important;
-}
-
-.busy1{
-    filter: hue-rotate(40deg);
-}
-
-.empty1{
-    filter: hue-rotate(-120deg) !important;
+    filter: hue-rotate(-60deg) !important;
 }

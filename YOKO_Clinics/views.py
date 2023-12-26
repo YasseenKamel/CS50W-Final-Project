@@ -467,7 +467,7 @@ def get_cal_data1(request):
                 time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
                 for j in range(1,len(appoints)):
                     time_frame = max(appoints[j].start_date - appoints[j - 1].end_date,time_frame)
-            prev_month_data.append((time_frame.total_seconds() % (24 * 60 * 60)) / (24 * 60 * 60) * 100)
+            prev_month_data.append((time_frame.total_seconds() / (shift_end-shift_start).total_seconds()) * 100)
 
         # cur_month
         _, num_days = calendar.monthrange(year, month)
@@ -495,7 +495,7 @@ def get_cal_data1(request):
                 time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
                 for j in range(1,len(appoints)):
                     time_frame = max(appoints[j].start_date - appoints[j - 1].end_date,time_frame)
-            month_data.append((time_frame.total_seconds() % (24 * 60 * 60)) / (24 * 60 * 60) * 100)
+            month_data.append((time_frame.total_seconds() / (shift_end-shift_start).total_seconds()) * 100)
 
         # next_month
         _, num_days_next = calendar.monthrange(next_year, next_month)
@@ -523,7 +523,7 @@ def get_cal_data1(request):
                 time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
                 for j in range(1,len(appoints)):
                     time_frame = max(appoints[j].start_date - appoints[j - 1].end_date,time_frame)
-            next_month_data.append((time_frame.total_seconds() % (24 * 60 * 60)) / (24 * 60 * 60) * 100)
+            next_month_data.append((time_frame.total_seconds() / (shift_end-shift_start).total_seconds()) * 100)
 
         return JsonResponse({
             'prev_month_data': prev_month_data,

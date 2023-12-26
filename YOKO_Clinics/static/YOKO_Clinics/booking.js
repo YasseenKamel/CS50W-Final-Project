@@ -26,14 +26,23 @@ document.addEventListener('DOMContentLoaded', function () {
     let appointments,vacations,altered;
     let starting = -1,ending = -1;
 
-    const hue_initial=279, saturation_initial=1, brightness_initial=1;
-    const hue_final=279, saturation_final=0.4, brightness_final=0.5;
+    const hue_initial=81, saturation_initial=1, brightness_initial=1;
+    const hue_final=0, saturation_final=1, brightness_final=1;
+    // const hue_initial=260, saturation_initial=0.5, brightness_initial=0.8;
+    // const hue_final=0, saturation_final=1, brightness_final=1;
+
     function set_business(val,el) {
-        let t=val/100;
-        let h= (1-t)*hue_final + t*hue_initial;
-        let s= (1-t)*saturation_final + t*saturation_initial;
-        let b= (1-t)*brightness_final + t*brightness_initial;
-        el.style.filter=`hue-rotate(${h-hue_initial}deg) saturate(${s}) brightness(${b})`;
+        // let t=3*(val/100)**2 - 2*(val/100)**3;
+        // let t = val/100;
+        // let t = Math.sin(Math.PI*val/200)**0.5;
+        el.classList.remove("day_off1");
+        let v = val/100;
+        let t = v*(1-v)**2 + 3*(1-v)*v**2 + v**3;
+        let h= (1-t)*hue_initial + t*hue_final;
+        let s= (1-t)*saturation_initial + t*saturation_final;
+        let b= (1-t)*brightness_initial + t*brightness_final;
+        console.log(val);
+        el.style.filter=`hue-rotate(${h}deg) saturate(${s}) brightness(${b})`;
     }
 
     function load_month(year, month, weekday, idx){
@@ -57,9 +66,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         
-        let day11 = '<li class="calendar-day day_off" id="calendar-day', day021 = '"><span>',day21 = '</span></li>';
-        let day31 = '<li class="calendar-day day_off" id="calendar-day', day041 = '"><span class="number_thing1">&nbsp',day41 = '&nbsp</span></li>';
-        let past_day11 = '<li class="calendar-day past_day day_off" id="calendar-day',past_day021 = '"><span>',past_day21 = '</span></li>';
+        let day11 = '<li class="calendar-day day_off1" id="calendar-day', day021 = '"><span>',day21 = '</span></li>';
+        let day31 = '<li class="calendar-day day_off1" id="calendar-day', day041 = '"><span class="number_thing1">&nbsp',day41 = '&nbsp</span></li>';
+        let past_day11 = '<li class="calendar-day past_day day_off1" id="calendar-day',past_day021 = '"><span>',past_day21 = '</span></li>';
 
         let cur_weekday = weekday;
         for(let i = 1 ; i <= days_num ; i ++){
@@ -604,6 +613,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if(document.getElementById("book_btn") != undefined){
+        set_business(100,document.getElementById("empty_color"));
+        set_business(0,document.getElementById("busy_color"));
         let currentDate = new Date();
         let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         let options = { timeZone: userTimeZone, year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'long', hour: 'numeric', minute: 'numeric', second: 'numeric' };
