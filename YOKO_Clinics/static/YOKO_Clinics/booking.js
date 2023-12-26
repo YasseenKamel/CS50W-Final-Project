@@ -45,6 +45,20 @@ document.addEventListener('DOMContentLoaded', function () {
         el.style.filter=`hue-rotate(${h}deg) saturate(${s}) brightness(${b})`;
     }
 
+    function book_event(event){
+
+    }
+
+    function add_booking_event(){
+        for(let i = 0 ; i < document.getElementById("calendar-days0").children.length ; i ++){
+            let cur = document.getElementById("calendar-days0").children[i];
+            if(cur.classList != "calendar-day"){
+                continue;
+            }
+            cur.addEventListener('click',book_event);
+        }
+    }
+
     function load_month(year, month, weekday, idx){
         let template = '<section class="calendar-month-header"><div id="selected-month' + idx + '" class="calendar-month-header-selected-month">' + month_names[month] + ' ' + year + '</div><div class="calendar-month-header-selectors"><span id="previous-month-selector' + idx + '"><</span><span id="present-month-selector' + idx + '">Today</span><span id="next-month-selector' + idx + '">></span></div></section><ol id="days-of-week' + idx + '" class="day-of-week"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ol><ol id="calendar-days' + idx + '" class="days-grid">';
         let template_close = '</ol>';
@@ -202,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(prev_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(prev_month_data[idx],cur);
@@ -216,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(month_data[idx],cur);
@@ -230,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(next_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(next_month_data[idx],cur);
@@ -341,6 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(prev_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(prev_month_data[idx],cur);
@@ -355,6 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(month_data[idx],cur);
@@ -369,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(next_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(next_month_data[idx],cur);
@@ -454,6 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(prev_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(prev_month_data[idx],cur);
@@ -468,6 +489,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(month_data[idx],cur);
@@ -482,6 +504,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(next_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(next_month_data[idx],cur);
@@ -562,6 +585,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(prev_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(prev_month_data[idx],cur);
@@ -576,6 +600,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(month_data[idx],cur);
@@ -590,6 +615,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if(next_month_data[idx] == -1){
                         cur.classList.add("day_off1");
+                        cur.classList.add("past_day");
                     }
                     else{
                         set_business(next_month_data[idx],cur);
@@ -688,6 +714,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 if(prev_month_data[idx] == -1){
                     cur.classList.add("day_off1");
+                    cur.classList.add("past_day");
                 }
                 else{
                     set_business(prev_month_data[idx],cur);
@@ -702,6 +729,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 if(month_data[idx] == -1){
                     cur.classList.add("day_off1");
+                    cur.classList.add("past_day");
                 }
                 else{
                     set_business(month_data[idx],cur);
@@ -716,6 +744,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 if(next_month_data[idx] == -1){
                     cur.classList.add("day_off1");
+                    cur.classList.add("past_day");
                 }
                 else{
                     set_business(next_month_data[idx],cur);
