@@ -273,5 +273,17 @@
             </div>
         </div>
     </div>
+    <div class="input_container" style="display:none;z-index: 1000;" id="input_container2">
+        <div class="input_vacation_frame">
+            <form class="vertical_align">
+                {% csrf_token %}
+                <div id="error_div" class="error_div">
+    
+                </div>
+                <h4 style="margin-bottom:2rem;" id="vacation_input_title">BANANA</h4>
+                
+            </form>
+        </div>
+    </div>
     {% endif %}
 {% endblock %}

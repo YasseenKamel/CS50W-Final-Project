@@ -441,6 +441,7 @@ def get_cal_data1(request):
         banana = User.objects.get(id=id1)
         default_start = banana.start_time
         default_end = banana.end_time
+        vacay = repeated_vacations.objects.filter(doctor_id=id1).values_list('day',flat=True)
         # prev_month
         _, num_days_prev = calendar.monthrange(prev_year, prev_month)
         prev_month_data = []
@@ -456,6 +457,9 @@ def get_cal_data1(request):
                 prev_month_shifts.append({'start':datetime.time(vacays[0].start_date.hour,vacays[0].start_date.minute,0),'end':datetime.time(vacays[0].end_date.hour,vacays[0].end_date.minute,0)})
             else:
                 prev_month_shifts.append({'start':default_start,'end':default_end})
+                if ((datetime.datetime(prev_year,prev_month,i,prev_month_shifts[i - 1]['start'].hour,prev_month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC).weekday() + 1) % 7 + 1) not in vacay:
+                    prev_month_data.append(-1)
+                    continue
             # search for appointments in this day
             shift_start = datetime.datetime(prev_year,prev_month,i,prev_month_shifts[i - 1]['start'].hour,prev_month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC)
             shift_end = datetime.datetime(prev_year,prev_month,i,prev_month_shifts[i - 1]['end'].hour,prev_month_shifts[i - 1]['end'].minute,0, tzinfo=pytz.UTC)
@@ -484,6 +488,9 @@ def get_cal_data1(request):
                 month_shifts.append({'start':datetime.time(vacays[0].start_date.hour,vacays[0].start_date.minute,0),'end':datetime.time(vacays[0].end_date.hour,vacays[0].end_date.minute,0)})
             else:
                 month_shifts.append({'start':default_start,'end':default_end})
+                if ((datetime.datetime(year,month,i,month_shifts[i - 1]['start'].hour,month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC).weekday() + 1) % 7 + 1) not in vacay:
+                    month_data.append(-1)
+                    continue
             # search for appointments in this day
             shift_start = datetime.datetime(year,month,i,month_shifts[i - 1]['start'].hour,month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC)
             shift_end = datetime.datetime(year,month,i,month_shifts[i - 1]['end'].hour,month_shifts[i - 1]['end'].minute,0, tzinfo=pytz.UTC)
@@ -512,6 +519,9 @@ def get_cal_data1(request):
                 next_month_shifts.append({'start':datetime.time(vacays[0].start_date.hour,vacays[0].start_date.minute,0),'end':datetime.time(vacays[0].end_date.hour,vacays[0].end_date.minute,0)})
             else:
                 next_month_shifts.append({'start':default_start,'end':default_end})
+                if ((datetime.datetime(next_year,next_month,i,next_month_shifts[i - 1]['start'].hour,next_month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC).weekday() + 1) % 7 + 1) not in vacay:
+                    next_month_data.append(-1)
+                    continue
             # search for appointments in this day
             shift_start = datetime.datetime(next_year,next_month,i,next_month_shifts[i - 1]['start'].hour,next_month_shifts[i - 1]['start'].minute,0, tzinfo=pytz.UTC)
             shift_end = datetime.datetime(next_year,next_month,i,next_month_shifts[i - 1]['end'].hour,next_month_shifts[i - 1]['end'].minute,0, tzinfo=pytz.UTC)

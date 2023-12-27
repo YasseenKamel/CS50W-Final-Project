@@ -41,22 +41,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let h= (1-t)*hue_initial + t*hue_final;
         let s= (1-t)*saturation_initial + t*saturation_final;
         let b= (1-t)*brightness_initial + t*brightness_final;
-        console.log(val);
+        // console.log(val);
         el.style.filter=`hue-rotate(${h}deg) saturate(${s}) brightness(${b})`;
     }
 
     function book_event(event){
-
-    }
-
-    function add_booking_event(){
-        for(let i = 0 ; i < document.getElementById("calendar-days0").children.length ; i ++){
-            let cur = document.getElementById("calendar-days0").children[i];
-            if(cur.classList != "calendar-day"){
-                continue;
-            }
-            cur.addEventListener('click',book_event);
-        }
+        console.log(event.target);
+        document.getElementById("input_container2").style.display = "flex";
     }
 
     function load_month(year, month, weekday, idx){
@@ -183,6 +174,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(slot.id.length > 12){
                     if(slot.id[12] == '0'){
                         slot.id = slot.id.slice(0,12) + '1' + slot.id.slice(13);
+                        if(slot.classList == "calendar-day"){
+                            slot.removeEventListener('click',book_event);
+                        }
                     }
                 }
             });
@@ -257,7 +251,16 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
             document.getElementById('present-month-selector0').addEventListener('click',cur_month);
-
+            
+            document.querySelectorAll('.calendar-day').forEach(slot => {
+                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                    if(slot.id[12] == '0'){
+                        if(slot.classList == "calendar-day"){
+                            slot.addEventListener('click',book_event);
+                        }
+                    }
+                }
+            });
 
         });
 
@@ -325,6 +328,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if(slot.id.length > 12){
                     if(slot.id[12] == '0'){
                         slot.id = slot.id.slice(0,12) + '-1' + slot.id.slice(13);
+                        if(slot.classList == "calendar-day"){
+                            slot.removeEventListener('click',book_event);
+                        }
                     }
                 }
             });
@@ -399,6 +405,15 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
             document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+            document.querySelectorAll('.calendar-day').forEach(slot => {
+                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                    if(slot.id[12] == '0'){
+                        if(slot.classList == "calendar-day"){
+                            slot.addEventListener('click',book_event);
+                        }
+                    }
+                }
+            });
 
         });
     }
@@ -514,6 +529,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
                 document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+                document.querySelectorAll('.calendar-day').forEach(slot => {
+                    if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                        if(slot.id[12] == '0'){
+                            if(slot.classList == "calendar-day"){
+                                slot.addEventListener('click',book_event);
+                                console.log("banana",slot);
+                            }
+                        }
+                    }
+                });
 
             });
 
@@ -570,6 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 next_div.classList.value = 'calendar_slide cal_slid2';
                 next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
+
                 document.getElementById('calendar-month').appendChild(next_div);
                 prev_month_data = data['prev_month_data'];
                 prev_month_shifts = data['prev_month_shifts'];
@@ -625,17 +651,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
                 document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+                document.querySelectorAll('.calendar-day').forEach(slot => {
+                    if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                        if(slot.id[12] == '0'){
+                            if(slot.classList == "calendar-day"){
+                                slot.addEventListener('click',book_event);
+                            }
+                        }
+                    }
+                });
 
             });
         }
     }
     function cancel_booking(event){
         if(event != "overriding_banana"){
-            if(event.target != document.getElementById('input_container')){
+            if(event.target != document.getElementById('input_container') && event.target != document.getElementById('input_container2')){
                 return;
             }
         }
-        document.getElementById('input_container').style.display = 'none';
+        if(document.getElementById('input_container2').style.display == "flex"){
+            document.getElementById('input_container2').style.display = "none";
+        }
+        else{
+            document.getElementById('input_container').style.display = "none";
+        }
     }
 
     if(document.getElementById("book_btn") != undefined){
@@ -755,12 +795,23 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
             document.getElementById('present-month-selector0').addEventListener('click',cur_month);
+            
+            document.querySelectorAll('.calendar-day').forEach(slot => {
+                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                    if(slot.id[12] == '0'){
+                        if(slot.classList == "calendar-day"){
+                            slot.addEventListener('click',book_event);
+                        }
+                    }
+                }
+            });
         });
         document.getElementById("book_btn").addEventListener('click',function(){
             document.getElementById("input_container").style.display="flex";
         });
         
         document.getElementById('input_container').addEventListener('click', cancel_booking);
+        document.getElementById('input_container2').addEventListener('click', cancel_booking);
     }
     ///////////////////////
     if(document.getElementById("back_thing") != undefined){
