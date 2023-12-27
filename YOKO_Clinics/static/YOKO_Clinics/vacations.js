@@ -979,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function (){
                     else{
                         ///No bad appointments
                         if(document.getElementById('is_vacation').checked == true){
-                            submit_vacation(new Date(year, month, starting, 12, 30, 45, 500),new Date(year, month, ending, 12, 30, 45, 500),document.getElementById('is_vacation').checked);
+                            submit_vacation(new Date(year, month, starting, 0, 0, 0, 0),new Date(year, month, ending, 23, 59, 59, 0),document.getElementById('is_vacation').checked);
                         }
                         else{
                             if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){
@@ -995,7 +995,7 @@ document.addEventListener('DOMContentLoaded', function (){
                 }
                 else{
                     if(document.getElementById('is_vacation').checked == true){
-                        submit_vacation(new Date(year, month, starting, 12, 30, 45, 500),new Date(year, month, ending, 12, 30, 45, 500),document.getElementById('is_vacation').checked);
+                        submit_vacation(new Date(year, month, starting, 0, 0, 0, 0),new Date(year, month, ending, 23, 59, 59, 0),document.getElementById('is_vacation').checked);
                     }
                     else{
                         if(!validateTime("start_time") || !validateTime("end_time") || document.getElementById('start_time').value == document.getElementById('end_time').value){
@@ -1015,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', function (){
                     submit_vacation(new Date(year, month, starting, parseInt(document.getElementById("start_time").value.split(':')[0],10), parseInt(document.getElementById("start_time").value.split(':')[1],10)),new Date(year, month, ending, parseInt(document.getElementById("end_time").value.split(':')[0],10), parseInt(document.getElementById("end_time").value.split(':')[1],10)),document.getElementById('is_vacation').checked);
                 }
                 else{
-                    submit_vacation(new Date(year, month, starting, 12, 30, 45, 500),new Date(year, month, ending, 12, 30, 45, 500),document.getElementById('is_vacation').checked);
+                    submit_vacation(new Date(year, month, starting, 0, 0, 0, 0),new Date(year, month, ending, 23, 59, 59, 0),document.getElementById('is_vacation').checked);
                 }
             }
         });

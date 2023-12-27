@@ -6,6 +6,7 @@
 {% block body %}
 {% if user.id == target.id %}
     <div class="profile_frame">
+        <input type="hidden" id="timezoneOffset" name="timezoneOffset">
         <script>
             function hide1(){
                 document.getElementById("beep1").style.display = "none";
@@ -163,6 +164,9 @@
             function hide1(){
                 document.getElementById("beep1").style.display = "none";
             }
+            function hide(i){
+                document.getElementById("beepo" + i).style.display = "none";
+            }
         </script>
         <div class="alert" id="beep1" style="display:none;">
             <a class="close" data-dismiss="alert" href="#" onclick="hide1()">×</a>
@@ -277,7 +281,7 @@
         <div class="input_vacation_frame">
             <form class="vertical_align">
                 {% csrf_token %}
-                <div id="error_div" class="error_div">
+                <div id="error_div_bookin" class="error_div">
     
                 </div>
                 <h4 style="margin-bottom:2rem;" id="vacation_input_title">BANANA</h4>

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const hue_initial=81, saturation_initial=1, brightness_initial=1;
     const hue_final=0, saturation_final=1, brightness_final=1;
+    let percentages = new Array();
     // const hue_initial=260, saturation_initial=0.5, brightness_initial=0.8;
     // const hue_final=0, saturation_final=1, brightness_final=1;
 
@@ -46,8 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function book_event(event){
-        console.log(event.target);
+        let cur = event.target;
+        console.log(cur,cur.style.filter.match(/hue-rotate\(([^)]+)\)/)[1]);
         document.getElementById("input_container2").style.display = "flex";
+        document.getElementById("error_div_bookin").innerHTML = "";
+        if(parseFloat(cur.style.filter.match(/hue-rotate\(([^)]+)\)/)[1]) > 51){
+            document.getElementById("error_div_bookin").innerHTML = '<div class="alert alert-warning" id="beepo0"><a class="close" data-dismiss="alert" href="#" onclick="hide(0)">×</a>This is a busy day. This means your appointment has a higher chance of getting cancelled.</div>';
+        }
     }
 
     function load_month(year, month, weekday, idx){

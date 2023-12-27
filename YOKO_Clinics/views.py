@@ -93,6 +93,15 @@ def register(request):
             end_time = request.POST.get('end_time')
             days = request.POST.getlist('days')
             specialties = request.POST.getlist('sub_specialties')
+            offset = request.POST.get('timezoneOffset')
+            if(len(str(start_time).split(':')) == 2):
+                start_time = str(start_time) + ":00"
+            if(len(str(end_time).split(':')) == 2):
+                end_time = str(end_time) + ":00"
+            start_temp = datetime.datetime.strptime(start_time, "%H:%M:%S")
+            end_temp = datetime.datetime.strptime(end_time, "%H:%M:%S")
+            start_time = (start_temp + datetime.timedelta(minutes=int(offset))).strftime("%H:%M:%S")
+            end_time = (end_temp + datetime.timedelta(minutes=int(offset))).strftime("%H:%M:%S")
             if country == None or state == None or city == None or address == None or start_time == None or end_time == None or days == [] or specialties == []:
                 return render(request, "YOKO_Clinics/register.html", {
                     "message": "Please fill in all fields."
@@ -153,6 +162,7 @@ def vacation_add(request):
         print(start)
         print(end)
         print(is_vacation)
+        #return JsonResponse({'message': 'Vacation added successfully.'})
         
         vacays = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=True,doctor_id = request.user.id)
         altered = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=False,doctor_id = request.user.id)
@@ -263,7 +273,15 @@ def edit_profile(request,banana):
         end_time = data['end_time']
         days = data['days']
         sub_specialties = data['sub_specialties']
-        #TODO: check if new default schedule clashes with already booked appointments
+        offset = data['timezoneOffset']
+        if(len(str(start_time).split(':')) == 2):
+            start_time = str(start_time) + ":00"
+        if(len(str(end_time).split(':')) == 2):
+            end_time = str(end_time) + ":00"
+        start_temp = datetime.datetime.strptime(start_time, "%H:%M:%S")
+        end_temp = datetime.datetime.strptime(end_time, "%H:%M:%S")
+        start_time = (start_temp + datetime.timedelta(minutes=int(offset))).strftime("%H:%M:%S")
+        end_time = (end_temp + datetime.timedelta(minutes=int(offset))).strftime("%H:%M:%S")
         appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = request.user.id,start_date__gte=datetime.datetime.now())
         bad_appoints = []
         for i in appoints:
@@ -285,10 +303,6 @@ def edit_profile(request,banana):
                 })
                 continue
             start1 = i.start_date
-            if(len(str(start_time).split(':')) == 2):
-                start_time = str(start_time) + ":00"
-            if(len(str(end_time).split(':')) == 2):
-                end_time = str(end_time) + ":00"
             start1 = start1.replace(hour=datetime.datetime.strptime(start_time, "%H:%M:%S").time().hour, minute=datetime.datetime.strptime(start_time, "%H:%M:%S").time().minute, second=datetime.datetime.strptime(start_time, "%H:%M:%S").time().second)
             end1 = i.end_date
             if start_time > end_time:
@@ -498,6 +512,9 @@ def get_cal_data1(request):
                 shift_end += datetime.timedelta(days=1)
             time_frame = shift_end - shift_start
             appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__gte=shift_start,end_date__lte=shift_end).order_by('start_date')
+            if i == 27:
+                print(appoints)
+                print(month_shifts[i - 1]['start'],month_shifts[i - 1]['end'])
             if len(appoints) > 0:
                 time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
                 for j in range(1,len(appoints)):

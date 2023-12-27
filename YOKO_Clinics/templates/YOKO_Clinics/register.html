@@ -38,6 +38,7 @@
                     </div>
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
+        <input type="hidden" id="timezoneOffset" name="timezoneOffset">
         <div>
             <div class="form-group1" id="slide_container">
                 <div id="page_1" class="page_1">

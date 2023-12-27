@@ -92,4 +92,25 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('theme', targetTheme);
     });
 
+    if(document.getElementById('timezoneOffset') != undefined){
+        document.getElementById('timezoneOffset').value = new Date().getTimezoneOffset();
+    }
+
+    if(document.getElementById('start_time_display') != undefined){
+        let user_time = new Date('2000-01-01T' + convertTo24HourFormat(document.getElementById('start_time_display').innerHTML) + "Z");
+        document.getElementById('start_time_display').innerHTML = user_time.toLocaleTimeString(undefined, {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          });
+    }
+    if(document.getElementById('end_time_display') != undefined){
+        let user_time = new Date('2000-01-01T' + convertTo24HourFormat(document.getElementById('end_time_display').innerHTML) + "Z");
+        document.getElementById('end_time_display').innerHTML = user_time.toLocaleTimeString(undefined, {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          });
+    }
+
 });

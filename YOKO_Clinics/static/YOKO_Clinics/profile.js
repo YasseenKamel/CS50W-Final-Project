@@ -226,7 +226,8 @@ document.addEventListener('DOMContentLoaded', function (){
                         end_time: document.getElementById('end_time').value,
                         days: days_list,
                         sub_specialties: subs_list,
-                        main_specialty: document.getElementById('specialty').value
+                        main_specialty: document.getElementById('specialty').value,
+                        timezoneOffset: document.getElementById('timezoneOffset').value
                     })
                 })
                 .then(response => response.json())

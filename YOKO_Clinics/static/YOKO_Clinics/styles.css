@@ -48,6 +48,9 @@
     --disabled_day: #dfd1e6;
     --selected_day: #bfa2cd;
     --hovered_day: #cdaddc;
+    --alert_warning_background: #fff3cd;
+    --alert_warning_text: #8e6e13;
+    --alert_warning_border: #8e6e13;
   }
   :root[data-theme="dark"] {
     --text: #ebe5f0;
@@ -69,6 +72,9 @@
     --disabled_day: #55495c;
     --selected_day: #3e2949;
     --hovered_day: #4b3259;
+    --alert_warning_background: #664b00;
+    --alert_warning_text: #e6d299;
+    --alert_warning_border: #e6d299;
   }
   
 
@@ -1107,4 +1113,10 @@ input[type="checkbox"].toggle1:checked+label::after {
 
 .day_off1{
     filter: hue-rotate(-60deg) !important;
+}
+
+.alert-warning{
+    color: var(--alert_warning_text);
+    border-color: var(--alert_warning_border);
+    background-color: var(--alert_warning_background);
 }
