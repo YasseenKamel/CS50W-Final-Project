@@ -124,7 +124,7 @@ select:disabled,input:disabled{
     background-color: var(--disabled) !important;
 }
 
-button:hover,input[type="submit"]:hover{
+button:hover,input[type="submit"]:hover,input[type="button"]:hover{
     background-color: var(--hover) !important;
 }
 

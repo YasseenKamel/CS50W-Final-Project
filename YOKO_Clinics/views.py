@@ -159,10 +159,6 @@ def vacation_add(request):
         start = datetime.datetime.fromisoformat(data['start'][:-1])
         end = datetime.datetime.fromisoformat(data['end'][:-1])
         is_vacation = data['is_vacation']
-        print(start)
-        print(end)
-        print(is_vacation)
-        #return JsonResponse({'message': 'Vacation added successfully.'})
         
         vacays = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=True,doctor_id = request.user.id)
         altered = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=False,doctor_id = request.user.id)
@@ -512,9 +508,6 @@ def get_cal_data1(request):
                 shift_end += datetime.timedelta(days=1)
             time_frame = shift_end - shift_start
             appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = id1,start_date__gte=shift_start,end_date__lte=shift_end).order_by('start_date')
-            if i == 27:
-                print(appoints)
-                print(month_shifts[i - 1]['start'],month_shifts[i - 1]['end'])
             if len(appoints) > 0:
                 time_frame = max(appoints[0].start_date - shift_start,shift_end - appoints[len(appoints)-1].end_date)
                 for j in range(1,len(appoints)):

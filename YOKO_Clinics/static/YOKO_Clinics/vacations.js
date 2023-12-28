@@ -26,6 +26,18 @@ document.addEventListener('DOMContentLoaded', function (){
     let appointments,vacations,altered;
     let starting = -1,ending = -1;
 
+    function set_up_input(){
+        document.getElementById('start_day').value = mousedown + '/' + (month + 1) + '/' + year;
+        document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
+        document.getElementById('input_container').style.display = 'flex';
+        document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
+        document.getElementById('success_vacay').innerHTML = "";
+        starting = mousedown;
+        ending = mouseup;
+        mousedown = -1;
+        mouseup = -1;
+    }
+
     function getdown(event){
         const clicked = event.target;
         if(!(clicked.classList.contains("calendar-day") && !clicked.classList.contains("disabled_day") && !clicked.classList.contains("past_day")) || event.button === 2){
@@ -87,15 +99,7 @@ document.addEventListener('DOMContentLoaded', function (){
         if(mousedown > mouseup){
             [mousedown, mouseup] = [mouseup, mousedown];
         }
-        document.getElementById('start_day').value = mousedown + '/' + (month + 1) + '/' + year;
-        document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
-        document.getElementById('input_container').style.display = 'flex';
-        document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
-        document.getElementById('success_vacay').innerHTML = "";
-        starting = mousedown;
-        ending = mouseup;
-        mousedown = -1;
-        mouseup = -1;
+        set_up_input();
     }
 
 
@@ -196,15 +200,7 @@ document.addEventListener('DOMContentLoaded', function (){
         if(mousedown > mouseup){
             [mousedown, mouseup] = [mouseup, mousedown];
         }
-        document.getElementById('start_day').value = mousedown + '/' + (month + 1) + '/' + year;
-        document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
-        document.getElementById('input_container').style.display = 'flex';
-        document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
-        document.getElementById('success_vacay').innerHTML = "";
-        starting = mousedown;
-        ending = mouseup;
-        mousedown = -1;
-        mouseup = -1;
+        set_up_input();
     }
 
 
@@ -865,9 +861,10 @@ document.addEventListener('DOMContentLoaded', function (){
     let set_vacation = 0;
 
     function submit_vacation(start, end, is_vacation){
-        console.log(start);
-        console.log(end);
-        console.log(is_vacation);
+        if(is_vacation){
+            start = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate(), start.getHours(),start.getMinutes()));
+            end = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate(), end.getHours(),end.getMinutes()));
+        }
         fetch('vacation_add',{
             method: 'PUT',
             headers: {
@@ -922,7 +919,7 @@ document.addEventListener('DOMContentLoaded', function (){
                         if(document.getElementById('is_vacation').checked == true){
                             document.getElementById('error_div').innerHTML = "";
                             document.getElementById('submit_vacation').value = "Set Anyway";
-                            document.getElementById('vacation_input_title').innerHTML += " (These appointments will be cancelled if schedule is set)";
+                            document.getElementById('vacation_input_title').innerHTML += "<br>These appointments will be cancelled if schedule is set.";
                             for(let i = start ; i <= end ; i ++){
                                 let day = new Date(appointments[i]['fields']['start_date']),daye = new Date(appointments[i]['fields']['end_date']);
                                 let day1 = day;
@@ -961,7 +958,7 @@ document.addEventListener('DOMContentLoaded', function (){
                                         if(!(days >= start_tar && daye <= end_tar)){
                                             bad_appointments ++;
                                             document.getElementById('submit_vacation').value = "Set Anyway";
-                                            document.getElementById('vacation_input_title').innerHTML += " (These appointments will be cancelled if schedule is set)";
+                                            document.getElementById('vacation_input_title').innerHTML += "<br>These appointments will be cancelled if schedule is set.";
                                             let day1 = days;
                                             days = days.getDate();
                                             let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

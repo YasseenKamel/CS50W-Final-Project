@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function book_event(event){
         let cur = event.target;
-        console.log(cur,cur.style.filter.match(/hue-rotate\(([^)]+)\)/)[1]);
+        document.getElementById("booking_date").value = cur.id.slice(13);
         document.getElementById("input_container2").style.display = "flex";
         document.getElementById("error_div_bookin").innerHTML = "";
         if(parseFloat(cur.style.filter.match(/hue-rotate\(([^)]+)\)/)[1]) > 51){
@@ -540,7 +540,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         if(slot.id[12] == '0'){
                             if(slot.classList == "calendar-day"){
                                 slot.addEventListener('click',book_event);
-                                console.log("banana",slot);
                             }
                         }
                     }
@@ -672,7 +671,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function cancel_booking(event){
         if(event != "overriding_banana"){
-            if(event.target != document.getElementById('input_container') && event.target != document.getElementById('input_container2')){
+            if(event.target != document.getElementById('input_container') && event.target != document.getElementById('input_container2') && event.target != document.getElementById('cancel_book')){
                 return;
             }
         }
@@ -682,6 +681,16 @@ document.addEventListener('DOMContentLoaded', function () {
         else{
             document.getElementById('input_container').style.display = "none";
         }
+    }
+
+    function final_booking(){
+        if(document.getElementById("book_desc").value.trim() == ""){
+            if(document.getElementById("beepo100") == undefined){
+                document.getElementById("error_div_bookin").innerHTML += '<div class="alert alert-danger" id="beepo100"><a class="close" data-dismiss="alert" href="#" onclick="hide(100)">×</a>Please fill in the description.</div>';
+            }
+            return;
+        }
+        // TODO: fetch request to add booking request
     }
 
     if(document.getElementById("book_btn") != undefined){
@@ -818,6 +827,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         document.getElementById('input_container').addEventListener('click', cancel_booking);
         document.getElementById('input_container2').addEventListener('click', cancel_booking);
+        document.getElementById('submit_book').addEventListener('click', final_booking);
     }
     ///////////////////////
     if(document.getElementById("back_thing") != undefined){
