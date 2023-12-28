@@ -23,7 +23,7 @@ class appointments_admin(admin.ModelAdmin):
     list_display = ("id" , "patient_id" , "doctor_id" , "start_date" , "end_date" , "description" , "left_review" , "status")
 
 class bookings_admin(admin.ModelAdmin):
-    list_display = ("id" , "patient_id" , "doctor_id" , "day" , "description" , "date_created" , "type_id" , "status")
+    list_display = ("id" , "patient_id" , "doctor_id" , "day" , "description" , "date_created" , "status")
 
 class messages_admin(admin.ModelAdmin):
     list_display = ("id" , "patient_id" , "doctor_id" , "status")

@@ -6,7 +6,7 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
-    path("bookings", views.bookings, name="bookings"),
+    path("bookings", views.bookings1, name="bookings"),
     path("vacation", views.vacation, name="vacation"),
     path("appointment/<int:id>", views.appointment, name="appointment"),
     path("profile/<int:id>", views.profile, name="profile"),
@@ -16,5 +16,6 @@ urlpatterns = [
     path("<str:banana>/edit_profile", views.edit_profile, name="edit_profile"),
     path("get_cal_data", views.get_cal_data, name="get_cal_data"),
     path("profile/get_cal_data1", views.get_cal_data1, name="get_cal_data1"),
+    path("profile/book_appointment", views.book_appointment, name="book_appointment"),
     path("vacation_add", views.vacation_add, name="vacation_add")
 ]

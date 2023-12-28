@@ -134,7 +134,7 @@ def index(request):
     return render(request, "YOKO_Clinics/index.html")
 
 @login_required
-def bookings(request):
+def bookings1(request):
     pass
 
 @login_required
@@ -554,3 +554,17 @@ def get_cal_data1(request):
             'next_month_shifts': next_month_shifts
         })
     
+@login_required
+def book_appointment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        desc = data['description']
+        pat_id = request.user.id
+        doc_id = data['id1']
+        date_created = datetime.datetime.now(datetime.timezone.utc)
+        date_requested = datetime.date(int(data['year']),int(data['month']),int(data['day']))
+        if bookings.objects.filter(Q(date_created__date=date_created.date()),patient_id = pat_id).count() > 0 or bookings.objects.filter(patient_id = pat_id,day=date_requested).count() > 0:
+            return JsonResponse({'message': 'You can not book multiple appointments on the same day.'})
+        item = bookings(patient_id = pat_id,doctor_id = doc_id,day = date_requested,description = desc,date_created = date_created)
+        item.save()
+        return JsonResponse({'message': 'OK'})

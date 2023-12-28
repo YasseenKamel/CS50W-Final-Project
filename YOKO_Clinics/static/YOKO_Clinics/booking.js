@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("booking_date").value = cur.id.slice(13);
         document.getElementById("input_container2").style.display = "flex";
         document.getElementById("error_div_bookin").innerHTML = "";
+        document.getElementById("book_desc").value="";
         if(parseFloat(cur.style.filter.match(/hue-rotate\(([^)]+)\)/)[1]) > 51){
             document.getElementById("error_div_bookin").innerHTML = '<div class="alert alert-warning" id="beepo0"><a class="close" data-dismiss="alert" href="#" onclick="hide(0)">×</a>This is a busy day. This means your appointment has a higher chance of getting cancelled.</div>';
         }
@@ -688,9 +689,35 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.getElementById("beepo100") == undefined){
                 document.getElementById("error_div_bookin").innerHTML += '<div class="alert alert-danger" id="beepo100"><a class="close" data-dismiss="alert" href="#" onclick="hide(100)">×</a>Please fill in the description.</div>';
             }
+            else{
+                document.getElementById("beepo100").style.display = '';
+            }
             return;
         }
-        // TODO: fetch request to add booking request
+        fetch('book_appointment',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                description: document.getElementById("book_desc").value.trim(),
+                year: year,
+                month: month + 1,
+                day: document.getElementById("booking_date").value,
+                id1: doctors_id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data['message'] != "OK"){
+                document.getElementById("error_div_bookin").innerHTML += '<div class="alert alert-danger" id="beepo5"><a class="close" data-dismiss="alert" href="#" onclick="hide(5)">×</a>' + data['message'] + '</div>';
+            }
+            else{
+                document.getElementById("success_vacay").innerHTML = '<div class="alert alert-success" id="beepo5"><a class="close" data-dismiss="alert" href="#" onclick="hide(5)">×</a>Your booking has been added to the waitlist. It is advised to visit the website to see the status of your request.</div>';
+                cancel_booking("overriding_banana");
+            }
+        });
     }
 
     if(document.getElementById("book_btn") != undefined){

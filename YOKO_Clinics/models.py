@@ -53,7 +53,6 @@ class bookings(models.Model):
     day = models.DateField()
     description = models.CharField(max_length=10000)
     date_created = models.DateTimeField()
-    type_id = models.IntegerField(default=0)
     status = models.CharField(max_length=100,default="Pending")
 
 class messages(models.Model):
