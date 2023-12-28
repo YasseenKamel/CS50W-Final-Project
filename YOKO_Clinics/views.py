@@ -131,14 +131,22 @@ def register(request):
 
 @login_required
 def index(request):
-    return render(request, "YOKO_Clinics/index.html")
+    bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
+    return render(request, "YOKO_Clinics/index.html",{
+        "bookings_cnt": bookings_cnt
+    })
 
 @login_required
 def bookings1(request):
-    pass
+    books = bookings.objects.filter(doctor_id=request.user.id,status="Pending")
+    return render(request, "YOKO_Clinics/bookings.html",{
+        "bookings_cnt": books.count(),
+        "bookings": books
+    })
 
 @login_required
 def vacation(request):
+    bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
     vacay = repeated_vacations.objects.filter(doctor_id=request.user.id).values_list('day',flat=True)
     days = [1,2,3,4,5,6,7]
     vaycays = []
@@ -147,7 +155,8 @@ def vacation(request):
             vaycays.append(i)
     return render(request, "YOKO_Clinics/vacations.html",{
         'current_time': datetime.datetime.now(),
-        'repeated': vaycays
+        'repeated': vaycays,
+        "bookings_cnt": bookings_cnt
     })
         
 
@@ -235,6 +244,7 @@ def profile(request,id):
     if request.method == "POST":
         pass
     else:
+        bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
         specialties = expertise.objects.filter(doctor_id=id).values_list('type_id',flat=True)
         day = repeated_vacations.objects.filter(doctor_id=id).values_list('day',flat=True)
         days = [0,0,0,0,0,0,0]
@@ -253,7 +263,8 @@ def profile(request,id):
             'target': target,
             'sub': sub,
             'days': days,
-            'repeated': vaycays
+            'repeated': vaycays,
+            "bookings_cnt": bookings_cnt
         })
     
 @login_required

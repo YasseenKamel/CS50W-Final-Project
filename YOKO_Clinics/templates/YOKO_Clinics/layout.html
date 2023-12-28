@@ -31,7 +31,7 @@
                     <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'bookings' %}">Bookings{% if book_cnt > 0 %} <span class="number_thing">&nbsp{{ book_cnt }}&nbsp</span>{% endif %}</a>
+                    <a class="nav-link" href="{% url 'bookings' %}">Bookings{% if bookings_cnt > 0 %} <span class="number_thing">&nbsp{{ bookings_cnt }}&nbsp</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'vacation' %}">Vacations</a>
