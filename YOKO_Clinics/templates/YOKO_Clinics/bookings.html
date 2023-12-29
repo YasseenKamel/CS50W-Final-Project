@@ -5,5 +5,48 @@
 {% block script %}<script src="{% static 'YOKO_Clinics/bookings.js' %}"></script>{% endblock %}
 
 {% block body %}
+<form>
+    <div class="sorting_div">
+        <div class="form-group" style="margin-right:0.5rem;">
+            <select class="form-select form-control" name="sort_by" tabindex="-1">
+                <option selected disabled>No order</option>
+                <option>Date created</option>
+                <option>Date of booking</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-right:0.5rem;">
+            <select class="form-select form-control" name="order_by" tabindex="-1">
+                <option selected>Ascending</option>
+                <option>Descending</option>
+            </select>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Sort" id="sort" style="height: calc(1.5em + 0.75rem + 2px);padding-left:1rem;padding-right:1rem;">
+    </div>
+</form>
+{% for booking in page_obj %}
+    <div class="profile_frame">
+        <div>
+            <h1 id="patient_username{{booking.patient_id}}" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
+            <script>
+                document.getElementById('patient_username{{booking.patient_id}}').textContent = "{{ booking.patient_username }}";
+            </script>
+        </div>
+    </div>
+{% endfor %}
 
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <div class="left_links">
+        <button class="btn btn-primary" onclick="page1()">&laquo; First</button>
+        <button class="btn btn-primary" onclick="page2()">Previous</button>
+    </div>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+    <div class="right_links">
+        <button class="btn btn-primary" onclick="page3()">Next</button>
+        <button class="btn btn-primary" onclick="page4()">Last &raquo;</button>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

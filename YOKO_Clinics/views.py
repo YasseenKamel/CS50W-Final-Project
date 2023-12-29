@@ -138,10 +138,28 @@ def index(request):
 
 @login_required
 def bookings1(request):
-    books = bookings.objects.filter(doctor_id=request.user.id,status="Pending")
+    books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending")
+    books = []
+    for book in books1:
+        patient = User.objects.get(id=book.patient_id)
+        books.append({
+            'id': book.id,
+            'patient_id': book.patient_id,
+            'doctor_id': book.doctor_id,
+            'day': book.day,
+            'description': book.description,
+            'date_created': book.date_created,
+            'status': book.status,
+            'patient_username': patient.username
+        })
+    paginator = Paginator(books, 10)
+    page_num = request.GET.get('page')
+    if page_num == None:
+        page_num = 1
+    page_obj = paginator.get_page(page_num)
     return render(request, "YOKO_Clinics/bookings.html",{
-        "bookings_cnt": books.count(),
-        "bookings": books
+        'bookings_cnt': books1.count(),
+        'page_obj': page_obj
     })
 
 @login_required
