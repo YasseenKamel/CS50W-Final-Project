@@ -138,7 +138,28 @@ def index(request):
 
 @login_required
 def bookings1(request):
-    books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending")
+    sorting = -1
+    order = 0
+    books1 = []
+    if request.GET.get('sort_by') != None and request.GET.get('sort_by') != 'No order':
+        if request.GET.get('sort_by') == "Date created":
+            sorting = 0
+        else:
+            sorting = 1
+    if sorting == 1:
+        if request.GET.get('order_by') == 'Ascending':
+            books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending").order_by('day')
+        else:
+            books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending").order_by('-day')
+            order = 1
+    elif sorting == 0:
+        if request.GET.get('order_by') == 'Ascending':
+            books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending").order_by('date_created')
+        else:
+            books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending").order_by('-date_created')
+            order = 1
+    else:
+        books1 = bookings.objects.filter(doctor_id=request.user.id,status="Pending")
     books = []
     for book in books1:
         patient = User.objects.get(id=book.patient_id)
@@ -159,7 +180,9 @@ def bookings1(request):
     page_obj = paginator.get_page(page_num)
     return render(request, "YOKO_Clinics/bookings.html",{
         'bookings_cnt': books1.count(),
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'sorting': sorting,
+        'order': order
     })
 
 @login_required

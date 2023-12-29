@@ -5,19 +5,19 @@
 {% block script %}<script src="{% static 'YOKO_Clinics/bookings.js' %}"></script>{% endblock %}
 
 {% block body %}
-<form>
+<form action="{% url 'bookings' %}">
     <div class="sorting_div">
         <div class="form-group" style="margin-right:0.5rem;">
             <select class="form-select form-control" name="sort_by" tabindex="-1">
-                <option selected disabled>No order</option>
-                <option>Date created</option>
-                <option>Date of booking</option>
+                <option {% if sorting == -1 %}selected{% endif %}>No order</option>
+                <option {% if sorting == 0 %}selected{% endif %}>Date created</option>
+                <option {% if sorting == 1 %}selected{% endif %}>Date of booking</option>
             </select>
         </div>
         <div class="form-group" style="margin-right:0.5rem;">
             <select class="form-select form-control" name="order_by" tabindex="-1">
-                <option selected>Ascending</option>
-                <option>Descending</option>
+                <option {% if order == 0 %}selected{% endif %}>Ascending</option>
+                <option {% if order == 1 %}selected{% endif %}>Descending</option>
             </select>
         </div>
         <input class="btn btn-primary" type="submit" value="Sort" id="sort" style="height: calc(1.5em + 0.75rem + 2px);padding-left:1rem;padding-right:1rem;">
@@ -26,10 +26,29 @@
 {% for booking in page_obj %}
     <div class="profile_frame">
         <div>
-            <h1 id="patient_username{{booking.patient_id}}" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
+            <h1 id="patient_username{{ booking.id }}" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
             <script>
-                document.getElementById('patient_username{{booking.patient_id}}').textContent = "{{ booking.patient_username }}";
+                document.getElementById('patient_username{{ booking.id }}').textContent = "{{ booking.patient_username }}";
             </script>
+        </div>
+        <div id="address_div" class="address_div margin_search">
+            <p id="date_created{{ booking.id }}"></p>
+            <script>
+                document.getElementById('date_created{{ booking.id }}').textContent = "{{ booking.date_created }}";
+            </script>
+            <p id="day_requested{{ booking.id }}"></p>
+            <script>
+                document.getElementById('day_requested{{ booking.id }}').textContent = "Day booked: {{ booking.day }}";
+            </script>
+        </div>
+        <div class="margin_search">
+            <h5>Description</h5>
+            <div id="desc_div">
+                <p id="desc{{ booking.id }}"></p>
+                <script>
+                    document.getElementById('desc{{ booking.id }}').textContent = "{{ booking.description }}";
+                </script>
+            </div>
         </div>
     </div>
 {% endfor %}
@@ -48,5 +67,146 @@
         <button class="btn btn-primary" onclick="page4()">Last &raquo;</button>
     </div>
     {% endif %}
+    <script>
+        {% if page_obj.has_previous %}
+        function page1() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page=1';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page=1";
+                }
+                else{
+                    window.location.href = currentUrl + "?page=1";
+                }
+            }
+            console.log(b);
+        }
+        
+        function page2() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page={{ page_obj.previous_page_number }}';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page={{ page_obj.previous_page_number }}";
+                }
+                else{
+                    window.location.href = currentUrl + "?page={{ page_obj.previous_page_number }}";
+                }
+            }
+        }
+        {% endif %}
+        
+        {% if page_obj.has_next %}
+        function page3() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page={{ page_obj.next_page_number }}';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page={{ page_obj.next_page_number }}";
+                }
+                else{
+                    window.location.href = currentUrl + "?page={{ page_obj.next_page_number }}";
+                }
+            }
+        }
+        function page4() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page={{ page_obj.paginator.num_pages }}';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page={{ page_obj.paginator.num_pages }}";
+                }
+                else{
+                    window.location.href = currentUrl + "?page={{ page_obj.paginator.num_pages }}";
+                }
+            }
+        }
+        {% endif %}
+    </script>
 </div>
 {% endblock %}
