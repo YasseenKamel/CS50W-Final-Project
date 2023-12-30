@@ -1131,3 +1131,31 @@ input[type="checkbox"].toggle1:checked+label::after {
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
+.booking_frame{
+    border-radius: 10px;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 2px;
+    background-color: var(--secondary);
+    padding: 1rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    width:70%;
+    margin: auto;
+    margin-top:2.5rem;
+    margin-bottom:2.5rem;
+    box-shadow: var(--shadow-elevation-medium);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.booking_data{
+    margin-right: 2rem;
+}
+
+.booking_btns{
+    margin-top: auto;
+    margin-left: auto;
+}

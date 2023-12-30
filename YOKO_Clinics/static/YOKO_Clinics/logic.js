@@ -16,23 +16,6 @@ function convertTo12HourFormat(twentyFourHourTime) {
     return hours + ':' + minutes + ' ' + period;
 }
 
-function parseCustomDatetime(datetimeString) {
-    let parts = datetimeString.split(/[\s,]+/);
-    let month = parts[0].slice(0,3);
-    let day = parseInt(parts[1], 10);
-    let yearString = parts[2];
-    let year = parseInt(yearString, 10);
-    let timeParts = parts[3].split(':');
-    let hour = parseInt(timeParts[0], 10);
-    let minute = parseInt(timeParts[1], 10);
-    let ampm = parts[4].toLowerCase();
-
-    if (ampm === 'p.m.' && hour < 12) {
-        hour += 12;
-    }
-    return new Date(year, monthToIndex(month), day, hour, minute);
-}
-
 function monthToIndex(month) {
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months.indexOf(month);

@@ -169,7 +169,7 @@ def bookings1(request):
             'doctor_id': book.doctor_id,
             'day': book.day,
             'description': book.description,
-            'date_created': book.date_created,
+            'date_created': book.date_created.isoformat,
             'status': book.status,
             'patient_username': patient.username
         })

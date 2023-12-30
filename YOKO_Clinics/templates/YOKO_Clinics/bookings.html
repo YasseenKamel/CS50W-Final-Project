@@ -24,31 +24,37 @@
     </div>
 </form>
 {% for booking in page_obj %}
-    <div class="profile_frame">
-        <div>
-            <h1 id="patient_username{{ booking.id }}" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h1>
-            <script>
-                document.getElementById('patient_username{{ booking.id }}').textContent = "{{ booking.patient_username }}";
-            </script>
+    <div class="booking_frame">
+        <div class="booking_data">
+            <div>
+                <h2 id="patient_username{{ booking.id }}" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h2>
+                <script>
+                    document.getElementById('patient_username{{ booking.id }}').textContent = "{{ booking.patient_username }}";
+                </script>
+            </div>
+            <div id="address_div" class="address_div">
+                <p id="date_created{{ booking.id }}" class="dates" style="margin-bottom:0rem;"></p>
+                <script>
+                    document.getElementById('date_created{{ booking.id }}').textContent = "{{ booking.date_created }}";
+                </script>
+                <p id="day_requested{{ booking.id }}" style="margin-bottom:0rem;"></p>
+                <script>
+                    document.getElementById('day_requested{{ booking.id }}').textContent = "Day booked: {{ booking.day }}";
+                </script>
+            </div>
         </div>
-        <div id="address_div" class="address_div margin_search">
-            <p id="date_created{{ booking.id }}"></p>
-            <script>
-                document.getElementById('date_created{{ booking.id }}').textContent = "{{ booking.date_created }}";
-            </script>
-            <p id="day_requested{{ booking.id }}"></p>
-            <script>
-                document.getElementById('day_requested{{ booking.id }}').textContent = "Day booked: {{ booking.day }}";
-            </script>
-        </div>
-        <div class="margin_search">
-            <h5>Description</h5>
+        <div class="address_div">
+            <h2 style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Description</h2>
             <div id="desc_div">
                 <p id="desc{{ booking.id }}"></p>
                 <script>
                     document.getElementById('desc{{ booking.id }}').textContent = "{{ booking.description }}";
                 </script>
             </div>
+        </div>
+        <div class="booking_btns">
+            <button class="btn btn-primary reject_booking" id="reject{{ booking.id }}">Reject</button>
+            <button class="btn btn-primary confirm_booking" id="confirm{{ booking.id }}">Confirm</button>
         </div>
     </div>
 {% endfor %}
