@@ -17,5 +17,7 @@ urlpatterns = [
     path("get_cal_data", views.get_cal_data, name="get_cal_data"),
     path("profile/get_cal_data1", views.get_cal_data1, name="get_cal_data1"),
     path("profile/book_appointment", views.book_appointment, name="book_appointment"),
+    path("get_selected", views.get_selected, name="get_selected"),
+    path("profile/get_selected", views.get_selected, name="get_selected"),
     path("vacation_add", views.vacation_add, name="vacation_add")
 ]

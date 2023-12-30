@@ -169,7 +169,7 @@ def bookings1(request):
             'doctor_id': book.doctor_id,
             'day': book.day,
             'description': book.description,
-            'date_created': book.date_created.isoformat,
+            'date_created': book.date_created.isoformat(),
             'status': book.status,
             'patient_username': patient.username
         })
@@ -620,3 +620,35 @@ def book_appointment(request):
         item = bookings(patient_id = pat_id,doctor_id = doc_id,day = date_requested,description = desc,date_created = date_created)
         item.save()
         return JsonResponse({'message': 'OK'})
+    
+@login_required
+def get_selected(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        date_requested = datetime.date(int(data['year']),int(data['month']),int(data['day']))
+        doc_id = data['id1']
+        vacs = vacations.objects.filter(Q(start_date__date__lte=date_requested,end_date__date__gte=date_requested),doctor_id=doc_id)
+        message = ""
+        if vacs.count() > 0:
+            if vacs[0].vacation == False:
+                message = "frame"
+                return JsonResponse({
+                    'message': message,
+                    'start': datetime.datetime.combine(datetime.datetime.now(),vacs[0].start_date.time()).isoformat(),
+                    'end': datetime.datetime.combine(datetime.datetime.now(),vacs[0].end_date.time()).isoformat()
+                })
+            else:
+                message = "(Day Off)"
+                return JsonResponse({'message': message})
+        weekday1 = ((date_requested.weekday() + 1) % 7) + 1
+        vacs = repeated_vacations.objects.filter(day=weekday1,doctor_id=doc_id).count()
+        if vacs == 0:
+            message = "(Day Off)"
+            return JsonResponse({'message': message})
+        vacs = User.objects.get(id=doc_id)
+        message = "frame"
+        return JsonResponse({
+            'message': message,
+            'start': datetime.datetime.combine(datetime.datetime.now(),vacs.start_time).isoformat(),
+            'end': datetime.datetime.combine(datetime.datetime.now(),vacs.end_time).isoformat()
+        })

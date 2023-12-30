@@ -8,6 +8,7 @@
 
 <script>
     let repeated_vacations = {{ repeated }};
+    let id1 = {{ request.user.id }};
     function hide(i){
         document.getElementById("beep" + i).style.display = "none";
     }
@@ -57,6 +58,7 @@
             <div id="error_div" class="error_div">
 
             </div>
+            <h4 id="day_selected"></h4>
             <h4 style="margin-bottom:2rem;" id="vacation_input_title">Select your new working times for each of the selected days.</h4>
             <div class="banana1">
                 <div class="form-group1">

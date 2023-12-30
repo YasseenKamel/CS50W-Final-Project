@@ -32,6 +32,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // const hue_initial=260, saturation_initial=0.5, brightness_initial=0.8;
     // const hue_final=0, saturation_final=1, brightness_final=1;
 
+    function get_selected(day){
+        fetch('get_selected',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                year: year,
+                month: (month + 1),
+                day: day,
+                id1: doctors_id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data['message'] == 'frame'){
+                let start = new Date(data['start']+"+00:00");
+                start = start.toLocaleString('en-US',{
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                });
+                let end = new Date(data['end']+"+00:00");
+                end = end.toLocaleString('en-US',{
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                });
+                document.getElementById("day_selected").textContent = "(" + start + " till " + end + ")";
+            }
+            else{
+                document.getElementById("day_selected").textContent = data['message'];
+            }
+        });
+    }
+
     function set_business(val,el) {
         // let t=3*(val/100)**2 - 2*(val/100)**3;
         // let t = val/100;
@@ -52,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("input_container2").style.display = "flex";
         document.getElementById("error_div_bookin").innerHTML = "";
         document.getElementById("book_desc").value="";
+        get_selected(parseInt(cur.id.slice(13)));
         if(parseFloat(cur.style.filter.match(/hue-rotate\(([^)]+)\)/)[1]) > 51){
             document.getElementById("error_div_bookin").innerHTML = '<div class="alert alert-warning" id="beepo0"><a class="close" data-dismiss="alert" href="#" onclick="hide(0)">×</a>This is a busy day. This means your appointment has a higher chance of getting cancelled.</div>';
         }

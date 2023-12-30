@@ -26,12 +26,55 @@ document.addEventListener('DOMContentLoaded', function (){
     let appointments,vacations,altered;
     let starting = -1,ending = -1;
 
+    function get_selected(){
+        fetch('get_selected',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                year: year,
+                month: (month + 1),
+                day: mousedown,
+                id1: id1
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data['message'] == 'frame'){
+                let start = new Date(data['start']+"+00:00");
+                start = start.toLocaleString('en-US',{
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                });
+                let end = new Date(data['end']+"+00:00");
+                end = end.toLocaleString('en-US',{
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                });
+                document.getElementById("day_selected").textContent = "(" + start + " till " + end + ")";
+            }
+            else{
+                document.getElementById("day_selected").textContent = data['message'];
+            }
+        });
+    }
+
     function set_up_input(){
         document.getElementById('start_day').value = mousedown + '/' + (month + 1) + '/' + year;
         document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
         document.getElementById('input_container').style.display = 'flex';
         document.getElementById('vacation_input_title').textContent = ((mousedown == mouseup) ? ("Select your new working times for each of the selected day. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ')') : ("Select your new working times for each of the selected days. (" + mousedown + ((mousedown == 1 || mousedown == 21 || mousedown == 31) ? "st" : ((mousedown == 2 || mousedown == 22) ? "nd" : ((mousedown == 3 || mousedown == 23) ? "rd" : "th"))) + ' till ' + mouseup + ((mouseup == 1 || mouseup == 21 || mouseup == 31) ? "st" : ((mouseup == 2 || mouseup == 22) ? "nd" : ((mouseup == 3 || mouseup == 23) ? "rd" : "th"))) + ')'));
         document.getElementById('success_vacay').innerHTML = "";
+        if(mouseup == mousedown){
+            get_selected();
+        }
+        else{
+            document.getElementById("day_selected").textContent = "";
+        }
         starting = mousedown;
         ending = mouseup;
         mousedown = -1;
