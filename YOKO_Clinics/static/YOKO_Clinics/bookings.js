@@ -18,14 +18,31 @@ document.addEventListener('DOMContentLoaded', function () {
     function reject(event){
         target = parseInt(event.target.id.slice(6));
         document.getElementById("input_container_reject").style.display = "";
+        document.getElementById("error_div").innerHTML = "";
     }
 
     function reject_final(){
-        
+        fetch('booking_final',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                method: "reject",
+                id: target
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            cancel_booking("overriding_banana");
+            document.getElementById("error_div").innerHTML = '<div class="alert alert-success" id="beepo5"><a class="close" data-dismiss="alert" href="#" onclick="hide(5)">×</a>Booking has been rejected successfully.</div>';
+        });
     }
 
     function confirm(event){
         target = parseInt(event.target.id.slice(7));
+        document.getElementById("error_div").innerHTML = "";
     }
 
     function cancel_booking(event){
@@ -56,5 +73,4 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('input_container_confirm').addEventListener('click', cancel_booking);
 
     document.getElementById('final_reject_confirm').addEventListener('click', reject_final);
-
 });

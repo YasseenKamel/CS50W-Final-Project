@@ -23,6 +23,17 @@
         <input class="btn btn-primary" type="submit" value="Sort" id="sort" style="height: calc(1.5em + 0.75rem + 2px);padding-left:1rem;padding-right:1rem;">
     </div>
 </form>
+
+<script>
+    function hide(i){
+        document.getElementById("beepo" + i).style.display = "none";
+    }
+</script>
+
+<div id="error_div" class="error_div centered_error_div">
+    
+</div>
+
 {% for booking in page_obj %}
     <div class="booking_frame">
         <div class="booking_data">

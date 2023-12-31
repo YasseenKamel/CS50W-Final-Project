@@ -59,4 +59,4 @@ class messages(models.Model):
     sender_id = models.IntegerField()
     receiver_id = models.IntegerField()
     content = models.CharField(max_length=10000,default="")
-    status = models.CharField(max_length=100)
+    read = models.BooleanField(default=False)

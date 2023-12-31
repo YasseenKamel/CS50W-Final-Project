@@ -264,7 +264,7 @@ def vacation_add(request):
         for i in appoints:
             i.status = "Canceled"
             i.save()
-            msg = messages(patient_id=i.patient_id,doctor_id=i.doctor_id,status="Unread",content=("Your appointment has been canceled due to some circumstances. Please book your appointment again."))
+            msg = messages(receiver_id=i.patient_id,sender_id=i.doctor_id,content=(f"Your appointment on {i.start_date.date()} has been canceled due to some circumstances. Please book your appointment again."))
             msg.save()
 
         item = vacations(start_date=start,end_date=end,doctor_id=request.user.id,vacation=is_vacation)
@@ -655,4 +655,17 @@ def get_selected(request):
     
 @login_required
 def booking_final(request):
-    return JsonResponse({'message': 'OK'})
+     if request.method == "POST":
+        data = json.loads(request.body)
+        if data['method'] == 'reject':
+            id = data['id']
+            booking = bookings.objects.get(id=id)
+            doc_id = booking.doctor_id
+            doc = User.objects.get(id=doc_id)
+            message = f"Your request for an appointment with {doc.username} on {booking.day} has been rejected."
+            item = messages(sender_id=doc_id,receiver_id=booking.patient_id,content=message)
+            item.save()
+            booking.delete()
+            return JsonResponse({'message': 'OK'})
+        else:
+            pass
