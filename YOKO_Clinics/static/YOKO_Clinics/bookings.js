@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("input_container_reject").style.display = "";
     }
 
+    function reject_final(){
+        
+    }
+
     function confirm(event){
         target = parseInt(event.target.id.slice(7));
     }
@@ -50,5 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('input_container_reject').addEventListener('click', cancel_booking);
     document.getElementById('input_container_confirm').addEventListener('click', cancel_booking);
+
+    document.getElementById('final_reject_confirm').addEventListener('click', reject_final);
 
 });

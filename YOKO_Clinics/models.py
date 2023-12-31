@@ -56,7 +56,7 @@ class bookings(models.Model):
     status = models.CharField(max_length=100,default="Pending")
 
 class messages(models.Model):
-    patient_id = models.IntegerField()
-    doctor_id = models.IntegerField()
+    sender_id = models.IntegerField()
+    receiver_id = models.IntegerField()
     content = models.CharField(max_length=10000,default="")
     status = models.CharField(max_length=100)

@@ -26,7 +26,7 @@ class bookings_admin(admin.ModelAdmin):
     list_display = ("id" , "patient_id" , "doctor_id" , "day" , "description" , "date_created" , "status")
 
 class messages_admin(admin.ModelAdmin):
-    list_display = ("id" , "patient_id" , "doctor_id" , "status")
+    list_display = ("id" , "sender_id" , "receiver_id" , "status")
 
 # Register your models here.
 admin.site.register(User, User_admin)

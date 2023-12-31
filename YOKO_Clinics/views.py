@@ -652,3 +652,7 @@ def get_selected(request):
             'start': datetime.datetime.combine(datetime.datetime.now(),vacs.start_time).isoformat(),
             'end': datetime.datetime.combine(datetime.datetime.now(),vacs.end_time).isoformat()
         })
+    
+@login_required
+def booking_final(request):
+    return JsonResponse({'message': 'OK'})
