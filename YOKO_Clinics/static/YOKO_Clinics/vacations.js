@@ -396,29 +396,31 @@ document.addEventListener('DOMContentLoaded', function (){
 
             document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
             for(let i = 0 ; i < vacations.length ; i ++){
-                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
+                let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
+                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                    if(day_month == month_prev){
                         document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
                     }
-                    else if(day.getMonth() == month){
+                    else if(day_month == month){
                         document.getElementById('calendar-day0' + j).classList.add("day_off_new");
                     }
-                    else if(day.getMonth() == month_next){
+                    else if(day_month == month_next){
                         document.getElementById('calendar-day1' + j).classList.add("day_off_new");
                     }
                 }
             }
             for(let i = 0 ; i < altered.length ; i ++){
-                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
+                let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
+                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                    if(day_month == month_prev){
                         document.getElementById('calendar-day-1' + j).classList.add("altered");
                     }
-                    else if(day.getMonth() == month){
+                    else if(day_month == month){
                         document.getElementById('calendar-day0' + j).classList.add("altered");
                     }
-                    else if(day.getMonth() == month_next){
+                    else if(day_month == month_next){
                         document.getElementById('calendar-day1' + j).classList.add("altered");
                     }
                 }
@@ -521,29 +523,31 @@ document.addEventListener('DOMContentLoaded', function (){
 
             document.getElementById('calendar-month').appendChild(next_div);
             for(let i = 0 ; i < vacations.length ; i ++){
-                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
+                let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
+                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                    if(day_month == month_prev){
                         document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
                     }
-                    else if(day.getMonth() == month){
+                    else if(day_month == month){
                         document.getElementById('calendar-day0' + j).classList.add("day_off_new");
                     }
-                    else if(day.getMonth() == month_next){
+                    else if(day_month == month_next){
                         document.getElementById('calendar-day1' + j).classList.add("day_off_new");
                     }
                 }
             }
             for(let i = 0 ; i < altered.length ; i ++){
-                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
+                let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
+                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                    if(day_month == month_prev){
                         document.getElementById('calendar-day-1' + j).classList.add("altered");
                     }
-                    else if(day.getMonth() == month){
+                    else if(day_month == month){
                         document.getElementById('calendar-day0' + j).classList.add("altered");
                     }
-                    else if(day.getMonth() == month_next){
+                    else if(day_month == month_next){
                         document.getElementById('calendar-day1' + j).classList.add("altered");
                     }
                 }
@@ -623,29 +627,31 @@ document.addEventListener('DOMContentLoaded', function (){
 
                 document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
                 for(let i = 0 ; i < vacations.length ; i ++){
-                    let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
+                    let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                    let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
+                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                        if(day_month == month_prev){
                             document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
                         }
-                        else if(day.getMonth() == month){
+                        else if(day_month == month){
                             document.getElementById('calendar-day0' + j).classList.add("day_off_new");
                         }
-                        else if(day.getMonth() == month_next){
+                        else if(day_month == month_next){
                             document.getElementById('calendar-day1' + j).classList.add("day_off_new");
                         }
                     }
                 }
                 for(let i = 0 ; i < altered.length ; i ++){
-                    let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
+                    let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                    let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
+                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                        if(day_month == month_prev){
                             document.getElementById('calendar-day-1' + j).classList.add("altered");
                         }
-                        else if(day.getMonth() == month){
+                        else if(day_month == month){
                             document.getElementById('calendar-day0' + j).classList.add("altered");
                         }
-                        else if(day.getMonth() == month_next){
+                        else if(day_month == month_next){
                             document.getElementById('calendar-day1' + j).classList.add("altered");
                         }
                     }
@@ -721,29 +727,31 @@ document.addEventListener('DOMContentLoaded', function (){
 
                 document.getElementById('calendar-month').appendChild(next_div);
                 for(let i = 0 ; i < vacations.length ; i ++){
-                    let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
+                    let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                    let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
+                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                        if(day_month == month_prev){
                             document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
                         }
-                        else if(day.getMonth() == month){
+                        else if(day_month == month){
                             document.getElementById('calendar-day0' + j).classList.add("day_off_new");
                         }
-                        else if(day.getMonth() == month_next){
+                        else if(day_month == month_next){
                             document.getElementById('calendar-day1' + j).classList.add("day_off_new");
                         }
                     }
                 }
                 for(let i = 0 ; i < altered.length ; i ++){
-                    let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                    for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                        if(day.getMonth() == month_prev){
+                    let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                    let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
+                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                        if(day_month == month_prev){
                             document.getElementById('calendar-day-1' + j).classList.add("altered");
                         }
-                        else if(day.getMonth() == month){
+                        else if(day_month == month){
                             document.getElementById('calendar-day0' + j).classList.add("altered");
                         }
-                        else if(day.getMonth() == month_next){
+                        else if(day_month == month_next){
                             document.getElementById('calendar-day1' + j).classList.add("altered");
                         }
                     }
@@ -821,29 +829,31 @@ document.addEventListener('DOMContentLoaded', function (){
             vacations = JSON.parse(data['vacays']);
             altered = JSON.parse(data['altered']);
             for(let i = 0 ; i < vacations.length ; i ++){
-                let day = new Date(vacations[i]['fields']['start_date']),day1 = new Date(vacations[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
+                let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
+                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                    if(day_month == month_prev){
                         document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
                     }
-                    else if(day.getMonth() == month){
+                    else if(day_month == month){
                         document.getElementById('calendar-day0' + j).classList.add("day_off_new");
                     }
-                    else if(day.getMonth() == month_next){
+                    else if(day_month == month_next){
                         document.getElementById('calendar-day1' + j).classList.add("day_off_new");
                     }
                 }
             }
             for(let i = 0 ; i < altered.length ; i ++){
-                let day = new Date(altered[i]['fields']['start_date']),day1 = new Date(altered[i]['fields']['end_date']);
-                for(let j = day.getDate() ; j <= day1.getDate() ; j ++){
-                    if(day.getMonth() == month_prev){
+                let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
+                let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
+                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                    if(day_month == month_prev){
                         document.getElementById('calendar-day-1' + j).classList.add("altered");
                     }
-                    else if(day.getMonth() == month){
+                    else if(day_month == month){
                         document.getElementById('calendar-day0' + j).classList.add("altered");
                     }
-                    else if(day.getMonth() == month_next){
+                    else if(day_month == month_next){
                         document.getElementById('calendar-day1' + j).classList.add("altered");
                     }
                 }
@@ -923,15 +933,15 @@ document.addEventListener('DOMContentLoaded', function (){
         .then(response => response.json())
         .then(data => {
             if(is_vacation){
-                let s = start.getDate(),e = end.getDate();
-                for(let i = s ; i <= e ; i ++){
+                let s = start.toISOString().split('-')[2].split('T')[0],e = end.toISOString().split('-')[2].split('T')[0];
+                for(let i = parseInt(s) ; i <= parseInt(e) ; i ++){
                     document.getElementById('calendar-day0' + i).classList.add("day_off_new");
                     document.getElementById('calendar-day0' + i).classList.remove("altered");
                 }
             }
             else{
-                let s = start.getDate(),e = end.getDate();
-                for(let i = s ; i <= e ; i ++){
+                let s = start.toISOString().split('-')[2].split('T')[0],e = end.toISOString().split('-')[2].split('T')[0];
+                for(let i = parseInt(s) ; i <= parseInt(e) ; i ++){
                     document.getElementById('calendar-day0' + i).classList.add("altered");
                     document.getElementById('calendar-day0' + i).classList.remove("day_off_new");
                 }
