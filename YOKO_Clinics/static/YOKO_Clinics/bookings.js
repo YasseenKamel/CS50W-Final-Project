@@ -13,4 +13,42 @@ document.addEventListener('DOMContentLoaded', function () {
         cur.textContent = 'Date created: ' + str;
     });
 
+    let target = -1;
+
+    function reject(event){
+        target = parseInt(event.target.id.slice(6));
+        document.getElementById("input_container_reject").style.display = "";
+    }
+
+    function confirm(event){
+        target = parseInt(event.target.id.slice(7));
+    }
+
+    function cancel_booking(event){
+        if(event != "overriding_banana"){
+            if(event.target != document.getElementById('input_container_reject') && event.target != document.getElementById('input_container_confirm') && event.target != document.getElementById('final_reject')){
+                return;
+            }
+        }
+        if(document.getElementById('input_container_reject').style.display == ""){
+            document.getElementById('input_container_reject').style.display = "none";
+        }
+        else if(document.getElementById('input_container_confirm').style.display == ""){
+            document.getElementById('input_container_confirm').style.display = "none";
+        }
+    }
+
+    let reject_btns = document.querySelectorAll('.reject_booking');
+    reject_btns.forEach(cur => {
+        cur.addEventListener('click',reject);
+    });
+
+    let confirm_btns = document.querySelectorAll('.confirm_booking');
+    confirm_btns.forEach(cur => {
+        cur.addEventListener('click',confirm);
+    });
+
+    document.getElementById('input_container_reject').addEventListener('click', cancel_booking);
+    document.getElementById('input_container_confirm').addEventListener('click', cancel_booking);
+
 });

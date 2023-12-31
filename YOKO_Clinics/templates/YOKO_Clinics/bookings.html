@@ -1,7 +1,7 @@
 {% extends "YOKO_Clinics/layout.html" %}
 {% load static %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Bookings{% endblock %}
 {% block script %}<script src="{% static 'YOKO_Clinics/bookings.js' %}"></script>{% endblock %}
 
 {% block body %}
@@ -58,6 +58,24 @@
         </div>
     </div>
 {% endfor %}
+
+<div class="input_container" style="display:none;" id="input_container_reject">
+    <div class="input_vacation_frame">
+        <h4 style="margin-bottom: 1rem;">Are you sure you want to reject this booking?</h4>
+        <div>
+            <button class="btn btn-primary" id="final_confirm">Yes</button>
+            <button class="btn btn-primary" id="final_reject">No</button>
+        </div>
+    </div>
+</div>
+
+<div class="input_container" style="display:none;" id="input_container_confirm">
+    <div class="input_vacation_frame">
+        <form class="vertical_align">
+            {% csrf_token %}
+        </form>
+    </div>
+</div>
 
 <div class="pagination">
     {% if page_obj.has_previous %}
