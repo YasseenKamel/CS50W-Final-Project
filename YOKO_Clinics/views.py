@@ -208,8 +208,10 @@ def vacation_add(request):
         data = json.loads(request.body)
         start = datetime.datetime.fromisoformat(data['start'][:-1])
         end = datetime.datetime.fromisoformat(data['end'][:-1])
+        if not data['is_vacation']:
+            start = start.replace(day = data['start_day'])
+            end = end.replace(day = data['end_day'])
         is_vacation = data['is_vacation']
-        
         vacays = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=True,doctor_id = request.user.id)
         altered = vacations.objects.filter((Q(start_date__date__lte=start.date(), end_date__date__gte=start.date()) | Q(start_date__date__lte=end.date(), end_date__date__gte=end.date()) | (Q(start_date__date__gte=start.date(), end_date__date__lte=end.date()))) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),vacation=False,doctor_id = request.user.id)
         appoints = appointments.objects.filter((~Q(status="Canceled")) & Q(start_date__date__lte=end.date(), start_date__date__gte=start.date()) & (Q(start_date__month=start.month, start_date__year=start.year) | Q(end_date__month=start.month, end_date__year=start.year)),doctor_id = request.user.id)
@@ -615,8 +617,8 @@ def book_appointment(request):
         doc_id = data['id1']
         date_created = datetime.datetime.now(datetime.timezone.utc)
         date_requested = datetime.date(int(data['year']),int(data['month']),int(data['day']))
-        if bookings.objects.filter(Q(date_created__date=date_created.date()),patient_id = pat_id).count() > 0 or bookings.objects.filter(patient_id = pat_id,day=date_requested).count() > 0:
-            return JsonResponse({'message': 'You can not book multiple appointments on the same day.'})
+        # if bookings.objects.filter(Q(date_created__date=date_created.date()),patient_id = pat_id).count() > 0 or bookings.objects.filter(patient_id = pat_id,day=date_requested).count() > 0:
+        #     return JsonResponse({'message': 'You can not book multiple appointments on the same day.'})
         item = bookings(patient_id = pat_id,doctor_id = doc_id,day = date_requested,description = desc,date_created = date_created)
         item.save()
         return JsonResponse({'message': 'OK'})
@@ -668,4 +670,88 @@ def booking_final(request):
             booking.delete()
             return JsonResponse({'message': 'OK'})
         else:
-            pass
+            id = data['id']
+            booking = bookings.objects.get(id=id)
+            duration = datetime.timedelta(hours=datetime.datetime.strptime(data['duration'], "%H:%M").hour, minutes=datetime.datetime.strptime(data['duration'], "%H:%M").minute)
+            # getting workshift
+            date_requested = booking.day
+            vacs = vacations.objects.filter(Q(start_date__date__lte=date_requested,end_date__date__gte=date_requested),doctor_id=booking.doctor_id)
+            start = ""
+            end = ""
+            if vacs.count() > 0:
+                if vacs[0].vacation == False:
+                    start = vacs[0].start_date.time()
+                    end = vacs[0].end_date.time()
+                else:
+                    message = "(Day Off)"
+                    return JsonResponse({'message': message})
+            else:
+                weekday1 = ((date_requested.weekday() + 1) % 7) + 1
+                vacs = repeated_vacations.objects.filter(day=weekday1,doctor_id=booking.doctor_id).count()
+                if vacs == 0:
+                    message = "(Day Off)"
+                    return JsonResponse({'message': message})
+                vacs = User.objects.get(id=booking.doctor_id)
+                start = vacs.start_time
+                end = vacs.end_time
+            # getting appointments
+            start = datetime.datetime.combine(booking.day,start)
+            end = datetime.datetime.combine(booking.day,end)
+            if end < start:
+                end += datetime.timedelta(hours=24)
+            start = start.replace(tzinfo=pytz.UTC)
+            end = end.replace(tzinfo=pytz.UTC)
+            appoints = appointments.objects.filter(~Q(status="Canceled"),doctor_id = booking.doctor_id,start_date__gte=start,end_date__lte=end).order_by('start_date')
+            max_dur = 0
+            if appoints.count() == 0:
+                max_dur = end - start
+            else:
+                max_dur = max(end - appoints[len(appoints)-1].end_date,appoints[0].start_date - start)
+                for i in range(1,len(appoints)):
+                    max_dur = max(max_dur,appoints[i].start_date - appoints[i - 1].end_date)
+            if max_dur < duration:
+                return JsonResponse({
+                    'message': "NO",
+                    'duration': str(max_dur)
+                })
+            # confirming the appointment
+            starting = start
+            ending = start
+            if appoints.count() == 0:
+                starting = start
+                ending = start + duration
+                item = appointments(patient_id=booking.patient_id,doctor_id=booking.doctor_id,start_date=starting,end_date=ending,description=booking.description)
+                item.save()
+            else:
+                bla = False
+                if appoints[0].start_date - start >= duration:
+                    starting = start
+                    ending = start + duration
+                    item = appointments(patient_id=booking.patient_id,doctor_id=booking.doctor_id,start_date=starting,end_date=ending,description=booking.description)
+                    item.save()
+                    bla = True
+                else:
+                    for i in range(1,len(appoints)):
+                        if (appoints[i].start_date - appoints[i - 1].end_date) >= duration:
+                            starting = appoints[i - 1].end_date
+                            ending = starting + duration
+                            item = appointments(patient_id=booking.patient_id,doctor_id=booking.doctor_id,start_date=starting,end_date=ending,description=booking.description)
+                            item.save()
+                            bla = True
+                            break
+                if bla == False:
+                    starting = appoints[len(appoints)-1].end_date
+                    ending = starting + duration
+                    item = appointments(patient_id=booking.patient_id,doctor_id=booking.doctor_id,start_date=starting,end_date=ending,description=booking.description)
+                    item.save()
+            doc=User.objects.get(id=booking.doctor_id)
+            message = f"Your request for an appointment with {doc.username} on {booking.day} has been confirmed."
+            item = messages(sender_id=doc.id,receiver_id=booking.patient_id,content=message)
+            item.save()
+            booking.delete()
+            return JsonResponse({
+                'message': "OK",
+                'content': (f"Appointment has been set from {starting.time()} till {ending.time()} on {starting.date()}"),
+                'start': starting.isoformat(),
+                'end': ending.isoformat()
+            })

@@ -63,6 +63,39 @@ document.addEventListener('DOMContentLoaded', function (){
         });
     }
 
+    function color_days(vacations,altered){
+        for(let i = 0 ; i < vacations.length ; i ++){
+            let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
+            let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
+            for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                if(day_month == month_prev){
+                    document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
+                }
+                else if(day_month == month){
+                    document.getElementById('calendar-day0' + j).classList.add("day_off_new");
+                }
+                else if(day_month == month_next){
+                    document.getElementById('calendar-day1' + j).classList.add("day_off_new");
+                }
+            }
+        }
+        for(let i = 0 ; i < altered.length ; i ++){
+            let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
+            let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
+            for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
+                if(day_month == month_prev){
+                    document.getElementById('calendar-day-1' + j).classList.add("altered");
+                }
+                else if(day_month == month){
+                    document.getElementById('calendar-day0' + j).classList.add("altered");
+                }
+                else if(day_month == month_next){
+                    document.getElementById('calendar-day1' + j).classList.add("altered");
+                }
+            }
+        }
+    }
+
     function set_up_input(){
         document.getElementById('start_day').value = mousedown + '/' + (month + 1) + '/' + year;
         document.getElementById('end_day').value = mouseup + '/' + (month + 1) + '/' + year;
@@ -380,10 +413,12 @@ document.addEventListener('DOMContentLoaded', function (){
             });
 
             document.querySelectorAll('.calendar-day').forEach(slot => {
-                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                if(slot.id.length > 12){
                     if(slot.id[12] == '-'){
                         slot.id = slot.id.slice(0,12) + '0' + slot.id.slice(14);
-                        slot.addEventListener('mouseenter',enter_element);
+                        if(!slot.classList.contains('past_day')){
+                            slot.addEventListener('mouseenter',enter_element);
+                        }
                     }
                 }
             });
@@ -395,36 +430,7 @@ document.addEventListener('DOMContentLoaded', function (){
             prev_div.innerHTML = load_month(year_prev,month_prev,weekday_prev,'-1');
 
             document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
-            for(let i = 0 ; i < vacations.length ; i ++){
-                let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
-                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                    if(day_month == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                    }
-                    else if(day_month == month){
-                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                    }
-                    else if(day_month == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                    }
-                }
-            }
-            for(let i = 0 ; i < altered.length ; i ++){
-                let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
-                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                    if(day_month == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("altered");
-                    }
-                    else if(day_month == month){
-                        document.getElementById('calendar-day0' + j).classList.add("altered");
-                    }
-                    else if(day_month == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("altered");
-                    }
-                }
-            }
+            color_days(vacations,altered);
             // redeclaring event listeners
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -507,10 +513,12 @@ document.addEventListener('DOMContentLoaded', function (){
             });
 
             document.querySelectorAll('.calendar-day').forEach(slot => {
-                if(slot.id.length > 12 && !slot.classList.contains('past_day')){
+                if(slot.id.length > 12){
                     if(slot.id[12] == '1'){
                         slot.id = slot.id.slice(0,12) + '0' + slot.id.slice(13);
-                        slot.addEventListener('mouseenter',enter_element);
+                        if(!slot.classList.contains('past_day')){
+                            slot.addEventListener('mouseenter',enter_element);
+                        }
                     }
                 }
             });
@@ -522,36 +530,7 @@ document.addEventListener('DOMContentLoaded', function (){
             next_div.innerHTML = load_month(year_next,month_next,weekday_next,'1');
 
             document.getElementById('calendar-month').appendChild(next_div);
-            for(let i = 0 ; i < vacations.length ; i ++){
-                let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
-                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                    if(day_month == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                    }
-                    else if(day_month == month){
-                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                    }
-                    else if(day_month == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                    }
-                }
-            }
-            for(let i = 0 ; i < altered.length ; i ++){
-                let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
-                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                    if(day_month == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("altered");
-                    }
-                    else if(day_month == month){
-                        document.getElementById('calendar-day0' + j).classList.add("altered");
-                    }
-                    else if(day_month == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("altered");
-                    }
-                }
-            }
+            color_days(vacations,altered);
             // redeclaring event listeners
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -626,36 +605,7 @@ document.addEventListener('DOMContentLoaded', function (){
                 });
 
                 document.getElementById('calendar-month').insertBefore(prev_div,document.getElementById('calendar-month').firstChild);
-                for(let i = 0 ; i < vacations.length ; i ++){
-                    let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                    let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
-                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                        if(day_month == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                        }
-                        else if(day_month == month){
-                            document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                        }
-                        else if(day_month == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                        }
-                    }
-                }
-                for(let i = 0 ; i < altered.length ; i ++){
-                    let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                    let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
-                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                        if(day_month == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("altered");
-                        }
-                        else if(day_month == month){
-                            document.getElementById('calendar-day0' + j).classList.add("altered");
-                        }
-                        else if(day_month == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("altered");
-                        }
-                    }
-                }
+                color_days(vacations,altered);
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
                 document.getElementById('present-month-selector0').addEventListener('click',cur_month);
@@ -726,36 +676,7 @@ document.addEventListener('DOMContentLoaded', function (){
                 });
 
                 document.getElementById('calendar-month').appendChild(next_div);
-                for(let i = 0 ; i < vacations.length ; i ++){
-                    let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                    let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
-                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                        if(day_month == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                        }
-                        else if(day_month == month){
-                            document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                        }
-                        else if(day_month == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                        }
-                    }
-                }
-                for(let i = 0 ; i < altered.length ; i ++){
-                    let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                    let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
-                    for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                        if(day_month == month_prev){
-                            document.getElementById('calendar-day-1' + j).classList.add("altered");
-                        }
-                        else if(day_month == month){
-                            document.getElementById('calendar-day0' + j).classList.add("altered");
-                        }
-                        else if(day_month == month_next){
-                            document.getElementById('calendar-day1' + j).classList.add("altered");
-                        }
-                    }
-                }
+                color_days(vacations,altered);
                 document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
                 document.getElementById('next-month-selector0').addEventListener('click',next_month);
                 document.getElementById('present-month-selector0').addEventListener('click',cur_month);
@@ -828,36 +749,7 @@ document.addEventListener('DOMContentLoaded', function (){
             appointments = JSON.parse(data['appointments']);
             vacations = JSON.parse(data['vacays']);
             altered = JSON.parse(data['altered']);
-            for(let i = 0 ; i < vacations.length ; i ++){
-                let day = vacations[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = vacations[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                let day_month = parseInt(vacations[i]['fields']['start_date'].split('-')[1])-1;
-                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                    if(day_month == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("day_off_new");
-                    }
-                    else if(day_month == month){
-                        document.getElementById('calendar-day0' + j).classList.add("day_off_new");
-                    }
-                    else if(day_month == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("day_off_new");
-                    }
-                }
-            }
-            for(let i = 0 ; i < altered.length ; i ++){
-                let day = altered[i]['fields']['start_date'].split('-')[2].split('T')[0],day1 = altered[i]['fields']['end_date'].split('-')[2].split('T')[0];
-                let day_month = parseInt(altered[i]['fields']['start_date'].split('-')[1])-1;
-                for(let j = parseInt(day) ; j <= parseInt(day1) ; j ++){
-                    if(day_month == month_prev){
-                        document.getElementById('calendar-day-1' + j).classList.add("altered");
-                    }
-                    else if(day_month == month){
-                        document.getElementById('calendar-day0' + j).classList.add("altered");
-                    }
-                    else if(day_month == month_next){
-                        document.getElementById('calendar-day1' + j).classList.add("altered");
-                    }
-                }
-            }
+            color_days(vacations,altered);
             ////////////////////////////////////////////////////////////
             document.getElementById('previous-month-selector0').addEventListener('click',prev_month);
             document.getElementById('next-month-selector0').addEventListener('click',next_month);
@@ -927,7 +819,9 @@ document.addEventListener('DOMContentLoaded', function (){
             body: JSON.stringify({
                 start: start,
                 end: end,
-                is_vacation: is_vacation
+                is_vacation: is_vacation,
+                start_day: start.getDate(),
+                end_day: end.getDate()
             })
         })
         .then(response => response.json())
@@ -940,7 +834,7 @@ document.addEventListener('DOMContentLoaded', function (){
                 }
             }
             else{
-                let s = start.toISOString().split('-')[2].split('T')[0],e = end.toISOString().split('-')[2].split('T')[0];
+                let s = (new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate(), start.getHours(),start.getMinutes()))).toISOString().split('-')[2].split('T')[0],e = (new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate(), end.getHours(),end.getMinutes()))).toISOString().split('-')[2].split('T')[0];
                 for(let i = parseInt(s) ; i <= parseInt(e) ; i ++){
                     document.getElementById('calendar-day0' + i).classList.add("altered");
                     document.getElementById('calendar-day0' + i).classList.remove("day_off_new");
