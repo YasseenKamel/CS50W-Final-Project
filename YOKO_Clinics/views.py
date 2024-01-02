@@ -138,6 +138,13 @@ def index(request):
 
 @login_required
 def bookings1(request):
+    books = bookings.objects.filter(day__lte=datetime.datetime.now().date(),doctor_id=request.user.id)
+    doc = User.objects.get(id=request.user.id)
+    for booking in books:
+        message = f"Your request for an appointment with {doc.username} on {booking.day} has been rejected."
+        item = messages(sender_id=request.user.id,receiver_id=booking.patient_id,content=message)
+        item.save()
+        booking.delete()
     sorting = -1
     order = 0
     books1 = []
@@ -617,8 +624,8 @@ def book_appointment(request):
         doc_id = data['id1']
         date_created = datetime.datetime.now(datetime.timezone.utc)
         date_requested = datetime.date(int(data['year']),int(data['month']),int(data['day']))
-        # if bookings.objects.filter(Q(date_created__date=date_created.date()),patient_id = pat_id).count() > 0 or bookings.objects.filter(patient_id = pat_id,day=date_requested).count() > 0:
-        #     return JsonResponse({'message': 'You can not book multiple appointments on the same day.'})
+        if bookings.objects.filter(Q(date_created__date=date_created.date()),patient_id = pat_id).count() > 0 or bookings.objects.filter(patient_id = pat_id,day=date_requested).count() > 0:
+            return JsonResponse({'message': 'You can not book multiple appointments on the same day.'})
         item = bookings(patient_id = pat_id,doctor_id = doc_id,day = date_requested,description = desc,date_created = date_created)
         item.save()
         return JsonResponse({'message': 'OK'})
