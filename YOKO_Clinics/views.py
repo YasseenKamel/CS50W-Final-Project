@@ -131,14 +131,15 @@ def register(request):
 
 @login_required
 def index(request):
-    bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
+    bookings_cnt = bookings.objects.filter(day__gt=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending").count()
     return render(request, "YOKO_Clinics/index.html",{
-        "bookings_cnt": bookings_cnt
+        "bookings_cnt": bookings_cnt,
+        'current': "home"
     })
 
 @login_required
 def bookings1(request):
-    books = bookings.objects.filter(day__lte=datetime.datetime.now().date(),doctor_id=request.user.id)
+    books = bookings.objects.filter(day__lte=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending")
     doc = User.objects.get(id=request.user.id)
     for booking in books:
         message = f"Your request for an appointment with {doc.username} on {booking.day} has been rejected."
@@ -189,7 +190,8 @@ def bookings1(request):
         'bookings_cnt': books1.count(),
         'page_obj': page_obj,
         'sorting': sorting,
-        'order': order
+        'order': order,
+        'current': "bookings"
     })
 
 @login_required
@@ -204,7 +206,8 @@ def vacation(request):
     return render(request, "YOKO_Clinics/vacations.html",{
         'current_time': datetime.datetime.now(),
         'repeated': vaycays,
-        "bookings_cnt": bookings_cnt
+        "bookings_cnt": bookings_cnt,
+        'current': "vacation"
     })
         
 
@@ -294,7 +297,7 @@ def profile(request,id):
     if request.method == "POST":
         pass
     else:
-        bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
+        bookings_cnt = bookings.objects.filter(day__gt=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending").count()
         specialties = expertise.objects.filter(doctor_id=id).values_list('type_id',flat=True)
         day = repeated_vacations.objects.filter(doctor_id=id).values_list('day',flat=True)
         days = [0,0,0,0,0,0,0]

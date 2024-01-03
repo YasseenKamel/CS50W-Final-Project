@@ -21,20 +21,20 @@
             {% if user.is_authenticated %}
             {% if request.session.type == 'patient' %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'appointments' %}">Appointments{% if appointment_cnt > 0 %} <span class="number_thing">&nbsp{{ appointment_cnt }}&nbsp</span>{% endif %}</a>
+                    <a class="nav-link" href="{% url 'appointments' %}">{% if current == "appointments" %}<strong>Appointments</strong>{% else %}Appointments{% endif %}{% if appointment_cnt > 0 %} <span class="number_thing">&nbsp{{ appointment_cnt }}&nbsp</span>{% endif %}</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'bookings' %}">Bookings{% if bookings_cnt > 0 %} <span class="number_thing">&nbsp{{ bookings_cnt }}&nbsp</span>{% endif %}</a>
+                    <a class="nav-link" href="{% url 'bookings' %}">{% if current == "bookings" %}<strong>Bookings</strong>{% else %}Bookings{% endif %}{% if bookings_cnt > 0 %} <span class="number_thing">&nbsp{{ bookings_cnt }}&nbsp</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vacation' %}">Vacations</a>
+                    <a class="nav-link" href="{% url 'vacation' %}">{% if current == "vacation" %}<strong>Vacations</strong>{% else %}Vacations{% endif %}</a>
                 </li>
             {% endif %}
             {% endif %}
