@@ -145,7 +145,7 @@ def index(request):
         ova.save()
 
     doc = User.objects.get(id=request.user.id)
-    sorting = -1
+    sorting = 0
     order = 0
     appoints1 = []
     if request.GET.get('show') != None and request.GET.get('show') != 'All Appointments':
@@ -154,19 +154,19 @@ def index(request):
         else:
             sorting = 1
     if sorting == 1:
-        if request.GET.get('order_by') == 'Earliest':
-            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Over").order_by('start_date')
-        else:
+        if request.GET.get('order_by') == 'Latest':
             appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Over").order_by('-start_date')
             order = 1
-    elif sorting == 0:
-        if request.GET.get('order_by') == 'Earliest':
-            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Booked").order_by('start_date')
         else:
+            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Over").order_by('start_date')
+    elif sorting == 0:
+        if request.GET.get('order_by') == 'Latest':
             appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Booked").order_by('-start_date')
             order = 1
+        else:
+            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Booked").order_by('start_date')
     else:
-        if request.GET.get('order_by') != 'Earliest':
+        if request.GET.get('order_by') == 'Latest':
             appoints1 = appointments.objects.filter(~Q(status="Canceled"),doctor_id=request.user.id).order_by('-start_date')
             order = 1
         else:
