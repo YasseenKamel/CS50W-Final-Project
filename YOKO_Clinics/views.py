@@ -18,6 +18,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 import calendar
 import pytz
+from tzlocal import get_localzone
 # Create your views here.
 
 def login_view(request):
@@ -132,8 +133,68 @@ def register(request):
 @login_required
 def index(request):
     bookings_cnt = bookings.objects.filter(day__gt=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending").count()
+    if User.objects.get(id=request.user.id).is_doctor == False:
+        return render(request, "YOKO_Clinics/index.html",{
+            "bookings_cnt": bookings_cnt,
+            'current': "home"
+        })
+    utc_now = datetime.datetime.now(get_localzone()).astimezone(pytz.utc)
+    over = appointments.objects.filter(doctor_id=request.user.id,end_date__lte=utc_now,status="Booked")
+    for ova in over:
+        ova.status="Over"
+        ova.save()
+
+    doc = User.objects.get(id=request.user.id)
+    sorting = -1
+    order = 0
+    appoints1 = []
+    if request.GET.get('show') != None and request.GET.get('show') != 'All Appointments':
+        if request.GET.get('show') == "Upcoming Appointments":
+            sorting = 0
+        else:
+            sorting = 1
+    if sorting == 1:
+        if request.GET.get('order_by') == 'Earliest':
+            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Over").order_by('start_date')
+        else:
+            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Over").order_by('-start_date')
+            order = 1
+    elif sorting == 0:
+        if request.GET.get('order_by') == 'Earliest':
+            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Booked").order_by('start_date')
+        else:
+            appoints1 = appointments.objects.filter(doctor_id=request.user.id,status="Booked").order_by('-start_date')
+            order = 1
+    else:
+        if request.GET.get('order_by') != 'Earliest':
+            appoints1 = appointments.objects.filter(~Q(status="Canceled"),doctor_id=request.user.id).order_by('-start_date')
+            order = 1
+        else:
+            appoints1 = appointments.objects.filter(~Q(status="Canceled"),doctor_id=request.user.id).order_by('start_date')
+    appoints = []
+    for appoint in appoints1:
+        patient = User.objects.get(id=appoint.patient_id)
+        appoints.append({
+            'id': appoint.id,
+            'patient_id': appoint.patient_id,
+            'doctor_id': appoint.doctor_id,
+            'start_date': appoint.start_date.isoformat(),
+            'end_date': appoint.end_date.isoformat(),
+            'description': appoint.description,
+            'left_review': appoint.left_review,
+            'status': appoint.status,
+            'patient_username': patient.username
+        })
+    paginator = Paginator(appoints, 10)
+    page_num = request.GET.get('page')
+    if page_num == None:
+        page_num = 1
+    page_obj = paginator.get_page(page_num)
     return render(request, "YOKO_Clinics/index.html",{
-        "bookings_cnt": bookings_cnt,
+        'bookings_cnt': bookings_cnt,
+        'page_obj': page_obj,
+        'sorting': sorting,
+        'order': order,
         'current': "home"
     })
 
@@ -765,3 +826,24 @@ def booking_final(request):
                 'start': starting.isoformat(),
                 'end': ending.isoformat()
             })
+
+@login_required
+def cancel_appoint(request):
+     if request.method == "POST":
+        data = json.loads(request.body)
+        utc_now = datetime.datetime.now(get_localzone()).astimezone(pytz.utc)
+        appoint = appointments.objects.filter(doctor_id=request.user.id,end_date__gte=utc_now,start_date__lte=utc_now,status="Booked")
+        if appoint.count() != 0 and appoint[0].id == data['id']:
+            return JsonResponse({
+                'message': "NO"
+            })
+        appoint = appointments.objects.get(id=data['id'])
+        doc=User.objects.get(id=request.user.id)
+        message = f"Your appointment with {doc.username} on {appoint.start_date.date()} has been canceled."
+        item = messages(sender_id=doc.id,receiver_id=appoint.patient_id,content=message)
+        item.save()
+        appoint.status = "Canceled"
+        appoint.save()
+        return JsonResponse({
+            'message': "OK"
+        })

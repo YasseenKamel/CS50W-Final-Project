@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}Home{% endblock %}
-{% block script %}<script src="{% static 'YOKO_Clinics/index.js' %}"></script>{% endblock %}
+{% block script %}{% if request.session.type == "patient" %}<script src="{% static 'YOKO_Clinics/index.js' %}"></script>{% else %}<script src="{% static 'YOKO_Clinics/home.js' %}"></script>{% endif %}{% endblock %}
 
 {% block body %}
 {% if request.session.type == "patient" %}
@@ -64,6 +64,238 @@
         
 </div>
 {% else %}
+<form action="{% url 'index' %}">
+    <div class="sorting_div">
+        <div class="form-group" style="margin-right:0.5rem;">
+            <select class="form-select form-control" name="show" tabindex="-1">
+                <option {% if sorting == -1 %}selected{% endif %}>All Appointments</option>
+                <option {% if sorting == 0 %}selected{% endif %}>Upcoming Appointments</option>
+                <option {% if sorting == 1 %}selected{% endif %}>Past Appointments</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-right:0.5rem;">
+            <select class="form-select form-control" name="order_by" tabindex="-1">
+                <option {% if order == 0 %}selected{% endif %}>Earliest</option>
+                <option {% if order == 1 %}selected{% endif %}>Latest</option>
+            </select>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Show" id="sort" style="height: calc(1.5em + 0.75rem + 2px);padding-left:1rem;padding-right:1rem;">
+    </div>
+</form>
 
+<script>
+    function hide(i){
+        document.getElementById("beepo" + i).style.display = "none";
+    }
+</script>
+
+<div id="error_div" class="error_div centered_error_div">
+    
+</div>
+
+{% for booking in page_obj %}
+    <div class="booking_frame" id="booking_frame{{ booking.id }}">
+        <div class="booking_data">
+            <div>
+                <h2 id="patient_username{{ booking.id }}" style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"></h2>
+                <script>
+                    document.getElementById('patient_username{{ booking.id }}').textContent = "{{ booking.patient_username }}";
+                </script>
+            </div>
+            <div id="address_div" class="address_div">
+                <p id="start_date{{ booking.id }}date" class="date" style="margin-bottom:0rem;"></p>
+                <p id="start_date{{ booking.id }}" class="dates" style="margin-bottom:0rem;"></p>
+                <script>
+                    document.getElementById('start_date{{ booking.id }}').textContent = "{{ booking.start_date }}";
+                </script>
+                <p id="end_date{{ booking.id }}" class="dates1" style="margin-bottom:0rem;"></p>
+                <script>
+                    document.getElementById('end_date{{ booking.id }}').textContent = "{{ booking.end_date }}";
+                </script>
+            </div>
+        </div>
+        <div class="address_div">
+            <h2 style="font-family: 'Poppins_BoldItalic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Description</h2>
+            <div id="desc_div">
+                <p id="desc{{ booking.id }}"></p>
+                <script>
+                    document.getElementById('desc{{ booking.id }}').textContent = "{{ booking.description }}";
+                </script>
+            </div>
+        </div>
+        {% if booking.status == 'Booked' %}
+        <div class="booking_btns">
+            <button class="btn btn-primary cancel_appointment" id="cancel{{ booking.id }}">Cancel Appointment</button>
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<div class="input_container" style="display:none;" id="input_container_reject">
+    <div class="input_vacation_frame">
+        <h4 style="margin-bottom: 1rem;">Are you sure you want to cancel this appointment?</h4>
+        <div>
+            <button class="btn btn-primary" id="final_yes">Yes</button>
+            <button class="btn btn-primary" id="final_no">No</button>
+        </div>
+    </div>
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <div class="left_links">
+        <button class="btn btn-primary" onclick="page1()">&laquo; First</button>
+        <button class="btn btn-primary" onclick="page2()">Previous</button>
+    </div>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+    <div class="right_links">
+        <button class="btn btn-primary" onclick="page3()">Next</button>
+        <button class="btn btn-primary" onclick="page4()">Last &raquo;</button>
+    </div>
+    {% endif %}
+    <script>
+        {% if page_obj.has_previous %}
+        function page1() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page=1';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page=1";
+                }
+                else{
+                    window.location.href = currentUrl + "?page=1";
+                }
+            }
+            console.log(b);
+        }
+        
+        function page2() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page={{ page_obj.previous_page_number }}';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page={{ page_obj.previous_page_number }}";
+                }
+                else{
+                    window.location.href = currentUrl + "?page={{ page_obj.previous_page_number }}";
+                }
+            }
+        }
+        {% endif %}
+        
+        {% if page_obj.has_next %}
+        function page3() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page={{ page_obj.next_page_number }}';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page={{ page_obj.next_page_number }}";
+                }
+                else{
+                    window.location.href = currentUrl + "?page={{ page_obj.next_page_number }}";
+                }
+            }
+        }
+        function page4() {
+            let currentUrl = window.location.href;
+            let startIndex = currentUrl.indexOf('page=');
+            let substringToReplace = "";
+            let b = false;
+            let s="";
+            for(let i = 5 ; i < currentUrl.length ; i ++){
+                if(currentUrl[i - 5] == 'p' && currentUrl[i-4] == 'a' && currentUrl[i-3] == 'g' && currentUrl[i-2] == 'e' && currentUrl[i-1] == '='){
+                    b = true;
+                    s+=currentUrl[i];
+                }
+                else if(b && currentUrl[i] >= '0' && currentUrl[i] <= '9'){
+                    s+=currentUrl[i];
+                }
+                else if(b){
+                    break;
+                }
+            }
+            if(b){
+                substringToReplace = 'page='+s;
+                let newParameter = 'page={{ page_obj.paginator.num_pages }}';
+                let newUrl = currentUrl.replace(substringToReplace, newParameter);
+                window.location.href = newUrl;
+            }
+            else{
+                if(currentUrl.indexOf('?') != -1){
+                    window.location.href = currentUrl + "&page={{ page_obj.paginator.num_pages }}";
+                }
+                else{
+                    window.location.href = currentUrl + "?page={{ page_obj.paginator.num_pages }}";
+                }
+            }
+        }
+        {% endif %}
+    </script>
+</div>
 {% endif %}
 {% endblock %}

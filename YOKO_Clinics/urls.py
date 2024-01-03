@@ -20,5 +20,6 @@ urlpatterns = [
     path("get_selected", views.get_selected, name="get_selected"),
     path("profile/get_selected", views.get_selected, name="get_selected"),
     path("booking_final", views.booking_final, name="booking_final"),
+    path("cancel_appoint", views.cancel_appoint, name="cancel_appoint"),
     path("vacation_add", views.vacation_add, name="vacation_add")
 ]
