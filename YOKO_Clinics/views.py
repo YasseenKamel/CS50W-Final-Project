@@ -969,3 +969,23 @@ def review_appoint(request):
         return JsonResponse({
             'message': "OK"
         })
+    
+@login_required
+def get_reviews(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        res = reviews.objects.filter(doctor_id=data['id'])
+        more = (len(res) > ((data['idx'] + 1) * 10))
+        ret = []
+        for i in range(data['idx'] * 10,min((data['idx'] + 1) * 10,len(res))):
+            pat = User.objects.get(id=res[i].patient_id)
+            ret.append({
+                'name': pat.username,
+                'rate': res[i].rating,
+                'desc': res[i].description
+            })
+        return JsonResponse({
+            'data': ret,
+            'more': more
+        })
+        

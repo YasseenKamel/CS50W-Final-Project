@@ -2,8 +2,12 @@
 {% load static %}
 
 {% block title %}{{target.username}}{% endblock %}
-{% block script %}{% if user.id == target.id %}<script src="{% static 'YOKO_Clinics/profile.js' %}"></script>{% else %}<script src="{% static 'YOKO_Clinics/booking.js' %}"></script>{% endif %}{% endblock %}
+{% block script %}<script src="{% static 'YOKO_Clinics/reviews.js' %}"></script>{% if user.id == target.id %}<script src="{% static 'YOKO_Clinics/profile.js' %}"></script>{% else %}<script src="{% static 'YOKO_Clinics/booking.js' %}"></script>{% endif %}{% endblock %}
 {% block body %}
+<script>
+    let repeated_vacations = {{ repeated }};
+    let doctors_id = {{ target.id }};
+</script>
 {% if user.id == target.id %}
     <div class="profile_frame">
         <input type="hidden" id="timezoneOffset" name="timezoneOffset">
@@ -155,10 +159,6 @@
         <button class="btn btn-primary norm_btn" id="cancel_btn" style="display:none;">Cancel</button>
     </div>
     {% else %}
-    <script>
-        let repeated_vacations = {{ repeated }};
-        let doctors_id = {{ target.id }};
-    </script>
     <div class="profile_frame">
         <script>
             function hide1(){
@@ -296,4 +296,13 @@
         </div>
     </div>
     {% endif %}
+    <div class="reviews_div">
+        <h1>Reviews</h1>
+        <div id="reviews_main">
+
+        </div>
+        <div id="load_more">
+            <button class="btn btn-primary" type="button" id="load_btn">Load More</button>
+        </div>
+    </div>
 {% endblock %}
