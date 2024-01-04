@@ -148,9 +148,11 @@ def index(request):
     sorting = 0
     order = 0
     appoints1 = []
-    if request.GET.get('show') != None and request.GET.get('show') != 'All Appointments':
+    if request.GET.get('show') != None:
         if request.GET.get('show') == "Upcoming Appointments":
             sorting = 0
+        elif request.GET.get('show') == "All Appointments":
+            sorting = -1
         else:
             sorting = 1
     if sorting == 1:
@@ -343,11 +345,6 @@ def vacation_add(request):
         item = vacations(start_date=start,end_date=end,doctor_id=request.user.id,vacation=is_vacation)
         item.save()
         return JsonResponse({'message': 'Vacation added successfully.'})
-
-
-@login_required
-def appointment(request,id):
-    pass
     
 
 @login_required
@@ -474,7 +471,87 @@ def edit_profile(request,banana):
 
 @login_required
 def appointments1(request):
-    pass
+    utc_now = datetime.datetime.now(get_localzone()).astimezone(pytz.utc)
+    over = appointments.objects.filter(patient_id=request.user.id,end_date__lte=utc_now,status="Booked")
+    for ova in over:
+        ova.status="Over"
+        ova.save()
+
+    pat = User.objects.get(id=request.user.id)
+    sorting = 0
+    order = 0
+    appoints1 = []
+    if request.GET.get('show') != None:
+        if request.GET.get('show') == "Upcoming Appointments":
+            sorting = 0
+        elif request.GET.get('show') == "Past Appointments":
+            sorting = 1
+        elif request.GET.get('show') == "Canceled Appointments":
+            sorting = -1
+        else:
+            sorting = 2
+    if sorting == 1:
+        if request.GET.get('order_by') == 'Latest':
+            appoints1 = appointments.objects.filter(patient_id=request.user.id,status="Over").order_by('-start_date')
+            order = 1
+        else:
+            appoints1 = appointments.objects.filter(patient_id=request.user.id,status="Over").order_by('start_date')
+    elif sorting == 0:
+        if request.GET.get('order_by') == 'Latest':
+            appoints1 = appointments.objects.filter(patient_id=request.user.id,status="Booked").order_by('-start_date')
+            order = 1
+        else:
+            appoints1 = appointments.objects.filter(patient_id=request.user.id,status="Booked").order_by('start_date')
+    elif sorting == -1:
+        if request.GET.get('order_by') == 'Latest':
+            appoints1 = appointments.objects.filter(patient_id=request.user.id,status="Canceled").order_by('-start_date')
+            order = 1
+        else:
+            appoints1 = appointments.objects.filter(patient_id=request.user.id,status="Canceled").order_by('start_date')
+    else:
+        if request.GET.get('order_by') == 'Latest':
+            appoints1 = bookings.objects.filter(patient_id=request.user.id,status="Pending").order_by('-day')
+            order = 1
+        else:
+            appoints1 = bookings.objects.filter(patient_id=request.user.id,status="Pending").order_by('day')
+    appoints = []
+    for appoint in appoints1:
+        doc = User.objects.get(id=appoint.doctor_id)
+        if sorting != 2:
+            appoints.append({
+                'id': appoint.id,
+                'patient_id': appoint.patient_id,
+                'doctor_id': appoint.doctor_id,
+                'start_date': appoint.start_date.isoformat(),
+                'end_date': appoint.end_date.isoformat(),
+                'description': appoint.description,
+                'left_review': appoint.left_review,
+                'status': appoint.status,
+                'doctor_username': doc.username,
+                'address': doc.address
+            })
+        else:
+            appoints.append({
+                'id': appoint.id,
+                'patient_id': appoint.patient_id,
+                'doctor_id': appoint.doctor_id,
+                'day': appoint.day,
+                'description': appoint.description,
+                'date_created': appoint.date_created.isoformat(),
+                'status': appoint.status,
+                'doctor_username': doc.username
+            })
+    paginator = Paginator(appoints, 10)
+    page_num = request.GET.get('page')
+    if page_num == None:
+        page_num = 1
+    page_obj = paginator.get_page(page_num)
+    return render(request, "YOKO_Clinics/appointments.html",{
+        'page_obj': page_obj,
+        'sorting': sorting,
+        'order': order,
+        'current': "appointments"
+    })
 
 @login_required
 def search(request):
@@ -831,17 +908,33 @@ def booking_final(request):
 def cancel_appoint(request):
      if request.method == "POST":
         data = json.loads(request.body)
+        if data['who'] == 'booking':
+            appoint = bookings.objects.get(id=data['id'])
+            appoint.delete()
+            return JsonResponse({
+                'message': "OK"
+            })
         utc_now = datetime.datetime.now(get_localzone()).astimezone(pytz.utc)
-        appoint = appointments.objects.filter(doctor_id=request.user.id,end_date__gte=utc_now,start_date__lte=utc_now,status="Booked")
+        appoint = 1
+        if data['who'] == 'doc':
+            appoint = appointments.objects.filter(doctor_id=request.user.id,end_date__gte=utc_now,start_date__lte=utc_now,status="Booked")
+        else:
+            appoint = appointments.objects.filter(patient_id=request.user.id,end_date__gte=utc_now,start_date__lte=utc_now,status="Booked")
         if appoint.count() != 0 and appoint[0].id == data['id']:
             return JsonResponse({
                 'message': "NO"
             })
         appoint = appointments.objects.get(id=data['id'])
-        doc=User.objects.get(id=request.user.id)
-        message = f"Your appointment with {doc.username} on {appoint.start_date.date()} has been canceled."
-        item = messages(sender_id=doc.id,receiver_id=appoint.patient_id,content=message)
-        item.save()
+        doc=User.objects.get(id=appoint.doctor_id)
+        pat=User.objects.get(id=appoint.patient_id)
+        if data['who'] == 'doc':
+            message = f"Your appointment with {doc.username} on {appoint.start_date.date()} has been canceled."
+            item = messages(sender_id=doc.id,receiver_id=appoint.patient_id,content=message)
+            item.save()
+        else:
+            message = f"Your appointment with {pat.username} on {appoint.start_date.date()} has been canceled."
+            item = messages(sender_id=pat.id,receiver_id=doc.id,content=message)
+            item.save()
         appoint.status = "Canceled"
         appoint.save()
         return JsonResponse({

@@ -43,7 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-CSRFToken': csrf_token,
             },
             body: JSON.stringify({
-                id: target
+                id: target,
+                who: 'doc'
             })
         })
         .then(response => response.json())
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else{
                 document.getElementById("booking_frame"+target).remove();
                 cancel_booking("overriding_banana");
-                document.getElementById("error_div").innerHTML = '<div class="alert alert-success" id="beepo5"><a class="close" data-dismiss="alert" href="#" onclick="hide(5)">×</a>Appointment has been cancelled successfully.</div>';
+                document.getElementById("error_div").innerHTML = '<div class="alert alert-success" id="beepo5"><a class="close" data-dismiss="alert" href="#" onclick="hide(5)">×</a>Appointment has been canceled successfully.</div>';
             }
         });
     }
