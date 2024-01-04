@@ -90,13 +90,39 @@
         <div class="booking_btns">
             <button class="btn btn-primary cancel_appointment1" id="cancel{{ booking.id }}">Cancel Request</button>
         </div>
-        {% elif booking.status == 'Over' %}
-        <div class="booking_btns">
+        {% elif booking.status == 'Over' and not booking.left_review %}
+        <div class="booking_btns" id="review_btns{{ booking.id }}">
             <button class="btn btn-primary review_appointment" id="review{{ booking.id }}">Review</button>
         </div>
         {% endif %}
     </div>
 {% endfor %}
+
+<div class="input_container" style="display:none;" id="input_container_review">
+    <div class="input_vacation_frame">
+        <div id="error_div_bookin" class="error_div">
+    
+        </div>
+        <h4 style="margin-bottom: 1rem;">Review your appointment out of 5.</h4>
+        <div class="form-group form-group2 no_wrap1">
+            <input type="checkbox" name="star" class="star_checker" id="s1" autocomplete="off">
+            <label for="s1" class="lil_star lil_star1" id="a1">★</label>
+            <input type="checkbox" name="star" class="star_checker" id="s2" autocomplete="off">
+            <label for="s2" class="lil_star lil_star2" id="a2">★</label>
+            <input type="checkbox" name="star" class="star_checker" id="s3" autocomplete="off">
+            <label for="s3" class="lil_star lil_star3" id="a3">★</label>
+            <input type="checkbox" name="star" class="star_checker" id="s4" autocomplete="off">
+            <label for="s4" class="lil_star lil_star4" id="a4">★</label>
+            <input type="checkbox" name="star" class="star_checker" id="s5" autocomplete="off">
+            <label for="s5" class="lil_star lil_star5" id="a5">★</label>
+        </div>
+        <textarea name="review_desc" placeholder="Enter a review for this appointment." id="review_desc" class="form-control" tabindex="-1" maxlength="500" style="margin-bottom:1rem;"></textarea>
+        <div>
+            <button class="btn btn-primary" id="final_no_review">Cancel</button>
+            <button class="btn btn-primary" id="final_review">Review</button>
+        </div>
+    </div>
+</div>
 
 <div class="input_container" style="display:none;" id="input_container_reject">
     <div class="input_vacation_frame">

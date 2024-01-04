@@ -1167,3 +1167,10 @@ input[type="checkbox"].toggle1:checked+label::after {
     align-self: center;
     margin-top: 1rem;
 }
+
+.no_wrap1{
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+    padding: 0rem 0.3rem;
+}

@@ -940,3 +940,32 @@ def cancel_appoint(request):
         return JsonResponse({
             'message': "OK"
         })
+     
+@login_required
+def review_appoint(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        appoints = appointments.objects.filter(id=data['id'])
+        if len(appoints) != 1:
+            return JsonResponse({
+                'message': "NO"
+            })
+        appoint = appoints[0]
+        if appoint.left_review:
+            return JsonResponse({
+                'message': "NO"
+            })
+        desc = data['description']
+        rate = data['rating']
+        doc = User.objects.get(id=appoint.doctor_id)
+        item = reviews(rating=rate,patient_id=appoint.patient_id,doctor_id=appoint.doctor_id,description=desc)
+        item.save()
+        rating = doc.rating
+        rating_cnt = reviews.objects.filter(doctor_id=doc.id).count() - 1
+        doc.rating = round(((rating * rating_cnt) + rate) / (rating_cnt + 1),2)
+        doc.save()
+        appoint.left_review = True
+        appoint.save()
+        return JsonResponse({
+            'message': "OK"
+        })

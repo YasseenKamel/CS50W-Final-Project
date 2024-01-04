@@ -729,6 +729,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else{
                 document.getElementById("beepo100").style.display = '';
+                document.getElementById("beepo100").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide(100)">×</a>Please fill in the description.';
+            }
+            return;
+        }
+        if(document.getElementById("book_desc").value.trim().length > 500){
+            if(document.getElementById("beepo100") == undefined){
+                document.getElementById("error_div_bookin").innerHTML += '<div class="alert alert-danger" id="beepo100"><a class="close" data-dismiss="alert" href="#" onclick="hide(100)">×</a>Description can not exceed 500 characters.</div>';
+            }
+            else{
+                document.getElementById("beepo100").style.display = '';
+                document.getElementById("beepo100").innerHTML = '<a class="close" data-dismiss="alert" href="#" onclick="hide(100)">×</a>Description can not exceed 500 characters.';
             }
             return;
         }
