@@ -1002,3 +1002,30 @@ def get_reviews(request):
             'more': more
         })
         
+@login_required
+def get_messages(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        if data['method'] == "get":
+            mess = messages.objects.filter(receiver_id=request.user.id,read=False).order_by('-id')
+            mess1 = []
+            for i in mess:
+                mess1.append({'content': i.content,'read': i.read,'id': i.id})
+            mess2 = []
+            if mess.count() < 10:
+                if messages.objects.filter(receiver_id=request.user.id,read=True).count() > 0:
+                    mess2 = messages.objects.filter(receiver_id=request.user.id,read=True).order_by('-id')[:(10-mess.count())]
+            for i in mess2:
+                mess1.append({'content': i.content,'read': i.read,'id': i.id})
+            return JsonResponse({
+                'data': mess1
+            })
+        else:
+            ids = data['ids']
+            for i in ids:
+                mess = messages.objects.get(id=i)
+                mess.read = True
+                mess.save()
+            return JsonResponse({
+                'message': "OK"
+            })

@@ -1234,7 +1234,11 @@ input[type="checkbox"].toggle1:checked+label::after {
     margin: auto;
     top:7dvh;
     z-index: 100;
-    padding: 1rem;
+    /* padding: 1rem; */
+    max-width: 70%;
+    max-height: 70dvh;
+    height: auto !important;
+    color: var(--text);
 }
 
 .blackscreen{
@@ -1245,4 +1249,23 @@ input[type="checkbox"].toggle1:checked+label::after {
     left:0;
     background-color: rgba(0,0,0,0.5);
     z-index: 10;
+}
+
+hr{
+    border-color: var(--text);
+    margin: 0;
+}
+
+.message{
+    transition: background-color 3s cubic-bezier(.69,.53,.3,.98);
+}
+
+.read{
+    background-color: var(--secondary);
+    transition: background-color 3s cubic-bezier(.69,.53,.3,.98);
+}
+
+.unread{
+    background-color: var(--alert_warning_background);
+    /* transition: background-color 3s cubic-bezier(.69,.53,.3,.98); */
 }

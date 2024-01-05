@@ -22,5 +22,7 @@ urlpatterns = [
     path("cancel_appoint", views.cancel_appoint, name="cancel_appoint"),
     path("review_appoint", views.review_appoint, name="review_appoint"),
     path("profile/get_reviews", views.get_reviews, name="get_reviews"),
+    path("profile/get_messages", views.get_messages, name="get_messages"),
+    path("get_messages", views.get_messages, name="get_messages"),
     path("vacation_add", views.vacation_add, name="vacation_add")
 ]
