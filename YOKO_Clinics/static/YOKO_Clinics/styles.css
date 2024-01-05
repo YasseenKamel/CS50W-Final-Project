@@ -1210,3 +1210,18 @@ input[type="checkbox"].toggle1:checked+label::after {
     align-items: center;
     flex-direction: column;
 }
+
+.center{
+    display: flex;
+    align-items: center;
+}
+
+#notif_read,
+#notif_unread {
+    cursor: pointer;
+}
+
+#notif_read:hover,
+#notif_unread:hover {
+    filter: brightness(80%);
+}

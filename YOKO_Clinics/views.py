@@ -133,10 +133,12 @@ def register(request):
 @login_required
 def index(request):
     bookings_cnt = bookings.objects.filter(day__gt=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending").count()
+    messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
     if User.objects.get(id=request.user.id).is_doctor == False:
         return render(request, "YOKO_Clinics/index.html",{
             "bookings_cnt": bookings_cnt,
-            'current': "home"
+            'current': "home",
+            "message_cnt": messages_cnt
         })
     utc_now = datetime.datetime.now(get_localzone()).astimezone(pytz.utc)
     over = appointments.objects.filter(doctor_id=request.user.id,end_date__lte=utc_now,status="Booked")
@@ -197,12 +199,14 @@ def index(request):
         'page_obj': page_obj,
         'sorting': sorting,
         'order': order,
-        'current': "home"
+        'current': "home",
+        "message_cnt": messages_cnt
     })
 
 @login_required
 def bookings1(request):
     books = bookings.objects.filter(day__lte=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending")
+    messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
     doc = User.objects.get(id=request.user.id)
     for booking in books:
         message = f"Your request for an appointment with {doc.username} on {booking.day} has been rejected."
@@ -254,12 +258,14 @@ def bookings1(request):
         'page_obj': page_obj,
         'sorting': sorting,
         'order': order,
-        'current': "bookings"
+        'current': "bookings",
+        "message_cnt": messages_cnt
     })
 
 @login_required
 def vacation(request):
     bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
+    messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
     vacay = repeated_vacations.objects.filter(doctor_id=request.user.id).values_list('day',flat=True)
     days = [1,2,3,4,5,6,7]
     vaycays = []
@@ -270,7 +276,8 @@ def vacation(request):
         'current_time': datetime.datetime.now(),
         'repeated': vaycays,
         "bookings_cnt": bookings_cnt,
-        'current': "vacation"
+        'current': "vacation",
+        "message_cnt": messages_cnt
     })
         
 
@@ -356,6 +363,7 @@ def profile(request,id):
         pass
     else:
         bookings_cnt = bookings.objects.filter(day__gt=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending").count()
+        messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
         specialties = expertise.objects.filter(doctor_id=id).values_list('type_id',flat=True)
         day = repeated_vacations.objects.filter(doctor_id=id).values_list('day',flat=True)
         days = [0,0,0,0,0,0,0]
@@ -375,7 +383,8 @@ def profile(request,id):
             'sub': sub,
             'days': days,
             'repeated': vaycays,
-            "bookings_cnt": bookings_cnt
+            "bookings_cnt": bookings_cnt,
+            "message_cnt": messages_cnt
         })
     
 @login_required
@@ -473,6 +482,7 @@ def edit_profile(request,banana):
 def appointments1(request):
     utc_now = datetime.datetime.now(get_localzone()).astimezone(pytz.utc)
     over = appointments.objects.filter(patient_id=request.user.id,end_date__lte=utc_now,status="Booked")
+    messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
     for ova in over:
         ova.status="Over"
         ova.save()
@@ -550,11 +560,13 @@ def appointments1(request):
         'page_obj': page_obj,
         'sorting': sorting,
         'order': order,
-        'current': "appointments"
+        'current': "appointments",
+        "message_cnt": messages_cnt
     })
 
 @login_required
 def search(request):
+    messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
     if request.method == "GET":
         country = request.GET.get('country')
         state = request.GET.get('state')
@@ -597,7 +609,8 @@ def search(request):
             page_num = 1
         page_obj = paginator.get_page(page_num)
         return render(request, "YOKO_Clinics/search.html",{
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            "message_cnt": messages_cnt
         })
 
 @login_required
