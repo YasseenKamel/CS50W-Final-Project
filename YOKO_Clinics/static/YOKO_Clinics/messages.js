@@ -54,7 +54,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById("message_div").appendChild(container);
                 document.getElementById("message_div").appendChild(document.createElement('hr'));
             }
-            
+            if(cnt == 0){
+                let container = document.createElement('div');
+                let content = document.createElement('p');
+                content.style.margin = "0";
+                content.style.padding = "0.5rem";
+                content.style.paddingLeft = "0.7rem";
+                content.style.paddingRight = "0.7rem";
+                content.textContent = "No messages.";
+                container.appendChild(content);
+                document.getElementById("message_div").appendChild(container);
+            }
         });
     }
     get_messages();
