@@ -1216,12 +1216,33 @@ input[type="checkbox"].toggle1:checked+label::after {
     align-items: center;
 }
 
-#notif_read,
-#notif_unread {
+#notif{
     cursor: pointer;
 }
 
-#notif_read:hover,
-#notif_unread:hover {
+#notif:hover {
     filter: brightness(80%);
+}
+
+.message_div{
+    position: absolute;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 2px;
+    background-color: var(--secondary);
+    margin: auto;
+    top:7dvh;
+    z-index: 100;
+    padding: 1rem;
+}
+
+.blackscreen{
+    position: absolute;
+    width: 100dvw;
+    height: 100dvh;
+    top:0;
+    left:0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 10;
 }
