@@ -15,26 +15,49 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light">
         <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link">LOGO</a>
+                <div id="borgir">
+                    <svg id="open" xmlns="http://www.w3.org/2000/svg" width="4dvh" height="4dvh" viewBox="0 0 24 24" class=""><path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M4 7h3m13 0h-9m9 10h-3M4 17h9m-9-5h16"></path></svg>
+                    <svg id="close" class="hidden" xmlns="http://www.w3.org/2000/svg" width="4dvh" height="4dvh" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"></path></svg>
+                </div>
+                <div id="content_nav">
+                    {% if request.session.type == 'patient' %}
+                        <a class="nav-link nav_borg" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
+                    
+                        <a class="nav-link nav_borg" href="{% url 'appointments' %}">{% if current == "appointments" %}<strong>Appointments</strong>{% else %}Appointments{% endif %}{% if appointment_cnt > 0 %} <span class="number_thing">&nbsp{{ appointment_cnt }}&nbsp</span>{% endif %}</a>
+                   
+                    {% else %}
+                        <a class="nav-link nav_borg" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
+                    
+                        <a class="nav-link nav_borg" href="{% url 'bookings' %}">{% if current == "bookings" %}<strong>Bookings</strong>{% else %}Bookings{% endif %}{% if bookings_cnt > 0 %} <span class="number_thing">&nbsp{{ bookings_cnt }}&nbsp</span>{% endif %}</a>
+                    
+                        <a class="nav-link nav_borg" href="{% url 'vacation' %}">{% if current == "vacation" %}<strong>Vacations</strong>{% else %}Vacations{% endif %}</a>
+                   
+                {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <img src="{% static 'YOKO_Clinics/logo.png' %}" id="logo">
             </li>
             {% if user.is_authenticated %}
             {% if request.session.type == 'patient' %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
+                    <a class="nav-link nav-thing" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'appointments' %}">{% if current == "appointments" %}<strong>Appointments</strong>{% else %}Appointments{% endif %}{% if appointment_cnt > 0 %} <span class="number_thing">&nbsp{{ appointment_cnt }}&nbsp</span>{% endif %}</a>
+                    <a class="nav-link nav-thing" href="{% url 'appointments' %}">{% if current == "appointments" %}<strong>Appointments</strong>{% else %}Appointments{% endif %}{% if appointment_cnt > 0 %} <span class="number_thing">&nbsp{{ appointment_cnt }}&nbsp</span>{% endif %}</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
+                    <a class="nav-link nav-thing" href="{% url 'index' %}">{% if current == "home" %}<strong>Home</strong>{% else %}Home{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'bookings' %}">{% if current == "bookings" %}<strong>Bookings</strong>{% else %}Bookings{% endif %}{% if bookings_cnt > 0 %} <span class="number_thing">&nbsp{{ bookings_cnt }}&nbsp</span>{% endif %}</a>
+                    <a class="nav-link nav-thing" href="{% url 'bookings' %}">{% if current == "bookings" %}<strong>Bookings</strong>{% else %}Bookings{% endif %}{% if bookings_cnt > 0 %} <span class="number_thing">&nbsp{{ bookings_cnt }}&nbsp</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vacation' %}">{% if current == "vacation" %}<strong>Vacations</strong>{% else %}Vacations{% endif %}</a>
+                    <a class="nav-link nav-thing" href="{% url 'vacation' %}">{% if current == "vacation" %}<strong>Vacations</strong>{% else %}Vacations{% endif %}</a>
                 </li>
             {% endif %}
             {% endif %}
@@ -44,12 +67,12 @@
             <script src="{% static 'YOKO_Clinics/messages.js' %}"></script>
             <li class="nav-item center">
                 {% if message_cnt > 0 %}
-                <svg id="notif" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                <svg id="notif" xmlns="http://www.w3.org/2000/svg" class="nav-thing1" width="32" height="32" viewBox="0 0 24 24">
                     <path fill="currentColor"
                         d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-8-3v-2h2v-7q0-2.075 1.25-3.687T10.5 4.2v-.7q0-.625.438-1.062T12 2q.625 0 1.063.438T13.5 3.5v.325q-.25.5-.375 1.05T13 6q0 2.075 1.463 3.538T18 11v6h2v2zM18 9q-1.25 0-2.125-.875T15 6q0-1.25.875-2.125T18 3q1.25 0 2.125.875T21 6q0 1.25-.875 2.125T18 9" />
                 </svg>
                 {% else %}
-                <svg id="notif" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                <svg id="notif" xmlns="http://www.w3.org/2000/svg" class="nav-thing1" width="32" height="32" viewBox="0 0 24 24">
                     <path fill="currentColor"
                         d="M4 19v-2h2v-7q0-2.075 1.25-3.687T10.5 4.2V2h3v2.2q2 .5 3.25 2.113T18 10v7h2v2zm8 3q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22" />
                 </svg>
@@ -61,22 +84,22 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" {% if user.is_doctor %} href="{% url 'profile' user.id %}" {% endif %} >{{ user.username }}</a>
+                <a class="nav-link nav-thing1" {% if user.is_doctor %} href="{% url 'profile' user.id %}" {% endif %} >{{ user.username }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                <a class="nav-link nav-thing1" href="{% url 'logout' %}">Log Out</a>
             </li>
             {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                <a class="nav-link nav-thing1" href="{% url 'login' %}">Log In</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                <a class="nav-link nav-thing1" href="{% url 'register' %}">Sign Up</a>
             </li>
             {% endif %}
             <li class="nav-item">
-                <input type="checkbox" id="scroll_toggle1" class="toggle1">
-                <label for="scroll_toggle1" class="slide_animation" style="animation-duration:1.5s;"></label>
+                <input type="checkbox" id="scroll_toggle1" class="toggle1 nav-thing1">
+                <label for="scroll_toggle1" class="slide_animation nav-thing1" style="animation-duration:1.5s;"></label>
             </li>
         </ul>
         </nav>

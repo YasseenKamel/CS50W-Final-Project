@@ -154,9 +154,9 @@
                 <label class="toggle-control" for="7d">Sat</label>
             </div>
         </div>
-        <button class="btn btn-primary norm_btn" id="edit_btn">Edit Profile</button>
-        <button class="btn btn-primary norm_btn" id="save_btn" style="display:none;">Save</button>
-        <button class="btn btn-primary norm_btn" id="cancel_btn" style="display:none;">Cancel</button>
+        <button class="btn btn-primary norm_btn stupid_btn" id="edit_btn">Edit Profile</button>
+        <button class="btn btn-primary norm_btn stupid_btn" id="save_btn" style="display:none;">Save</button>
+        <button class="btn btn-primary norm_btn stupid_btn" id="cancel_btn" style="display:none;">Cancel</button>
     </div>
     {% else %}
     <div class="profile_frame">
@@ -243,7 +243,7 @@
                 <label class="{% if days.6 %}toggle-control6{% else %}toggle-control5{% endif %}" id="d7">Sat</label>
             </div>
         </div>
-        <button class="btn btn-primary norm_btn" id="book_btn">Book</button>
+        <button class="btn btn-primary norm_btn stupid_btn" id="book_btn">Book</button>
     </div>
     <div class="input_container" style="display:none;" id="input_container">
         <div id="calendar_container" class="calendar_container">
@@ -289,8 +289,8 @@
                 <textarea name="book_desc" placeholder="Enter a description for your condition and/or if this is a follow-up appointment." id="book_desc" class="form-control" tabindex="-1" maxlength="500"></textarea>
                 <input type="hidden" id="booking_date" name="booking_date">
                 <div>
-                    <input class="btn btn-primary" type="button" id="cancel_book" value="Cancel" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
-                    <input class="btn btn-primary" type="button" value="Book" id="submit_book" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
+                    <input class="btn btn-primary stupid_btn" type="button" id="cancel_book" value="Cancel" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
+                    <input class="btn btn-primary stupid_btn" type="button" value="Book" id="submit_book" style="margin-bottom:0.5rem;height:3rem;margin-top: 2.6rem;width:8rem;">
                 </div>
             </form>
         </div>

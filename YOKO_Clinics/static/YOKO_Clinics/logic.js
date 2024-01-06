@@ -58,6 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.getElementById('back_arrow') != undefined){
                 document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow1.png";
             }
+            if(document.getElementById('logo') != undefined){
+                document.getElementById('logo').src="../static/YOKO_Clinics/logo1.png";
+            }
         }
         else{
             toggle.checked = false;
@@ -70,6 +73,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.getElementById('back_arrow') != undefined){
                 document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow.png";
             }
+            if(document.getElementById('logo') != undefined){
+                document.getElementById('logo').src="../static/YOKO_Clinics/logo.png";
+            }
         }
     }
     
@@ -80,6 +86,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if(document.getElementById('arrow1') != undefined){
             document.getElementById('arrow1').src="../static/YOKO_Clinics/right-arrow.png";
         }
+        if(document.getElementById('arrow2') != undefined){
+            document.getElementById('arrow2').src="../static/YOKO_Clinics/right-arrow.png";
+        }
+        if(document.getElementById('logo') != undefined){
+            document.getElementById('logo').src="../static/YOKO_Clinics/logo.png";
+        }
         if(document.getElementById('back_arrow') != undefined){
             document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow.png";
         }
@@ -88,8 +100,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if(document.getElementById('arrow1') != undefined){
                 document.getElementById('arrow1').src="../static/YOKO_Clinics/right-arrow1.png";
             }
+            if(document.getElementById('arrow2') != undefined){
+                document.getElementById('arrow2').src="../static/YOKO_Clinics/right-arrow1.png";
+            }
             if(document.getElementById('back_arrow') != undefined){
                 document.getElementById('back_arrow').src="../static/YOKO_Clinics/left-arrow1.png";
+            }
+            if(document.getElementById('logo') != undefined){
+                document.getElementById('logo').src="../static/YOKO_Clinics/logo1.png";
             }
         }
     
@@ -116,6 +134,25 @@ document.addEventListener('DOMContentLoaded', function () {
             minute: 'numeric',
             hour12: true,
           });
+    }
+
+    let burger = document.getElementById('borgir');
+    let content = document.getElementById('content_nav');
+    if(burger != undefined){
+        burger.addEventListener('click', function () {
+            let open = document.getElementById('open');
+            let close = document.getElementById('close');
+
+            if (!open.classList.contains('hidden')) {
+                open.classList.add('hidden');
+                close.classList.remove('hidden');
+                content.style.transform='translateX(0%) translateZ(10px)';
+            } else {
+                open.classList.remove('hidden');
+                close.classList.add('hidden');
+                content.style.transform='translateX(-150%) translateZ(10px)';
+            }
+        });
     }
 
 });
