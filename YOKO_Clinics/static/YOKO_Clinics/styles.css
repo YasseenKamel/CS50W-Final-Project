@@ -1458,5 +1458,29 @@ hr{
     .main_specialty_container {
         flex-direction: column;
     }
+    .search_frame{
+        margin-right: 2rem;
+        margin-left: 2rem;
+    }
+    .calendar-month-header-selected-month{
+        font-size: 2rem;
+    }
+    .calendar-month-header-selectors{
+        font-size: 2rem;
+        width: 12rem;
+    }
+    #previous-month-selector0,#next-month-selector0,#previous-month-selector1,#next-month-selector1,#previous-month-selector-1,#next-month-selector-1{
+        font-size: 4rem;
+    }
+    .day-of-week{
+        font-size: 1.5rem;
+    }
+    .calendar-day{
+        font-size: 1.5rem;
+        min-height: 9dvh;
+    }
+    .calendar-month{
+        height:66dvh;
+    }
 }
 

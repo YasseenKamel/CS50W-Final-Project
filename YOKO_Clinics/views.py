@@ -94,6 +94,8 @@ def register(request):
             end_time = request.POST.get('end_time')
             days = request.POST.getlist('days')
             specialties = request.POST.getlist('sub_specialties')
+            main = request.POST.get('specialty')
+            print(main)
             offset = request.POST.get('timezoneOffset')
             if(len(str(start_time).split(':')) == 2):
                 start_time = str(start_time) + ":00"
@@ -112,7 +114,7 @@ def register(request):
                     "message": "Start time cannot be equal to end time."
                 })
             try:
-                user = User.objects.create_user(username=username, email=email, password=password, is_doctor=True, country=country, state=state, city=city, address=address, bio=bio, start_time=start_time, end_time=end_time)
+                user = User.objects.create_user(username=username, email=email, password=password, is_doctor=True, country=country, state=state, city=city, address=address, bio=bio, start_time=start_time, end_time=end_time,main_specialty=main)
             except IntegrityError as e:
                 print(f"IntegrityError: {e}")
                 return render(request, "YOKO_Clinics/register.html", {

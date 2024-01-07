@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentDate1 = new Date();
         let userTimeZone1 = Intl.DateTimeFormat().resolvedOptions().timeZone;
         let options1 = { timeZone: userTimeZone1, year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'long', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-        let date1 = new Date(currentDate1.toLocaleString(undefined, options1));
+        let date1 = new Date(currentDate1.toLocaleString('en-US', options1));
         let today_date1 = date1.getDate();
         for(let i = last_month - weekday + 2 ; i <= last_month ; i ++){
             template += no_day1 + i + no_day2;
@@ -775,7 +775,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentDate = new Date();
         let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         let options = { timeZone: userTimeZone, year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'long', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-        let date = new Date(currentDate.toLocaleString(undefined, options));
+        let date = new Date(currentDate.toLocaleString('en-US', options));
         let today = date.getDay() + 1;
         let today_date = date.getDate();
         let first_day = today - ((today_date - 1) % 7);
