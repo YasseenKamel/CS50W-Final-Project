@@ -1482,5 +1482,11 @@ hr{
     .calendar-month{
         height:66dvh;
     }
+    .alert{
+        font-size: 2rem;
+    }
+    .close{
+        font-size: 3rem;
+    }
 }
 
