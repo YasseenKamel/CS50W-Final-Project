@@ -160,6 +160,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function prev_month(){
+        document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
+        document.getElementById('next-month-selector0').removeEventListener('click',next_month);
+        document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
         month_next = month;
         month = month_prev;
         month_prev = (month - 1) % 12 + (12 * (month == 0));
@@ -314,6 +317,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function next_month(){
+        document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
+        document.getElementById('next-month-selector0').removeEventListener('click',next_month);
+        document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
         month_prev = month;
         month = month_next;
         month_next = (month + 1) % 12;
@@ -465,6 +471,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function cur_month(){
+        document.getElementById('previous-month-selector0').removeEventListener('click',prev_month);
+        document.getElementById('next-month-selector0').removeEventListener('click',next_month);
+        document.getElementById('present-month-selector0').removeEventListener('click',cur_month);
         if(year > year_this || (year == year_this && month > month_this)){
 
             fetch('get_cal_data1',{
