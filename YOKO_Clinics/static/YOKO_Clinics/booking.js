@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let template_close = '</ol>';
         let days_num = month_days[month] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 1);
         let day1 = '<li class="calendar-day" id="calendar-day', day02 = '"><span>',day2 = '</span></li>';
-        let day3 = '<li class="calendar-day" id="calendar-day', day04 = '"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
+        let day3 = '<li class="calendar-day past_day" id="calendar-day', day04 = '"><span class="number_thing1">&nbsp',day4 = '&nbsp</span></li>';
         let no_day1 = '<li class="calendar-day disabled_day"><span>',no_day2 = '</span></li>';
         let past_day1 = '<li class="calendar-day past_day" id="calendar-day',past_day02 = '"><span>',past_day2 = '</span></li>';
         let last_month = month_days[((month - 1) < 0 ? 11 : (month - 1))] + ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) && month == 2);
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         
         let day11 = '<li class="calendar-day day_off1" id="calendar-day', day021 = '"><span>',day21 = '</span></li>';
-        let day31 = '<li class="calendar-day day_off1" id="calendar-day', day041 = '"><span class="number_thing1">&nbsp',day41 = '&nbsp</span></li>';
+        let day31 = '<li class="calendar-day day_off1 past_day" id="calendar-day', day041 = '"><span class="number_thing1">&nbsp',day41 = '&nbsp</span></li>';
         let past_day11 = '<li class="calendar-day past_day day_off1" id="calendar-day',past_day021 = '"><span>',past_day21 = '</span></li>';
 
         let cur_weekday = weekday;
