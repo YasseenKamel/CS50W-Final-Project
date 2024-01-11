@@ -3,7 +3,10 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-
+{% if page_obj %}
+{% else %}
+<h2 style="text-align: center;margin-top: 1rem;">No results.</h2>
+{% endif %}
 {% for doc in page_obj %}
     <div class="profile_frame">
 

@@ -266,7 +266,7 @@ def bookings1(request):
 
 @login_required
 def vacation(request):
-    bookings_cnt = bookings.objects.filter(doctor_id=request.user.id,status="Pending").count()
+    bookings_cnt = bookings.objects.filter(day__gt=datetime.datetime.now().date(),doctor_id=request.user.id,status="Pending").count()
     messages_cnt = messages.objects.filter(receiver_id=request.user.id,read=False).count()
     vacay = repeated_vacations.objects.filter(doctor_id=request.user.id).values_list('day',flat=True)
     days = [1,2,3,4,5,6,7]

@@ -33,7 +33,10 @@
 <div id="error_div" class="error_div centered_error_div">
     
 </div>
-
+{% if page_obj %}
+{% else %}
+<h2 style="text-align: center;">No bookings.</h2>
+{% endif %}
 {% for booking in page_obj %}
     <div class="booking_frame" id="booking_frame{{ booking.id }}">
         <div class="booking_data">
