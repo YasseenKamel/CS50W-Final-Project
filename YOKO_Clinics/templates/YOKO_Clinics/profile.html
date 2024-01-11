@@ -116,9 +116,9 @@
         <h5 style="margin-bottom:1rem;">Normal working times:</h5>
         <div id="time_div">
             <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
-                <p class="normal_p" id="start_time_display">{{ target.start_time|date:"g:i A" }}</p>
+                <p class="normal_p" id="start_time_display">{{ target.start_time|date:"H:i" }}</p>
                 <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
-                <p class="normal_p" id="end_time_display">{{ target.end_time|date:"g:i A" }}</p>
+                <p class="normal_p" id="end_time_display">{{ target.end_time|date:"H:i" }}</p>
             </div>
             <div class="form-group form-group1" id="time_input" style="display:none;">
                 <input type="time" id="start_time" name="start_time" class="form-control" value="{{ target.start_time|time:"H:i" }}">
@@ -227,9 +227,9 @@
         <h5 style="margin-bottom:1rem;">Normal working times:</h5>
         <div id="time_div">
             <div class="form-group1" style="margin-bottom: 1rem;" id="time_display">
-                <p class="normal_p" id="start_time_display">{{ target.start_time|date:"g:i A" }}</p>
+                <p class="normal_p" id="start_time_display">{{ target.start_time|date:"H:i" }}</p>
                 <img src="../static/YOKO_Clinics/right-arrow.png" style="width:2rem; margin-right:0.5rem;margin-left:0.5rem;opacity:0.75;" id="arrow1">
-                <p class="normal_p" id="end_time_display">{{ target.end_time|date:"g:i A" }}</p>
+                <p class="normal_p" id="end_time_display">{{ target.end_time|date:"H:i" }}</p>
             </div>
         </div>
         <div id="day_div">

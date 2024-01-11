@@ -1,7 +1,18 @@
 function convertTo24HourFormat(twelveHourTime) {
-    let date = new Date("2000-01-01 " + twelveHourTime);
-    let twentyFourHourTime = date.toLocaleTimeString('en-US', {hour12: false});
-    return twentyFourHourTime;
+    let splitTime = twelveHourTime.split(":");
+    let hours = parseInt(splitTime[0]);
+    let minutes = splitTime[1].split(" ")[0];
+
+    let period = splitTime[1].split(" ")[1];
+
+    if(period == "PM" && hours > 12){
+        hours += 12;
+    }
+    let x = "";
+    if(hours < 10){
+        x = "0";
+    }
+    return x + hours + ':' + minutes;
 }
 function convertTo12HourFormat(twentyFourHourTime) {
     let splitTime = twentyFourHourTime.split(":");
@@ -120,16 +131,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if(document.getElementById('start_time_display') != undefined){
-        let user_time = new Date('2000-01-01T' + convertTo24HourFormat(document.getElementById('start_time_display').innerHTML) + "Z");
-        document.getElementById('start_time_display').innerHTML = user_time.toLocaleTimeString(undefined, {
+        let user_time = new Date('2000-01-01T' + document.getElementById('start_time_display').innerHTML + "Z");
+        document.getElementById('start_time_display').innerHTML = user_time.toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: 'numeric',
             hour12: true,
-          });
+        });
     }
     if(document.getElementById('end_time_display') != undefined){
-        let user_time = new Date('2000-01-01T' + convertTo24HourFormat(document.getElementById('end_time_display').innerHTML) + "Z");
-        document.getElementById('end_time_display').innerHTML = user_time.toLocaleTimeString(undefined, {
+        let user_time = new Date('2000-01-01T' + document.getElementById('end_time_display').innerHTML + "Z");
+        document.getElementById('end_time_display').innerHTML = user_time.toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: 'numeric',
             hour12: true,
