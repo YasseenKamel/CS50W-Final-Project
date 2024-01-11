@@ -229,7 +229,7 @@ input[type="checkbox"].toggle:checked+label::after {
 nav{
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
-    height: 9dvh;
+    height: 9vh;
     background-color: var(--secondary);
     color: var(--nav_text) !important;
     box-shadow: var(--shadow-elevation-medium1);
@@ -241,8 +241,8 @@ nav{
 }
 
 .image_cont{
-    height:100dvh;
-    width:100dvw;
+    height:100vh;
+    width:100vw;
     position:absolute;
     z-index: -2;
     top:0;
@@ -696,7 +696,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     right: -1.75rem;
     bottom: -0.5rem;
     left: -1.75rem;
-    transform: scaleY(5dvh);
+    transform: scaleY(5vh);
 }
 
 .main_specialty {
@@ -792,7 +792,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     overflow: hidden;
     border: solid 1px var(--accent);
     background-color: var(--accent);
-    height: 78dvh;
+    height: 78vh;
     border-radius: 1rem;
   }
   
@@ -803,7 +803,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     justify-content: space-between;
     background-color: var(--primary);
     padding: 10px;
-    height: 7dvh;
+    height: 7vh;
   }
   
   /* Month indicator */
@@ -829,7 +829,7 @@ input[type="checkbox"].toggle1:checked+label::after {
     background-color: var(--primary);
     padding-bottom: 5px;
     padding-top: 10px;
-    height: 5dvh;
+    height: 5vh;
   }
   
   ol {
@@ -861,7 +861,7 @@ input[type="checkbox"].toggle1:checked+label::after {
   
   .calendar-day {
     position: relative;
-    min-height: 11dvh;
+    min-height: 11vh;
     background-color: var(--primary);
     padding: 5px;
     -webkit-user-select: none;
@@ -921,7 +921,7 @@ input[type="checkbox"].toggle1:checked+label::after {
   }
 
   .cal_slid1{
-    left: -83dvw;
+    left: -83vw;
     height: auto;
     max-height: 0;
     max-width: 0;
@@ -930,7 +930,7 @@ input[type="checkbox"].toggle1:checked+label::after {
 }
 
 .cal_slid2{
-    left: 83dvw;
+    left: 83vw;
     height: auto;
     max-height: 0;
     max-width: 0;
@@ -1092,7 +1092,7 @@ input[type="checkbox"].toggle1:checked+label::after {
 
 .main_body{
     overflow-y: auto;
-    min-height: 91dvh;
+    min-height: 91vh;
 }
 
 .scroll {
@@ -1232,19 +1232,19 @@ input[type="checkbox"].toggle1:checked+label::after {
     border-width: 2px;
     background-color: var(--secondary);
     margin: auto;
-    top:7dvh;
+    top:7vh;
     z-index: 100;
     /* padding: 1rem; */
     max-width: 70%;
-    max-height: 70dvh;
+    max-height: 70vh;
     height: auto !important;
     color: var(--text);
 }
 
 .blackscreen{
     position: absolute;
-    width: 100dvw;
-    height: 100dvh;
+    width: 100vw;
+    height: 100vh;
     top:0;
     left:0;
     background-color: rgba(0,0,0,0.5);
@@ -1287,11 +1287,11 @@ hr{
 }
 
 #logo{
-    height: 7dvh;
+    height: 7vh;
 }
 
 .nav-thing,.nav-thing1{
-    margin-top:3dvh;
+    margin-top:3vh;
 }
 
 .hidden{
@@ -1303,7 +1303,7 @@ hr{
 #content_nav{
     z-index: -1;
     position: absolute;
-    top: 9dvh;
+    top: 9vh;
     left: 0;
     display: flex;
     flex-direction: column;
@@ -1327,7 +1327,7 @@ hr{
         width: 10rem !important;
     }
     #logo{
-        height: 5dvh;
+        height: 5vh;
     }
     .nav-thing{
         display: none;
@@ -1336,14 +1336,14 @@ hr{
         font-size: 2rem;
     }
     .nav-thing,.nav-thing1{
-        margin-top:2dvh;
+        margin-top:2vh;
     }
     #borgir{
         display: block;
     }
     #notif{
-        height: 3dvh;
-        width: 3dvh;
+        height: 3vh;
+        width: 3vh;
     }
     .nav_borg{
         font-size: 3rem;
@@ -1477,10 +1477,10 @@ hr{
     }
     .calendar-day{
         font-size: 1.5rem;
-        min-height: 9dvh;
+        min-height: 9vh;
     }
     .calendar-month{
-        height:66dvh;
+        height:66vh;
     }
     .alert{
         font-size: 2rem;
