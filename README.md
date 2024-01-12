@@ -14,6 +14,8 @@ When a new user opens the website, they'll be prompted to log in or sign up. Whe
 - Normal working days of the week
 - The doctor's main specialty
 - The subspecialties they work in
+### Patient
+### Doctor
 ## Files
 ### manage.py
 This is file that runs the server and it's given by default when creating a new django project.
