@@ -95,7 +95,6 @@ def register(request):
             days = request.POST.getlist('days')
             specialties = request.POST.getlist('sub_specialties')
             main = request.POST.get('specialty')
-            print(main)
             offset = request.POST.get('timezoneOffset')
             if(len(str(start_time).split(':')) == 2):
                 start_time = str(start_time) + ":00"
