@@ -21,6 +21,7 @@ Once logged in as a patient, the user can search for doctors based on:
 - Doctor name as a substring
 - rating from 0 and above to 5 stars
 - Specialty and subspecialty
+
 The search fields are not required to be filled but will only act as a filter. Once the results are displayed, the user can click on any doctor to open their profile.
 #### Doctor's profile and booking
 Once in the doctor's profile, the patient will be able to see all the information about that doctor and the reviews about them. When the `Book` button is pressed, the user is prompted with a calendar that shows the doctor's schedule which can be exited by clicking anywhere away from it.
@@ -28,6 +29,7 @@ Colors in it represent:
 - Day off
 - An empty shift
 - A busy shift
+
 The colours are scaled between the empty and busy shifts to give a feeling of how busy the doctor is on that day. By clicking on a day, the user is given the doctor's working times on that day and prompted to write an appropriate description for his case and to book. To cancel this prompt, one can press on the cancel button or away from the prompt window. Once the booking has been submitted, it's up to the doctor whether to accept or reject it.
 #### Appointments
 In the appointments page, the patient can filter through the appointment based on these criteria:
