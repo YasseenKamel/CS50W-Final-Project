@@ -5,7 +5,7 @@ function convertTo24HourFormat(twelveHourTime) {
 
     let period = splitTime[1].split(" ")[1];
 
-    if(period == "PM" && hours > 12){
+    if(period == "PM" && hours < 12){
         hours += 12;
     }
     let x = "";
