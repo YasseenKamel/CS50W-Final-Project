@@ -70,18 +70,17 @@
                 <div class="form-group" style="display:none;" id="address_input">
                     <input class="form-control" type="text" name="address" value="{{ target.address }}" id="address">
                 </div>
-                {% if target.bio %}
                 <h5>About</h5>
                 <div id="bio_div">
                     <p id="bio_display"></p>
                     <script>
-                        document.getElementById('bio_display').textContent = "{{ target.bio }}";
+                        document.getElementById('bio_display').textContent = "{% if target.bio == "" %}No description.{% else %}{{ target.bio }}{% endif %}";
+                        let is_nana = {% if target.bio == "" %}0{% else %}1{% endif %};
                     </script>
                     <div class="form-group" id="bio_input" style="display:none;">
                         <textarea name="bio" id="bio" class="form-control">{{ target.bio }}</textarea>
                     </div>
                 </div>
-                {% endif %}
             </div>
             <div class="pfp_and_rating">
                 <img src="../static/YOKO_Clinics/profile.png">

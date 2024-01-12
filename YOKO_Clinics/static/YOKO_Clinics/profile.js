@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function (){
     stateSelect = document.querySelector('.state'),
     citySelect = document.querySelector('.city');
     let countries,specialties;
-    let is_bio = (document.getElementById('bio_display') != undefined);
     if(countrySelect != undefined){
         function fetchJson(url) {
             return fetch(url)
@@ -168,15 +167,13 @@ document.addEventListener('DOMContentLoaded', function (){
             let country_select = document.getElementById('country_select');
             let state_select = document.getElementById('state_select');
             let city_select = document.getElementById('city_select');
-            if(is_bio){
-                let bio = document.getElementById('bio_display');
-                let bio_input = document.getElementById('bio_input');
-            }
+            let bio = document.getElementById('bio_display');
             let time = document.getElementById('time_display');
             let day = document.getElementById('day_display');
             let sub_specialties = document.getElementById('sub_specialties_display');
             let address_input = document.getElementById('address_input');
             let country_input = document.getElementById('country_input');
+            let bio_input = document.getElementById('bio_input');
             let time_input = document.getElementById('time_input');
             let day_input = document.getElementById('day_input');
             let sub_specialties_input1 = document.getElementById('sub_specialties_data1');
@@ -224,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function (){
                         state: state_select.value,
                         city: city_select.value,
                         address: document.getElementById('address').value,
-                        bio: (is_bio ? document.getElementById('bio').value : ""),
+                        bio: document.getElementById('bio').value,
                         start_time: document.getElementById('start_time').value,
                         end_time: document.getElementById('end_time').value,
                         days: days_list,
@@ -254,9 +251,7 @@ document.addEventListener('DOMContentLoaded', function (){
                         return;
                     }
                     address_input.style.display='none';
-                    if(is_bio){
-                        bio_input.style.display='none';
-                    }
+                    bio_input.style.display='none';
                     country_input.style.display="none";
                     time_input.style.display="none";
                     day_input.style.display="none";
@@ -271,8 +266,13 @@ document.addEventListener('DOMContentLoaded', function (){
                         document.getElementById('country_display').textContent += ', ' + state_select.value;
                     }
                     document.getElementById('address_display').textContent = 'Address: ' + document.getElementById('address').value;
-                    if(is_bio){
-                    document.getElementById('bio_display').textContent = document.getElementById('bio').value;
+                    if(document.getElementById('bio').value != ""){
+                        document.getElementById('bio_display').textContent = document.getElementById('bio').value;
+                        is_nana = 1;
+                    }
+                    else{
+                        document.getElementById('bio_display').textContent = "No description.";
+                        is_nana = 0;
                     }
                     document.getElementById('start_time_display').textContent = convertTo12HourFormat(document.getElementById('start_time').value);
                     document.getElementById('end_time_display').textContent = convertTo12HourFormat(document.getElementById('end_time').value);
@@ -305,9 +305,7 @@ document.addEventListener('DOMContentLoaded', function (){
                     document.getElementById('beep1').style.display = "block";
                     time.style.display="flex";
                     country.style.display="block";
-                    if(is_bio){
                     bio.style.display="block";
-                    }
                     day.style.display="flex";
                     sub_specialties.style.display="flex";
                     document.getElementById('edit_btn').style.display="inline-block";
@@ -325,25 +323,20 @@ document.addEventListener('DOMContentLoaded', function (){
             let country_select = document.getElementById('country_select');
             let state_select = document.getElementById('state_select');
             let city_select = document.getElementById('city_select');
-            if(is_bio){
             let bio = document.getElementById('bio_display');
-            let bio_input = document.getElementById('bio_input');
-            }
             let time = document.getElementById('time_display');
             let day = document.getElementById('day_display');
             let sub_specialties = document.getElementById('sub_specialties_display');
             let address_input = document.getElementById('address_input');
             let country_input = document.getElementById('country_input');
+            let bio_input = document.getElementById('bio_input');
             let time_input = document.getElementById('time_input');
             let day_input = document.getElementById('day_input');
             let sub_specialties_input1 = document.getElementById('sub_specialties_data1');
             let sub_specialties_input2 = document.getElementById('sub_specialties1');
 
             address_input.style.display='none';
-            if(is_bio){
             bio_input.style.display='none';
-            bio.style.display="block";
-            }
             country_input.style.display="none";
             time_input.style.display="none";
             day_input.style.display="none";
@@ -352,6 +345,7 @@ document.addEventListener('DOMContentLoaded', function (){
             address.style.display="block";
             time.style.display="flex";
             country.style.display="block";
+            bio.style.display="block";
             day.style.display="flex";
             sub_specialties.style.display="flex";
             document.getElementById("error_msgs").innerHTML = "";
@@ -370,15 +364,13 @@ document.addEventListener('DOMContentLoaded', function (){
             let country_select = document.getElementById('country_select');
             let state_select = document.getElementById('state_select');
             let city_select = document.getElementById('city_select');
-            if(is_bio){
             let bio = document.getElementById('bio_display');
-            let bio_input = document.getElementById('bio_input');
-            }
             let time = document.getElementById('time_display');
             let day = document.getElementById('day_display');
             let sub_specialties = document.getElementById('sub_specialties_display');
             let address_input = document.getElementById('address_input');
             let country_input = document.getElementById('country_input');
+            let bio_input = document.getElementById('bio_input');
             let time_input = document.getElementById('time_input');
             let day_input = document.getElementById('day_input');
             let sub_specialties_input1 = document.getElementById('sub_specialties_data1');
@@ -531,9 +523,9 @@ document.addEventListener('DOMContentLoaded', function (){
             stateSelect.style.pointerEvents = 'auto';
             citySelect.style.pointerEvents = 'auto';
             address_input.style.display='block';
-            if(is_bio){
             bio_input.style.display='block';
-            document.getElementById('bio').value = bio.innerHTML;
+            if(is_nana){
+                document.getElementById('bio').value = bio.innerHTML;
             }
             document.getElementById('address').value = address.innerHTML.slice(9);
             document.getElementById('start_time').value = convertTo24HourFormat(document.getElementById('start_time_display').innerHTML);
@@ -546,9 +538,7 @@ document.addEventListener('DOMContentLoaded', function (){
             address.style.display="none";
             time.style.display="none";
             country.style.display="none";
-            if(is_bio){
             bio.style.display="none";
-            }
             day.style.display="none";
             sub_specialties.style.display="none";
             document.getElementById('edit_btn').style.display="none";
