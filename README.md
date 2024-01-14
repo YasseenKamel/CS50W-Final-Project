@@ -1,4 +1,4 @@
-![unread](https://github.com/YasseenKamel/CS50W-Final-Project/assets/136619329/e87cbfb9-7924-4e85-87b9-c687f31cc44f)# CS50W-Final-Project
+# CS50W-Final-Project
 This is my CS50W final project which is a booking system where doctors can make their accounts with their information, and patients can log in and book at certain doctors according to many factors.
 ## How to run
 Running this command in the terminal will run the server on 127.0.0.1:8000.
@@ -87,9 +87,9 @@ Moreover, the doctor can select multiple days on the calendar (however they must
 
 If the newly set working times will get in the way of an already confirmed appointment, the doctor will be warned for each appointment and given the option to set their working times anyway, cancelling the mentioned appointments.
 ### Notifications
-This feature is present for both types of users, where there is a bell icon right next to their username.
+This feature is present for both types of users, where there is a bell icon right next to their username. ![unread](https://github.com/YasseenKamel/CS50W-Final-Project/assets/136619329/e5deb152-7ed9-4e9c-8ab0-6b6308766dbd)
 
-If there are new notifications, the bell icon will have a circle over it.
+If there are new notifications, the bell icon will have a circle over it like so: ![unread](https://github.com/YasseenKamel/CS50W-Final-Project/assets/136619329/e87cbfb9-7924-4e85-87b9-c687f31cc44f)
 
 When clicked, unread messages will be highlighted in yellow and fade out till normal color, which will mark them as read.
 
@@ -101,6 +101,7 @@ Messages may include:
 ## Files
 ### manage.py
 This is file that runs the server and it's given by default when creating a new django project.
+
 ### db.sqlite3
 This is the database file. It contains a lot of data use to test the website during development and I chose to keep this data for the sake of demonstration. All users have a password of `123`
 ### YOKO_Clinics/admin.py
