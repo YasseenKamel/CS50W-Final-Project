@@ -58,12 +58,8 @@ The patient account is like any normal account, but the doctor account contains 
 ### Doctor
 1. #### Home
     Once logged in as a doctor, the user will be able to see all his apointments and filter them according to:
-    - Upcoming Appointments
-    - Past Appointments
-    
-    and 
-    - Earliest
-    - Latest
+    - Upcoming Appointments (ascending or descending)
+    - Past Appointments (ascending or descending)
     
     Upcoming appointments have the option to be cancelled in case the doctor could not make it there.
 2. #### Bookings
