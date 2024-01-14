@@ -58,14 +58,14 @@ The patient account is like any normal account, but the doctor account contains 
 ### Doctor
 1. #### Home
     Once logged in as a doctor, the user will be able to see all his apointments and filter them according to:
-    - Upcoming Appointments (ascending or descending)
-    - Past Appointments (ascending or descending)
+    - Upcoming Appointments (earliest or latest)
+    - Past Appointments (earliest or latest)
     
     Upcoming appointments have the option to be cancelled in case the doctor could not make it there.
 2. #### Bookings
     This tab will show the number of bookings which are still pending to the doctor in the navigation menu. When opened, this page displays all incoming requests and the doctor can sort them by:
-    - Date created (ascending or descending)
-    - Date requested for the booking (ascending or descending)
+    - Date created (earliest or latest)
+    - Date requested for the booking (earliest or latest)
     
     The doctor can choose whether to accept the booking or reject it.
     
