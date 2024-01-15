@@ -1488,5 +1488,8 @@ hr{
     .close{
         font-size: 3rem;
     }
+    .main_body{
+        padding-bottom: 15vh;
+    }
 }
 
