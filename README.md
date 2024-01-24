@@ -123,6 +123,7 @@ This is the style sheet for the entire website which includes mobile support as 
 All pictures in this folder are pictures used in the website both in dark mode and light mode.
 ### YOKO_Clinics/static/YOKO_Clinics/countries.json
 This json file contains all the countries, states and cities.
+
 Mainly used for:
 - Location selection when making a doctor account.
 - Searching for doctors by location.
@@ -140,6 +141,7 @@ This js file is used for the `Appointments` page for the patients which is respo
 
 ### YOKO_Clinics/static/YOKO_Clinics/booking.js
 This js file is responsible for the booking procedure which takes place when a patient is on a doctor's profile.
+
 Features this file runs include:
 - Functioning calendar for booking
 - Colour coded days to view how busy the doctor is in a given day
@@ -148,6 +150,7 @@ Features this file runs include:
 
 ### YOKO_Clinics/static/YOKO_Clinics/bookings.js
 This file is responsible for the `Bookings` page for the doctors.
+
 It manages the ability to set durations for bookings and register them if valid.
 
 ### YOKO_Clinics/static/YOKO_Clinics/home.js
@@ -158,6 +161,7 @@ This file manages the ability to search for doctors at `Home` page for patients.
 
 ### YOKO_Clinics/static/YOKO_Clinics/messages.js
 This file is included in all html pages where the user is authenticated.
+
 It manages the notifications feature which opens the inbox and marks messages as read after a few seconds.
 
 ### YOKO_Clinics/static/YOKO_Clinics/profile.js
@@ -173,6 +177,7 @@ This file is included in any `Profile` page of any doctor to load reviews in set
 
 ### YOKO_Clinics/static/YOKO_Clinics/vacations.js
 This file manages the `Vacations` page in the doctors' accounts.
+
 It manages things like:
 - The interactive calendar with day selection
 - Prompting for vacation/schedule data
@@ -180,6 +185,9 @@ It manages things like:
 
 ## Distinctiveness and Complexity
 I believe this project is distinct due to the fact that I got this idea as I waited for an appointment at a clinic myself, and all the features I've added are features I've come up with myself.
+
 In terms of complexity, I believe it maches the project's requirements as I've added a decent amount of features and data which does not clash or bug in any way.
+
 Moreover, I've made use of binary search to further optimise the code in a js file as well.
+
 In conclusion, I mainly believe it suits the requirements due to the variety of data included and managed precisely without any form of bugging or clashing.
