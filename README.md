@@ -107,7 +107,7 @@ I have tested this website on:
     
 ## Files
 ### manage.py
-This is file that runs the server and it's given by default when creating a new django project.
+This is the file that runs the server and it's given by default when creating a new django project.
 
 ### db.sqlite3
 This is the database file. It contains a lot of data use to test the website during development and I chose to keep this data for the sake of demonstration. All users have a password of `123`
