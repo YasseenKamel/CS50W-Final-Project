@@ -94,6 +94,17 @@ Messages may include:
 - Cancelling of an appointment to either the doctor or the patient.
 - Confirmation of a booking request for the patient.
 
+### Testings
+I have tested this website on:
+1. Windows
+    - Firefox
+    - Google Chrome
+2. Android
+    - Samsung Internet
+    - Google Chrome
+3. MacOS
+    - Safari
+    
 ## Files
 ### manage.py
 This is file that runs the server and it's given by default when creating a new django project.
