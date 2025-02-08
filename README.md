@@ -15,6 +15,9 @@ python manage.py runserver (local_IP_Address:Port)
 ```
 Any user can open the website via the public IP address through the port 8000.
 
+##Video demonstration
+https://www.youtube.com/watch?v=B-5KUskOzfo
+
 ## Description
 When a new user opens the website, they'll be prompted to log in or sign up.
 
