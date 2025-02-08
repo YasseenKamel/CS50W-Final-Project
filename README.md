@@ -5,6 +5,16 @@ Running this command in the terminal will run the server on 127.0.0.1:8000.
 ```
 python manage.py runserver
 ```
+In order to run outside the local network the public IP address has to be added to YOKO/settings.py in 2 locations.
+![image](https://github.com/user-attachments/assets/1defe1c5-1093-4c08-8f97-a69e72df5044)
+
+Replace 197.48.122.100 with the public IP address and replace 192.168.1.11 with the local IP address.
+To run, run this command with the local IP address followed by port (ex. 197.48.122.100:8000).
+```
+python manage.py runserver (local_IP_Address:Port)
+```
+Any user can open the website via the public IP address through the port 8000.
+
 ## Description
 When a new user opens the website, they'll be prompted to log in or sign up.
 
